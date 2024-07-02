@@ -1,4 +1,5 @@
 @import url("./styles/reset.css");
+@import url("./styles/tailwind/tailwindcss.css");
 
 /* 폰트 관련 css (나중에 다른 사항들도 index.css에 작성하게되면 따로 빼서 @import해주세요!) */
 #root {
