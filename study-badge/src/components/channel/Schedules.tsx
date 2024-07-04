@@ -3,6 +3,7 @@ import Calendar from "../calendar/Calendar";
 
 const Schedules = (): JSX.Element => {
   const { selectedDate, setSelectedDate } = useSelectedDateStore();
+  const attendList = ["홍길동", "김철수", "김영희"];
 
   return (
     <>
@@ -42,10 +43,12 @@ const Schedules = (): JSX.Element => {
                 {selectedDate.split("-")[1]}.{selectedDate.split("-")[2]} 출석 멤버
               </h3>
               <div className="h-40 flex flex-wrap overflow-y-scroll custom-scroll">
-                <div className="member w-fit h-fit flex flex-col justify-center items-center mx-2">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-                  <span>홍길동</span>
-                </div>
+                {attendList.map((member) => (
+                  <div className="member w-fit h-fit flex flex-col justify-center items-center mx-2">
+                    <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+                    <span>{member}</span>
+                  </div>
+                ))}
               </div>
             </>
           </>
