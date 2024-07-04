@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Value } from "../../types/calendar";
+import { Value } from "../../types/schedule-type";
 import { StyledCalendar } from "../../styles/components/StyledCalendar";
 import moment from "moment";
+import useSelectedDateStore from "../../store/schedule-state";
 
 const Calendar = (): JSX.Element => {
   const curDate = new Date();
+  const { selectedDate, setSelectedDate } = useSelectedDateStore();
   const [value, onChange] = useState<Value>(curDate);
   const [mark, setMark] = useState(["2024-07-01"]);
   // 달력에 일정표시할 날짜들을 mark배열에 "YYYY-MM-DD"형태로 담을 예정
@@ -27,8 +29,8 @@ const Calendar = (): JSX.Element => {
   // );
 
   useEffect(() => {
-    console.log(value);
-  }, [value]);
+    console.log(selectedDate);
+  }, [selectedDate]);
 
   const handleValueChange = (selectedDate: Value) => {
     onChange(() => selectedDate);
@@ -36,7 +38,7 @@ const Calendar = (): JSX.Element => {
 
   const handleDayClick = (date: Date) => {
     const transDate = moment(date).format("YYYY-MM-DD");
-    console.log(transDate);
+    setSelectedDate(transDate);
   };
 
   return (
@@ -53,8 +55,8 @@ const Calendar = (): JSX.Element => {
         next2Label={null} // +1년 & +10년 이동 버튼 숨기기
         prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
         minDetail="year" // 10년단위 년도 숨기기
-        tileClassName={({ date }) => {
-          if (date.getDay() === 0) {
+        tileClassName={({ date, view }) => {
+          if (date.getDay() === 0 && view !== "year") {
             return "text-[#bf230b]";
           }
         }}
@@ -62,8 +64,8 @@ const Calendar = (): JSX.Element => {
           if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
             return (
               <>
-                <div className="flex justify-center items-center absolute absoluteDiv">
-                  <div className="dot w-9 h-2 bg-[#ffcd32] rounded-lg flex ml-px"></div>
+                <div className="flex justify-center items-center relative absoluteDiv">
+                  <div className="dot w-3/4 h-2 bg-[#ffcd32] rounded-lg flex ml-px absolute top-[0.2px]"></div>
                 </div>
               </>
             );
