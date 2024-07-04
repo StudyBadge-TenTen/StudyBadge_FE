@@ -2,7 +2,6 @@ import Calendar from "react-calendar";
 import styled from "styled-components";
 
 export const StyledCalendar = styled(Calendar)`
-  width: 40%;
   min-width: 340px;
   max-width: 390px;
   height: fit-content;
