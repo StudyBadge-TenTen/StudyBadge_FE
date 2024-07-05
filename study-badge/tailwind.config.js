@@ -11,6 +11,9 @@ export default {
       xl2: "1360px",
     },
     extend: {
+      boxShadow: {
+        card: "0px 2px 8px 0px rgba(99, 99, 99, 0.2)",
+      },
       lineClamp: {
         1: "1",
         2: "2",
