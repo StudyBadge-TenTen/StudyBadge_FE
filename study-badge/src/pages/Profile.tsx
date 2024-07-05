@@ -3,11 +3,13 @@ import ProfileSidebar from "../components/profile/profile-sidebar";
 import ProfilePhoto from "../components/profile/profile-photo";
 import ProfileHeader from "../components/profile/profile-header";
 import ProfileDeposit from "../components/profile/profile-deposit";
+import { ProfileEditState } from "../types/profile";
 import useProfileEditStore from "../store/profile-edit";
 
 const Profile: React.FC = () => {
   const { isEditing, isViewingPayments, isViewingProfile, toggleEditMode, toggleViewProfile, nickname, setNickname } =
-    useProfileEditStore();
+    useProfileEditStore((state: ProfileEditState) => state);
+
   const [newNickname, setNewNickname] = useState(nickname);
 
   const handleSave = () => {

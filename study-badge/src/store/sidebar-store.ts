@@ -1,11 +1,7 @@
-import create from "zustand";
+import { create } from "zustand";
+import { SidebarStoreState } from "../types/profile";
 
-interface SidebarState {
-  isOpen: boolean;
-  toggleSidebar: () => void;
-}
-
-const useSidebarStore = create<SidebarState>((set) => ({
+const useSidebarStore = create<SidebarStoreState>((set) => ({
   isOpen: false,
   toggleSidebar: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
