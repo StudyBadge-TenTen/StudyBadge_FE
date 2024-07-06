@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import { Value } from "../../types/schedule-type";
 import { StyledCalendar } from "../../styles/components/StyledCalendar";
 import moment from "moment";
-import useSelectedDateStore from "../../store/schedule-state";
+import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-state";
+import PrevMonthBtn from "./PrevMonthBtn";
+import NextMonthBtn from "./NextMonthBtn";
 
-const Calendar = (): JSX.Element => {
+const Calendar = ({ marks }: { marks: string[] }): JSX.Element => {
   const curDate = new Date();
-  const { selectedDate, setSelectedDate } = useSelectedDateStore();
+  const { setSelectedDate } = useSelectedDateStore();
+  const { setSelectedMonth } = useSelectedMonthStore();
   const [value, onChange] = useState<Value>(curDate);
-  const [mark, setMark] = useState(["2024-07-01"]);
+  const [mark, setMark] = useState(marks);
   // 달력에 일정표시할 날짜들을 mark배열에 "YYYY-MM-DD"형태로 담을 예정
 
   // useQuery이용해서 데이터 가져오기(예시)
@@ -29,16 +32,19 @@ const Calendar = (): JSX.Element => {
   // );
 
   useEffect(() => {
-    console.log(selectedDate);
-  }, [selectedDate]);
+    setMark(() => marks);
+  }, [marks]);
 
   const handleValueChange = (selectedDate: Value) => {
     onChange(() => selectedDate);
   };
-
   const handleDayClick = (date: Date) => {
     const transDate = moment(date).format("YYYY-MM-DD");
     setSelectedDate(transDate);
+  };
+  const handleMonthClick = (date: Date) => {
+    const transDate = moment(date).format("YYYY-MM");
+    setSelectedMonth(transDate);
   };
 
   return (
@@ -46,10 +52,14 @@ const Calendar = (): JSX.Element => {
       <StyledCalendar
         onChange={handleValueChange}
         onClickDay={handleDayClick}
+        onClickMonth={handleMonthClick}
+        // month를 변경하는 버튼들을 컴포넌트로 만들어 onClick함수로 새로운 달의 일정을 get해야함
+        prevLabel={<PrevMonthBtn />}
+        nextLabel={<NextMonthBtn />}
         value={value}
-        formatDay={(locale, date) => moment(date).format("D")} // 일 제거 숫자만 보이게
-        formatYear={(locale, date) => moment(date).format("YYYY")} // 네비게이션 눌렀을때 숫자 년도만 보이게
-        formatMonthYear={(locale, date) => moment(date).format("YYYY. MM")} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
+        formatDay={(_, date) => moment(date).format("D")} // 일 제거 숫자만 보이게
+        formatYear={(_, date) => moment(date).format("YYYY")} // 네비게이션 눌렀을때 숫자 년도만 보이게
+        formatMonthYear={(_, date) => moment(date).format("YYYY. MM")} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
         calendarType="gregory" // 일요일 부터 시작
         showNeighboringMonth={false} // 전달, 다음달 날짜 숨기기
         next2Label={null} // +1년 & +10년 이동 버튼 숨기기
@@ -60,15 +70,17 @@ const Calendar = (): JSX.Element => {
             return "text-[#bf230b]";
           }
         }}
-        tileContent={({ date }) => {
-          if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
-            return (
-              <>
-                <div className="flex justify-center items-center relative absoluteDiv">
-                  <div className="dot w-3/4 h-2 bg-[#ffcd32] rounded-lg flex ml-px absolute top-[0.2px]"></div>
-                </div>
-              </>
-            );
+        tileContent={({ date, view }) => {
+          if (view !== "year") {
+            if (mark.find((markDate) => markDate === moment(date).format("YYYY-MM-DD"))) {
+              return (
+                <>
+                  <div className="flex justify-center items-center relative absoluteDiv">
+                    <div className="dot w-3/4 h-2 bg-[#ffcd32] rounded-lg flex ml-px absolute top-[0.2px]"></div>
+                  </div>
+                </>
+              );
+            }
           }
         }}
       />

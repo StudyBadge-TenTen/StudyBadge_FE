@@ -9,7 +9,7 @@ const Router = (): JSX.Element => {
       <Route path="*" element={<Error />} />
       <Route path="/" element={<Main />} />
       {/* 테스트용 라우트 경로 임시 추가 */}
-      <Route path="/channel/:id" element={<ChannelPage />} />
+      <Route path="/channel/:channelId" element={<ChannelPage />} />
     </Routes>
   );
 };
