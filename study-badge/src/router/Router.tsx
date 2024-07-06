@@ -10,7 +10,7 @@ const Router = (): JSX.Element => {
       <Route path="*" element={<Error />} />
       <Route path="/" element={<Main />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/channel" element={<ChannelPage />} />
+      <Route path="/channel/:channelId" element={<ChannelPage />} />
     </Routes>
   );
 };
