@@ -1,3 +1,4 @@
+// schedule data
 export const scheduleList = [
   {
     id: 0,
@@ -50,3 +51,5 @@ export const placeInfo = {
   placeName: "스터디 카페 25시",
   placeAddress: "서울시 OO구 OO동 OO로 1길",
 };
+
+// ~~~ data

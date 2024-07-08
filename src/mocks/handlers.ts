@@ -1,9 +1,8 @@
 import { http, HttpResponse } from "msw";
 import { placeInfo, scheduleList } from "./data";
 
-//`/api/study-channels/:studyChannelId/schedules?year=yyyy&month=mm`
-
 export const handlers = [
+  // schedule handlers
   http.get(`/api/study-channels/:channelId/schedules`, ({ request, params }) => {
     const url = new URL(request.url);
 
@@ -20,4 +19,6 @@ export const handlers = [
     console.log(`Captured a "GET /api/study-channels/${params.scheduleId}/places/${params.placeId}" request`);
     return HttpResponse.json(placeInfo);
   }),
+
+  // ~~ handlers
 ];
