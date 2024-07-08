@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import ProfileSidebar from "../components/profile/profile-sidebar";
-import ProfilePhoto from "../components/profile/profile-photo";
-import ProfileHeader from "../components/profile/profile-header";
-import ProfileDeposit from "../components/profile/profile-deposit";
-import { ProfileEditState } from "../types/profile";
-import useProfileEditStore from "../store/profile-edit";
+import ProfileSidebar from "../components/profile/ProfileSidebar";
+import ProfilePhoto from "../components/profile/ProfilePhoto";
+import ProfileHeader from "../components/profile/ProfileHeader";
+import ProfileDeposit from "../components/profile/ProfileDeposit";
+import useProfileStore from "../store/profile-store";
 
 const Profile: React.FC = () => {
   const { isEditing, isViewingPayments, isViewingProfile, toggleEditMode, toggleViewProfile, nickname, setNickname } =
-    useProfileEditStore((state: ProfileEditState) => state);
-
+    useProfileStore();
   const [newNickname, setNewNickname] = useState(nickname);
 
   const handleSave = () => {
