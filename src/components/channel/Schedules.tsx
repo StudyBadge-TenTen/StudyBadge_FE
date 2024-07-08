@@ -1,4 +1,4 @@
-import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-state";
+import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
 import Calendar from "../calendar/Calendar";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";

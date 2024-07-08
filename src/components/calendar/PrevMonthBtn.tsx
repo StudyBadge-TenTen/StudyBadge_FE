@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useSelectedMonthStore } from "../../store/schedule-state";
+import { useSelectedMonthStore } from "../../store/schedule-store";
 
 const PrevMonthBtn = (): JSX.Element => {
   const { selectedMonth, setSelectedMonth } = useSelectedMonthStore();

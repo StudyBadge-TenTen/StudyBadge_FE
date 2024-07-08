@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Value } from "../../types/schedule-type";
 import { StyledCalendar } from "../../styles/components/StyledCalendar";
 import moment from "moment";
-import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-state";
+import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
 import PrevMonthBtn from "./PrevMonthBtn";
 import NextMonthBtn from "./NextMonthBtn";
 
