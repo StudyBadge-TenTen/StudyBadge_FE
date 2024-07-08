@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { ScheduleCalcResponseType, ScheduleInfoType } from "../../types/schedule-type";
 import { getScheduleInfo, scheduleCalculator } from "../../utils/schedule-function";
+import AddScheduleBtn from "../calendar/AddScheduleBtn";
 
 const Schedules = (): JSX.Element => {
   const { channelId } = useParams();
@@ -69,7 +70,7 @@ const Schedules = (): JSX.Element => {
                     시간
                   </div>
                   <div className="w-32 lg:w-48 text-[#89919D] overflow-x-hidden text-ellipsis whitespace-nowrap">
-                    {scheduleInfo.time[0]} ~ {scheduleInfo.time[1]}
+                    {`${scheduleInfo.time[0].split(":")[0]}:${scheduleInfo.time[0].split(":")[1]} ~ ${scheduleInfo.time[1].split(":")[0]}:${scheduleInfo.time[1].split(":")[1]}`}
                   </div>
                 </div>
                 {/* 오프라인 스터디일 경우 장소 추가 */}
@@ -122,6 +123,8 @@ const Schedules = (): JSX.Element => {
           </div>
         </div>
       </div>
+      {/* 스터디 리더 용 일정등록/변경 버튼 */}
+      <AddScheduleBtn />
     </>
   );
 };

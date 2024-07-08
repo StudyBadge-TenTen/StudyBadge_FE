@@ -65,9 +65,7 @@ const Header = (): JSX.Element => {
               </svg>
             </button>
           </div>
-          <button className="hidden md:inline-block w-20 h-10 bg-[#1C4587] rounded-[50px] text-sm text-white text-center hover:bg-[#3C78D8]">
-            로그인
-          </button>
+          <button className="hidden md:inline-block btn-blue">로그인</button>
         </div>
       </div>
     </section>
