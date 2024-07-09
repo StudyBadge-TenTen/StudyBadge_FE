@@ -46,6 +46,7 @@ interface ScheduleType {
   repeatSituation?: RepeatDailyType | RepeatWeeklyType | RepeatMonthlyType;
   repeatEndDate?: "YYYY-MM-DD" | string;
   placeId?: number | string;
+  placeAddress?: string;
   repeated: boolean;
 }
 
@@ -76,11 +77,33 @@ interface ScheduleCalcResponseType {
   }[];
 }
 
-interface ScheduleInfoType {
+// interface ScheduleInfoType {
+//   name: string;
+//   content: string;
+//   time: string[];
+//   placeAddress?: string;
+// }
+
+type SelectorType = "" | "start-hour" | "start-minute" | "end-hour" | "end-minute" | "repeat-check" | "repeatEndDate";
+
+interface TimeSelectorPropsType {
+  selector: SelectorType;
   name: string;
-  content: string;
-  time: string[];
-  placeAddress?: string;
+  setTime: React.Dispatch<
+    React.SetStateAction<{
+      start: string[];
+      end: string[];
+    }>
+  >;
+}
+
+type RepeatStateType = "NONE" | "DAILY" | "WEEKLY" | "MONTHLY";
+
+interface RepeatSetterPropsType {
+  repeatState: RepeatStateType;
+  setRepeatState: React.Dispatch<React.SetStateAction<RepeatStateType>>;
+  day: string | undefined;
+  setSelector: React.Dispatch<React.SetStateAction<SelectorType>>;
 }
 
 // -------- 임시) 장소 관련 ----------
@@ -97,6 +120,7 @@ interface PlaceType {
 }
 
 export type {
+  RepeatCycleType,
   RepeatDailyType,
   RepeatWeeklyType,
   ScheduleType,
@@ -105,7 +129,11 @@ export type {
   MonthStoreType,
   ScheduleParamsType,
   ScheduleCalcResponseType,
-  ScheduleInfoType,
+  // ScheduleInfoType,
+  SelectorType,
+  TimeSelectorPropsType,
+  RepeatStateType,
+  RepeatSetterPropsType,
   PlaceParamsType,
   PlaceType,
 };

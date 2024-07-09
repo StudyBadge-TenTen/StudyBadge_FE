@@ -1,10 +1,10 @@
 import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-state";
-import Calendar from "../calendar/Calendar";
+import Calendar from "../schedule/Calendar";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { ScheduleCalcResponseType, ScheduleInfoType } from "../../types/schedule-type";
+import { ScheduleCalcResponseType, ScheduleType } from "../../types/schedule-type";
 import { getScheduleInfo, scheduleCalculator } from "../../utils/schedule-function";
-import AddScheduleBtn from "../calendar/AddScheduleBtn";
+import AddScheduleBtn from "../schedule/leader/AddScheduleBtn";
 
 const Schedules = (): JSX.Element => {
   const { channelId } = useParams();
@@ -12,7 +12,7 @@ const Schedules = (): JSX.Element => {
   const { selectedMonth } = useSelectedMonthStore();
   const [marks, setMarks] = useState<string[]>([]);
   const [scheduleState, setScheduleState] = useState<ScheduleCalcResponseType>();
-  const [scheduleInfo, setScheduleInfo] = useState<ScheduleInfoType | false>();
+  const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | false>();
   const attendList = ["홍길동", "김철수", "김영희"];
 
   useEffect(() => {
@@ -41,21 +41,21 @@ const Schedules = (): JSX.Element => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-[#1C4587] text-center mb-4">스터디 일정</h2>
+      <h2 className="text-2xl font-bold text-Blue-2 text-center mb-4">스터디 일정</h2>
       <div className="flex flex-col md:flex-row justify-center items-center">
         <Calendar marks={marks} />
-        <div className="schedule w-96 h-[393px] border border-solid border-[#B4BDCB] rounded-[50px] mt-4 md:mt-0 md:ml-4">
+        <div className="schedule w-96 h-[393px] border border-solid border-Gray-3 rounded-[50px] mt-4 md:mt-0 md:ml-4">
           <div className="m-6 h-[345px] overflow-y-scroll custom-scroll">
             {/* 일정이 등록되어 있는 경우 렌더링 될 요소 */}
             {scheduleInfo ? (
               <>
-                <div className="h-fit bg-[#dce1e77e] rounded-[30px]">
-                  <div className="p-4 border-b border-solid border-[#B4BDCB]">{scheduleInfo.name}</div>
-                  <div className="p-4">{scheduleInfo.content}</div>
+                <div className="h-fit bg-Gray-1 rounded-[30px]">
+                  <div className="p-4 border-b border-solid border-Gray-3">{scheduleInfo.scheduleName}</div>
+                  <div className="p-4">{scheduleInfo.scheduleContent}</div>
                 </div>
                 {/* 시간 */}
-                <div className="h-fit flex items-center border border-solid border-[#DCE1E7] rounded-[50px] p-2 my-2">
-                  <div className="w-fit flex items-center text-[#1C4587] font-bold mx-4">
+                <div className="h-fit flex items-center border border-solid border-Gray-2 rounded-[50px] p-2 my-2">
+                  <div className="w-fit flex items-center text-Blue-2 font-bold mx-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -69,14 +69,14 @@ const Schedules = (): JSX.Element => {
                     </svg>
                     시간
                   </div>
-                  <div className="w-32 lg:w-48 text-[#89919D] overflow-x-hidden text-ellipsis whitespace-nowrap">
-                    {`${scheduleInfo.time[0].split(":")[0]}:${scheduleInfo.time[0].split(":")[1]} ~ ${scheduleInfo.time[1].split(":")[0]}:${scheduleInfo.time[1].split(":")[1]}`}
+                  <div className="w-32 lg:w-48 text-Gray-4 overflow-x-hidden text-ellipsis whitespace-nowrap">
+                    {`${scheduleInfo.scheduleStartTime.split(":")[0]}:${scheduleInfo.scheduleStartTime.split(":")[1]} ~ ${scheduleInfo.scheduleEndTime.split(":")[0]}:${scheduleInfo.scheduleEndTime.split(":")[1]}`}
                   </div>
                 </div>
                 {/* 오프라인 스터디일 경우 장소 추가 */}
                 {scheduleInfo.placeAddress && (
-                  <div className="h-fit flex items-center border border-solid border-[#DCE1E7] rounded-[50px] p-2 my-2">
-                    <div className="w-fit flex items-center text-[#1C4587] font-bold mx-4">
+                  <div className="h-fit flex items-center border border-solid border-Gray-2 rounded-[50px] p-2 my-2">
+                    <div className="w-fit flex items-center text-Blue-2 font-bold mx-4">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -90,17 +90,17 @@ const Schedules = (): JSX.Element => {
                       </svg>
                       장소
                     </div>
-                    <div className="w-48 md:w-32 lg:w-48 text-[#89919D] overflow-x-hidden text-ellipsis whitespace-nowrap">
+                    <div className="w-48 md:w-32 lg:w-48 text-Gray-4 overflow-x-hidden text-ellipsis whitespace-nowrap">
                       {scheduleInfo.placeAddress}
                     </div>
                   </div>
                 )}
                 {/* 출석 체크 멤버 */}
                 <>
-                  <h3 className="text-2xl font-bold text-[#1C4587] text-center my-4">
+                  <h3 className="text-2xl font-bold text-Blue-2 text-center my-4">
                     {selectedDate.split("-")[1]}.{selectedDate.split("-")[2]} 출석 멤버
                   </h3>
-                  <div className="text-center text-[#B4BDCB]">아직 출석체크를 하지 않았습니다.</div>
+                  <div className="text-center text-Gray-3">아직 출석체크를 하지 않았습니다.</div>
                   {/* 출석완료 후 렌더링 될 요소 */}
                   {/* <div className="h-28 flex flex-wrap">
                     {attendList.map((member) => (
@@ -114,17 +114,17 @@ const Schedules = (): JSX.Element => {
               </>
             ) : (
               <div className="h-full flex flex-col justify-center items-center">
-                <h3 className="text-2xl font-bold text-[#1C4587] text-center my-4">
+                <h3 className="text-2xl font-bold text-Blue-2 text-center my-4">
                   {selectedDate.split("-")[1]}.{selectedDate.split("-")[2]}
                 </h3>
-                <div className="h-full flex justify-center items-center text-[#B4BDCB]">등록된 일정이 없습니다.</div>
+                <div className="h-full flex justify-center items-center text-Gray-3">등록된 일정이 없습니다.</div>
               </div>
             )}
           </div>
         </div>
       </div>
       {/* 스터디 리더 용 일정등록/변경 버튼 */}
-      <AddScheduleBtn />
+      <AddScheduleBtn originInfo={scheduleInfo} />
     </>
   );
 };
