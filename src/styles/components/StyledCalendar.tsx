@@ -8,6 +8,7 @@ export const StyledCalendar = styled(Calendar)`
   border: 1px solid #b4bdcb;
   border-radius: 50px;
   padding: 35px 45px;
+  background-color: white;
 
   .react-calendar__navigation {
     display: flex;

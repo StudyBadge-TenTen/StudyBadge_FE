@@ -19,7 +19,7 @@ const Header = (): JSX.Element => {
         <img src={LOGO} className="h-24 md:h-16"></img>
         <input
           type="text"
-          className="hidden md:inline-block w-1/2 h-12 border border-solid border-[#B4BDCB] rounded-[50px] indent-5 mx-8"
+          className="hidden md:inline-block w-1/2 h-12 border border-solid border-Gray-3 rounded-[50px] indent-5 mx-8"
         ></input>
         <div className="user-container flex flex-col md:flex-row justify-center items-center">
           <div className="flex justify-center items-center">
