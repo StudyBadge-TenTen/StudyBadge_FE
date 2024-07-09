@@ -3,9 +3,10 @@ import AddPlaceBtn from "./leader/AddPlaceBtn";
 import { useLocation, useNavigate, useParams } from "react-router";
 import TimeSelector from "./leader/TimeSelector";
 import RepeatSetter from "./leader/RepeatSetter";
-import { RepeatCycleType, RepeatStateType, ScheduleType, SelectorType } from "../../types/schedule-type";
+import { RepeatCycleType, ScheduleType, SelectorType } from "../../types/schedule-type";
 import { useSelectedDateStore } from "../../store/schedule-state";
 import Calendar from "./Calendar";
+import { postSchedule } from "../../services/schedule-api";
 
 const ScheduleEdit = (): JSX.Element => {
   const { channelId } = useParams();
@@ -14,7 +15,7 @@ const ScheduleEdit = (): JSX.Element => {
     state: { originInfo },
   }: { state: { originInfo: false | ScheduleType | undefined } } = useLocation();
   const { selectedDate } = useSelectedDateStore();
-  // const [value, setValue] = useState("");
+  const [inputValue, setInputValue] = useState({ scheduleName: "", scheduleContent: "" });
   const [selector, setSelector] = useState<SelectorType>("");
   const [time, setTime] = useState({ start: ["00", "00"], end: ["00", "00"] });
   const [repeatState, setRepeatState] = useState<RepeatCycleType | "NONE">("NONE");
@@ -23,14 +24,17 @@ const ScheduleEdit = (): JSX.Element => {
   const selectedDay = new Date(selectedDate).getDay();
 
   useEffect(() => {
+    // 드롭다운모달 밖을 클릭할 때를 감지하기 위한 이벤트 등록
     window.addEventListener("click", (e) => handleSelectorReset(e));
 
+    // 기존에 등록된 일정이 있을 경우
     if (originInfo) {
       setTime(() => ({
         start: [originInfo.scheduleStartTime.split(":")[0], originInfo.scheduleStartTime.split(":")[1]],
         end: [originInfo.scheduleEndTime.split(":")[0], originInfo.scheduleEndTime.split(":")[1]],
       }));
 
+      // 반복일정인 경우
       if (originInfo.repeated && originInfo.repeatCycle) {
         setRepeatState(() => originInfo.repeatCycle!);
         setRepeatEndDate(() => originInfo.repeatEndDate!);
@@ -40,10 +44,23 @@ const ScheduleEdit = (): JSX.Element => {
     return window.removeEventListener("click", (e) => handleSelectorReset(e));
   }, []);
 
-  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   console.log(e.target.value);
-  // };
+  // 일정 이름, 내용 input의 handler함수
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.id === "scheduleName") {
+      setInputValue((origin) => ({
+        ...origin,
+        scheduleName: e.target.value,
+      }));
+    }
+    if (e.target.id === "scheduleContent") {
+      setInputValue((origin) => ({
+        ...origin,
+        scheduleContent: e.target.value,
+      }));
+    }
+  };
 
+  // 설정 클릭 시, 드롭다운모달을 활성화하기위한 함수
   const handleSelectorClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const btn = e.target as HTMLButtonElement;
     if (btn.classList.contains("start-hour")) {
@@ -66,6 +83,7 @@ const ScheduleEdit = (): JSX.Element => {
     }
   };
 
+  // 드롭다운모달을 닫기 위한 함수
   const handleSelectorReset = (e: MouseEvent) => {
     e.stopPropagation();
     const target = e.target as HTMLElement;
@@ -85,6 +103,7 @@ const ScheduleEdit = (): JSX.Element => {
     }
   };
 
+  // 숫자로 된 값을 요일로 바꾸는 함수
   const transDay = (selectedDay: number) => {
     let result;
     switch (selectedDay) {
@@ -117,6 +136,84 @@ const ScheduleEdit = (): JSX.Element => {
     return result;
   };
 
+  // 반복 조건을 post할 데이터타입으로 반환하는 함수
+  const situationCalculator = (repeatState: RepeatCycleType, selectedDate: string, selectedDay: number) => {
+    let result;
+
+    if (repeatState === "DAILY") {
+      result = "EVERYDAY";
+    }
+    if (repeatState === "WEEKLY") {
+      switch (selectedDay) {
+        case 0:
+          result = "SUNDAY";
+          break;
+        case 1:
+          result = "MONDAY";
+          break;
+        case 2:
+          result = "TUESDAY";
+          break;
+        case 3:
+          result = "WEDNESDAY";
+          break;
+        case 4:
+          result = "THURSDAY";
+          break;
+        case 5:
+          result = "FRIDAY";
+          break;
+        case 6:
+          result = "SATURDAY";
+          break;
+      }
+    }
+    if (repeatState === "MONTHLY") {
+      result = Number(selectedDate.split("-")[2]);
+    }
+
+    return result;
+  };
+
+  // 일정 등록을 클릭 시, post요청하는 함수
+  const handleSubmitClick = async () => {
+    let result;
+
+    if (repeatState === "NONE") {
+      result = await postSchedule(Number(channelId), {
+        type: "single",
+        scheduleName: inputValue.scheduleName,
+        scheduleContent: inputValue.scheduleContent,
+        scheduleDate: selectedDate,
+        scheduleStartTime: `${time.start.join(":")}:00`,
+        scheduleEndTime: `${time.end.join(":")}:00`,
+      });
+    } else {
+      result = await postSchedule(Number(channelId), {
+        type: "repeat",
+        repeatCycle: repeatState,
+        repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
+        repeatEndDate: repeatEndDate,
+        scheduleName: inputValue.scheduleName,
+        scheduleContent: inputValue.scheduleContent,
+        scheduleDate: selectedDate,
+        scheduleStartTime: `${time.start.join(":")}:00`,
+        scheduleEndTime: `${time.end.join(":")}:00`,
+      });
+    }
+
+    console.log(result);
+
+    // post 성공 시와 실패 시 처리를 우선 아래와 같이 간단히 처리했습니다.
+    // 실제로는 따로 에러처리가 필요합니다.
+    if (result) {
+      navigate(`/channel/${channelId}`);
+    } else {
+      alert("일정 등록에 실패하였습니다.");
+      throw new Error("일정 등록에 실패하였습니다.");
+    }
+  };
+
   return (
     <div className="w-full h-fit flex flex-col justify-center items-center">
       <div className="w-screen h-60 bg-Blue-2 flex justify-center items-center">
@@ -133,14 +230,18 @@ const ScheduleEdit = (): JSX.Element => {
                 id="scheduleName"
                 type="text"
                 placeholder="일정 이름"
-                value={originInfo ? originInfo.scheduleName : ""}
+                defaultValue={originInfo ? originInfo.scheduleName : undefined}
+                value={inputValue.scheduleName}
+                onChange={(e) => handleChange(e)}
                 className="w-full p-4 px-6 bg-Gray-1 border-b border-solid border-Gray-3 rounded-t-[30px]"
               />
               <input
                 id="scheduleContent"
                 type="text"
                 placeholder="내용"
-                value={originInfo ? originInfo.scheduleContent : ""}
+                defaultValue={originInfo ? originInfo.scheduleContent : undefined}
+                value={inputValue.scheduleContent}
+                onChange={(e) => handleChange(e)}
                 className="w-full p-4 px-6 bg-Gray-1 rounded-b-[30px]"
               />
             </div>
@@ -229,7 +330,7 @@ const ScheduleEdit = (): JSX.Element => {
                   onClick={(e) => handleSelectorClick(e)}
                   className="w-40 bg-white py-1 rounded-[50px] flex justify-center items-center"
                 >
-                  {repeatEndDate === "NONE" ? "없음" : `${repeatEndDate}`}
+                  {repeatEndDate === "NONE" ? `${selectedDate}` : `${repeatEndDate}`}
                 </button>
               </div>
               {selector === "repeatEndDate" && (
@@ -238,14 +339,15 @@ const ScheduleEdit = (): JSX.Element => {
                 </>
               )}
             </div>
-            {/* 오프라인 채널일 경우 장소 선택 버튼 */}
+            {/* 오프라인 채널일 경우 장소 선택 버튼 - 클릭하면 맵 페이지로 이동 */}
+            {/* 돌아오면서 placeId를 navigate의 state로 전달해주는 방향이면 좋을 듯*/}
             <AddPlaceBtn />
           </div>
           <div className="flex justify-between items-center px-8 mt-8">
             <button type="button" onClick={() => navigate(`/channel/${channelId}`)} className="btn-blue w-24">
               취소
             </button>
-            <button type="button" onClick={() => navigate(`/channel/${channelId}`)} className="btn-blue w-24">
+            <button type="button" onClick={() => handleSubmitClick()} className="btn-blue w-24">
               일정저장
             </button>
           </div>

@@ -13,14 +13,15 @@ const Schedules = (): JSX.Element => {
   const [marks, setMarks] = useState<string[]>([]);
   const [scheduleState, setScheduleState] = useState<ScheduleCalcResponseType>();
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | false>();
-  const attendList = ["홍길동", "김철수", "김영희"];
+  // const attendList = ["홍길동", "김철수", "김영희"];
 
   useEffect(() => {
     //month상태가 바뀔 때마다 scheduleCalculator()호출해 일정들 가져오기
     if (channelId) {
       const year = selectedMonth.split("-")[0];
       const month = selectedMonth.split("-")[1];
-      scheduleCalculator({ channelId, year, month }).then((response) => {
+      // 결과를 받아 상태로 저장
+      scheduleCalculator({ channelId: Number(channelId), year, month }).then((response) => {
         response.scheduleMarks.map((schedule) => {
           setMarks((marks) => [...marks, ...schedule.marks]);
         });
@@ -29,6 +30,7 @@ const Schedules = (): JSX.Element => {
     }
   }, [channelId, selectedMonth]);
 
+  // 선택하는 날짜가 바뀔 때마다 날짜에 해당되는 일정정보를 set하기 위해
   useEffect(() => {
     if (scheduleState) {
       getScheduleInfo(selectedDate, scheduleState.scheduleList, scheduleState.scheduleMarks).then((response) => {
