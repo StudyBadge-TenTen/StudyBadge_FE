@@ -177,40 +177,33 @@ const ScheduleEdit = (): JSX.Element => {
 
   // 일정 등록을 클릭 시, post요청하는 함수
   const handleSubmitClick = async () => {
-    let result;
-
-    if (repeatState === "NONE") {
-      result = await postSchedule(Number(channelId), {
-        type: "single",
-        scheduleName: inputValue.scheduleName,
-        scheduleContent: inputValue.scheduleContent,
-        scheduleDate: selectedDate,
-        scheduleStartTime: `${time.start.join(":")}:00`,
-        scheduleEndTime: `${time.end.join(":")}:00`,
-      });
-    } else {
-      result = await postSchedule(Number(channelId), {
-        type: "repeat",
-        repeatCycle: repeatState,
-        repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
-        repeatEndDate: repeatEndDate,
-        scheduleName: inputValue.scheduleName,
-        scheduleContent: inputValue.scheduleContent,
-        scheduleDate: selectedDate,
-        scheduleStartTime: `${time.start.join(":")}:00`,
-        scheduleEndTime: `${time.end.join(":")}:00`,
-      });
-    }
-
-    console.log(result);
-
-    // post 성공 시와 실패 시 처리를 우선 아래와 같이 간단히 처리했습니다.
-    // 실제로는 따로 에러처리가 필요합니다.
-    if (result) {
+    try {
+      if (repeatState === "NONE") {
+        await postSchedule(Number(channelId), {
+          type: "single",
+          scheduleName: inputValue.scheduleName,
+          scheduleContent: inputValue.scheduleContent,
+          scheduleDate: selectedDate,
+          scheduleStartTime: `${time.start.join(":")}:00`,
+          scheduleEndTime: `${time.end.join(":")}:00`,
+        });
+      } else {
+        await postSchedule(Number(channelId), {
+          type: "repeat",
+          repeatCycle: repeatState,
+          repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
+          repeatEndDate: repeatEndDate,
+          scheduleName: inputValue.scheduleName,
+          scheduleContent: inputValue.scheduleContent,
+          scheduleDate: selectedDate,
+          scheduleStartTime: `${time.start.join(":")}:00`,
+          scheduleEndTime: `${time.end.join(":")}:00`,
+        });
+      }
       navigate(`/channel/${channelId}`);
-    } else {
+    } catch (error) {
+      console.log(error);
       alert("일정 등록에 실패하였습니다.");
-      throw new Error("일정 등록에 실패하였습니다.");
     }
   };
 
