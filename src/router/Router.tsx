@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
-import Main from "../pages/Main";
-import Error from "../pages/Error";
-import Profile from "../pages/Profile";
+import Main from "../pages/MainPage";
+import Error from "../pages/ErrorPage";
+import Profile from "../pages/ProfilePage";
 import ChannelPage from "../pages/ChannelPage";
 import ScheduleEditPage from "../pages/ScheduleEditPage";
 
