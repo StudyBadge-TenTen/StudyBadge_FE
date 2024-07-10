@@ -1,5 +1,5 @@
 import { RepeatSetterPropsType } from "../../../types/schedule-type";
-import { useSelectedDateStore } from "../../../store/schedule-state";
+import { useSelectedDateStore } from "../../../store/schedule-store";
 
 const RepeatSetter = ({ repeatState, setRepeatState, day, setSelector }: RepeatSetterPropsType): JSX.Element => {
   const { selectedDate } = useSelectedDateStore();
