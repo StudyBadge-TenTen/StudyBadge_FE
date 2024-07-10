@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import TimeSelector from "./leader/TimeSelector";
 import RepeatSetter from "./leader/RepeatSetter";
 import { RepeatCycleType, ScheduleType, SelectorType } from "../../types/schedule-type";
-import { useSelectedDateStore } from "../../store/schedule-state";
+import { useSelectedDateStore } from "../../store/schedule-store";
 import Calendar from "./Calendar";
 import { postSchedule } from "../../services/schedule-api";
 
