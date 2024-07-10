@@ -76,19 +76,15 @@ const getScheduleInfo = async (
 
   if (scheduleObject) {
     if (scheduleObject.placeId) {
-      const params = { scheduleId: scheduleObject.id, placeId: scheduleObject.placeId };
+      const params = { studyChannelId: scheduleObject.studyChannelId, placeId: scheduleObject.placeId };
       const { placeAddress } = await getPlace(params);
       scheduleInfo = {
-        name: scheduleObject.scheduleName,
-        content: scheduleObject.scheduleContent,
-        time: [scheduleObject.scheduleStartTime, scheduleObject.scheduleEndTime],
+        ...scheduleObject,
         placeAddress: placeAddress,
       };
     } else {
       scheduleInfo = {
-        name: scheduleObject.scheduleName,
-        content: scheduleObject.scheduleContent,
-        time: [scheduleObject.scheduleStartTime, scheduleObject.scheduleEndTime],
+        ...scheduleObject,
       };
     }
   }

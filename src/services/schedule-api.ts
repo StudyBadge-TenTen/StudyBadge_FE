@@ -1,17 +1,24 @@
-import axios from "axios";
-import { PlaceParamsType, ScheduleParamsType } from "../types/schedule-type";
+import { PlaceParamsType, PlaceType, ScheduleParamsType, SchedulePostType, ScheduleType } from "../types/schedule-type";
+import fetchCall from "./common";
 
 // todo: react-query로 호출 최소화하는 방법 적용하기
 const getSchedules = async ({ channelId, year, month }: ScheduleParamsType) => {
-  const res = await axios.get(`/api/study-channels/${channelId}/schedules?year=${year}&month=${month}`);
-  const schedules = res.data;
+  const schedules = await fetchCall<ScheduleType[]>(
+    `/api/study-channels/${channelId}/schedules?year=${year}&month=${month}`,
+    "get",
+  );
   return schedules;
 };
 
-const getPlace = async ({ scheduleId, placeId }: PlaceParamsType) => {
-  const res = await axios.get(`/api/study-channels/${scheduleId}/places/${placeId}`);
-  const placeInfo = res.data;
+const getPlace = async ({ studyChannelId, placeId }: PlaceParamsType) => {
+  const placeInfo = await fetchCall<PlaceType>(`/api/study-channels/${studyChannelId}/places/${placeId}`, "get");
   return placeInfo;
 };
 
-export { getSchedules, getPlace };
+const postSchedule = async (studyChannelId: number | string, scheduleInfo: SchedulePostType) => {
+  const result = await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}/schedules`, "post", scheduleInfo);
+
+  return result;
+};
+
+export { getSchedules, getPlace, postSchedule };

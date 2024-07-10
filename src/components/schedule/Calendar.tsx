@@ -6,7 +6,13 @@ import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedul
 import PrevMonthBtn from "./PrevMonthBtn";
 import NextMonthBtn from "./NextMonthBtn";
 
-const Calendar = ({ marks }: { marks: string[] }): JSX.Element => {
+const Calendar = ({
+  marks,
+  setRepeatEndDate,
+}: {
+  marks?: string[];
+  setRepeatEndDate?: React.Dispatch<React.SetStateAction<string>>;
+}): JSX.Element => {
   const curDate = new Date();
   const { setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
@@ -40,6 +46,12 @@ const Calendar = ({ marks }: { marks: string[] }): JSX.Element => {
   };
   const handleDayClick = (date: Date) => {
     const transDate = moment(date).format("YYYY-MM-DD");
+
+    if (!mark && setRepeatEndDate) {
+      setRepeatEndDate(() => transDate);
+      return;
+    }
+
     setSelectedDate(transDate);
   };
   const handleMonthClick = (date: Date) => {
@@ -50,6 +62,7 @@ const Calendar = ({ marks }: { marks: string[] }): JSX.Element => {
   return (
     <>
       <StyledCalendar
+        className={`calendar ${!mark && "absolute left-[-10px] z-10"}`}
         onChange={handleValueChange}
         onClickDay={handleDayClick}
         onClickMonth={handleMonthClick}
@@ -72,11 +85,11 @@ const Calendar = ({ marks }: { marks: string[] }): JSX.Element => {
         }}
         tileContent={({ date, view }) => {
           if (view !== "year") {
-            if (mark.find((markDate) => markDate === moment(date).format("YYYY-MM-DD"))) {
+            if (mark && mark.find((markDate) => markDate === moment(date).format("YYYY-MM-DD"))) {
               return (
                 <>
                   <div className="flex justify-center items-center relative absoluteDiv">
-                    <div className="dot w-3/4 h-2 bg-[#ffcd32] rounded-lg flex ml-px absolute top-[0.2px]"></div>
+                    <div className="dot w-3/4 h-2 bg-Yellow-1 rounded-lg flex ml-px absolute top-[0.2px]"></div>
                   </div>
                 </>
               );

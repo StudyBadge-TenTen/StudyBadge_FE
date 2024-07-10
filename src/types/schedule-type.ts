@@ -35,8 +35,8 @@ type RepeatMonthlyType =
   | "MONTHLY_THIRTY_ONE";
 
 interface ScheduleType {
-  id: number | string;
-  studyChannelId: number | string;
+  id: number;
+  studyChannelId: number;
   scheduleName: string;
   scheduleContent: string;
   scheduleDate: "YYYY-MM-DD" | string;
@@ -45,7 +45,8 @@ interface ScheduleType {
   repeatCycle?: RepeatCycleType;
   repeatSituation?: RepeatDailyType | RepeatWeeklyType | RepeatMonthlyType;
   repeatEndDate?: "YYYY-MM-DD" | string;
-  placeId?: number | string;
+  placeId?: number;
+  placeAddress?: string;
   repeated: boolean;
 }
 
@@ -63,7 +64,7 @@ interface MonthStoreType {
 }
 
 interface ScheduleParamsType {
-  channelId: string;
+  channelId: number;
   year: string;
   month: string;
 }
@@ -71,25 +72,53 @@ interface ScheduleParamsType {
 interface ScheduleCalcResponseType {
   scheduleList: ScheduleType[];
   scheduleMarks: {
-    scheduleId: string | number;
+    scheduleId: number;
     marks: string[];
   }[];
 }
 
-interface ScheduleInfoType {
+type SelectorType = "" | "start-hour" | "start-minute" | "end-hour" | "end-minute" | "repeat-check" | "repeatEndDate";
+
+interface TimeSelectorPropsType {
+  selector: SelectorType;
   name: string;
-  content: string;
-  time: string[];
-  placeAddress?: string;
+  setTime: React.Dispatch<
+    React.SetStateAction<{
+      start: string[];
+      end: string[];
+    }>
+  >;
+}
+
+type RepeatStateType = "NONE" | "DAILY" | "WEEKLY" | "MONTHLY";
+
+interface RepeatSetterPropsType {
+  repeatState: RepeatStateType;
+  setRepeatState: React.Dispatch<React.SetStateAction<RepeatStateType>>;
+  day: string | undefined;
+  setSelector: React.Dispatch<React.SetStateAction<SelectorType>>;
+}
+
+interface SchedulePostType {
+  type: "repeat" | "single";
+  scheduleName: string;
+  scheduleContent: string;
+  scheduleDate: "YYYY-MM-DD" | string;
+  scheduleStartTime: "00:00:00" | string;
+  scheduleEndTime: "00:00:00" | string;
+  repeatCycle?: RepeatCycleType;
+  repeatSituation?: string | number;
+  repeatEndDate?: "YYYY-MM-DD" | string;
+  placeId?: number;
 }
 
 // -------- 임시) 장소 관련 ----------
 interface PlaceParamsType {
-  scheduleId: string | number;
-  placeId: string | number;
+  studyChannelId: number;
+  placeId: number;
 }
 interface PlaceType {
-  id: string | number;
+  id: number;
   lat: number;
   lng: number;
   placeName: string;
@@ -97,6 +126,7 @@ interface PlaceType {
 }
 
 export type {
+  RepeatCycleType,
   RepeatDailyType,
   RepeatWeeklyType,
   ScheduleType,
@@ -105,7 +135,12 @@ export type {
   MonthStoreType,
   ScheduleParamsType,
   ScheduleCalcResponseType,
-  ScheduleInfoType,
+  SelectorType,
+  TimeSelectorPropsType,
+  RepeatStateType,
+  RepeatSetterPropsType,
+  SchedulePostType,
+  //
   PlaceParamsType,
   PlaceType,
 };

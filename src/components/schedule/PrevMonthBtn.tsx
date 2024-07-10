@@ -11,7 +11,11 @@ const PrevMonthBtn = (): JSX.Element => {
     setSelectedMonth(transDate);
   };
 
-  return <span onClick={() => updateMonth(selectedMonth)}>{"<"}</span>;
+  return (
+    <span onClick={() => updateMonth(selectedMonth)} className="calendar">
+      {"<"}
+    </span>
+  );
 };
 
 export default PrevMonthBtn;
