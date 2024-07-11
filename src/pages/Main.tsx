@@ -1,6 +1,5 @@
 import LoginUser from "./LoginUser";
 
-
 const Main = (): JSX.Element => {
   // 페이지 폴더 컴포넌트들은 여기에 로직 없이
   // return에 컴포넌트들을 담아 페이지에 보여주는 용으로만 사용하기로 해요!
@@ -9,7 +8,7 @@ const Main = (): JSX.Element => {
     <div className="">
       <LoginUser />
     </div>
-  )
+  );
 };
 
 export default Main;
