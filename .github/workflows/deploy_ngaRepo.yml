@@ -32,8 +32,8 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.NGA_AUTO_ACTIONS }}
         with:
           source-directory: 'output'
-          destination-github-username: [rabyeoljji]
-          destination-repository-name: [StudyBadge]
+          destination-github-username: rabyeoljji
+          destination-repository-name: StudyBadge
           user-email: ${{ secrets.NGA_EMAIL }}
           commit-message: ${{ github.event.commits[0].message }}
           target-branch: main
