@@ -31,7 +31,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.NGA_AUTO_ACTIONS }}
         with:
-          source-directory: 'StudyBadge/output'
+          source-directory: 'output'
           destination-github-username: rabyeoljji
           destination-repository-name: StudyBadge
           user-email: ${{ secrets.NGA_EMAIL }}
