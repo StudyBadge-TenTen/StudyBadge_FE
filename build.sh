@@ -1,7 +1,7 @@
   
 #!/bin/sh
 
-cd ./
+cd ../
 
 mkdir output
 
