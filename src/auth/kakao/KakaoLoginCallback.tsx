@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios'; // axios를 사용하여 백엔드 통신
 
 const KakaoLoginCallback: React.FC = () => {
   const location = useLocation();
@@ -8,28 +9,33 @@ const KakaoLoginCallback: React.FC = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const code = searchParams.get('code');
-    
-    if (code) {
-      // 실제로는 이 코드를 사용해 백엔드에서 인증을 처리해야 합니다.
-      // 여기서는 간단히 로컬 스토리지를 사용해 로그인 상태를 시뮬레이션합니다.
-      const mockUserData = {
-        id: 'kakao_' + Math.random().toString(36).substr(2, 9),
-        email: 'kakao_user@example.com',
-        name: '카카오 사용자'
-      };
 
-      const existingUser = localStorage.getItem('userData');
-      if (existingUser) {
-        // 기존 사용자: 로그인 처리
-        localStorage.setItem('isLoggedIn', 'true');
-        navigate('/');
-      } else {
-        // 신규 사용자: 회원가입 페이지로 이동
-        localStorage.setItem('tempUserData', JSON.stringify(mockUserData));
-        navigate('/SignUp');
+    const handleKakaoLogin = async (code: string) => {
+      try {
+        // 백엔드에 카카오 인증 코드를 전송하고 로그인 처리를 요청
+        const response = await axios.post('/api/kakao-login', { code });
+        
+        if (response.data.success) {
+          // 로그인 성공
+          localStorage.setItem('isLoggedIn', 'true');
+          // 필요한 경우 사용자 정보를 저장
+          localStorage.setItem('userData', JSON.stringify(response.data.user));
+          navigate('/'); // 메인 페이지로 이동
+        } else {
+          // 로그인 실패
+          console.error('카카오 로그인 실패:', response.data.message);
+          navigate('/LoginUser'); // 로그인 페이지로 이동
+        }
+      } catch (error) {
+        console.error('카카오 로그인 처리 중 오류 발생:', error);
+        navigate('/LoginUser'); // 오류 발생 시 로그인 페이지로 이동
       }
+    };
+
+    if (code) {
+      handleKakaoLogin(code);
     } else {
-      console.error('카카오 로그인 실패');
+      console.error('카카오 로그인 실패: 인증 코드 없음');
       navigate('/LoginUser');
     }
   }, [location, navigate]);

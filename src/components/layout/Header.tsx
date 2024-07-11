@@ -1,8 +1,15 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import LOGO from "../../assets/logo/STUDY-BADGE-LOGO_PNG.png";
 
 const Header = (): JSX.Element => {
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
   return (
-    // section 클래스에 css position sticky를 넣어서 스크롤을 내려도 검색바가 보이도록 했는데 별로면 말씀해주세요!
     <section className="header h-32 flex justify-center items-center bg-white sticky top-0 shadow-md z-50">
       <div className="w-[1025px] flex justify-between md:justify-center items-center">
         <button className="md:hidden search-btn ml-8">
@@ -17,11 +24,11 @@ const Header = (): JSX.Element => {
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
           </svg>
         </button>
-        <img src={LOGO} className="h-24 md:h-16"></img>
+        <img src={LOGO} className="h-24 md:h-16" alt="STUDY-BADGE-LOGO" />
         <input
           type="text"
           className="hidden md:inline-block w-1/2 h-12 border border-solid border-Gray-3 rounded-[50px] indent-5 mx-8"
-        ></input>
+        />
         <div className="user-container flex flex-col md:flex-row justify-center items-center">
           <div className="flex justify-center items-center">
             <button className="profile-btn mr-8 md:mr-4">
@@ -66,7 +73,12 @@ const Header = (): JSX.Element => {
               </svg>
             </button>
           </div>
-          <button className="hidden md:inline-block btn-blue">로그인</button>
+          <button
+            className="hidden md:inline-block btn-blue"
+            onClick={handleLoginClick}
+          >
+            로그인
+          </button>
         </div>
       </div>
     </section>

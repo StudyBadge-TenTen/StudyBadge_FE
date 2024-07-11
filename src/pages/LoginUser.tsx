@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
-import NaverLogin from "../components/login/NaverLogin";
-import KakaoLogin from "../components/login/KakaoLogin";
+import NaverLogin from "../components/layout/login/NaverLogin";
+import KakaoLogin from "../components/layout/login/KakaoLogin";
 
 // Zustand store 정의
 interface LoginStore {
