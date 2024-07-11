@@ -31,7 +31,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.NGA_AUTO_ACTIONS }}
         with:
-          source-directory: 'output'
+          source-directory: 'StudyBadge/output'
           destination-github-username: rabyeoljji
           destination-repository-name: StudyBadge
           user-email: ${{ secrets.NGA_EMAIL }}
@@ -41,3 +41,9 @@ jobs:
 
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        run: npx vercel --prod --token ${{ secrets.NGA_VERCEL }} --cwd ./StudyBadge/output
