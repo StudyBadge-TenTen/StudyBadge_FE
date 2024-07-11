@@ -4,7 +4,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 
 function App() {
-  // CI/CD 테스트용 주석 코드입니다3
+  // CI/CD 테스트용 주석 코드입니다4
   return (
     <BrowserRouter>
       <Header />
