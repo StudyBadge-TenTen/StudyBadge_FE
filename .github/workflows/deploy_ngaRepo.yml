@@ -42,8 +42,3 @@ jobs:
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        run: npx vercel --prod --token ${{ secrets.NGA_VERCEL }} --cwd ./StudyBadge/output
