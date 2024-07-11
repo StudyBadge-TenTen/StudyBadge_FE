@@ -1,6 +1,8 @@
   
 #!/bin/sh
 
+cd ./
+
 mkdir output
 
 cp -R ./StudyBadge_FE/* ./output
