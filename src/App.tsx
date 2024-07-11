@@ -16,13 +16,12 @@ function App() {
         <div className="w-[1025px] min-h-96 flex justify-center items-center">
           <Routes>
             <Route path="/*" element={<Router />} />
-            <Route path="/login" element={<LoginUser />} />
+            <Route path="/LoginUser" element={<LoginUser />} />
             <Route path="/SignUp" element={<SignUpUser />} />
             <Route path="/PasswordReset" element={<PasswordReset />} />
             <Route path="/auth/kakao/KakaoLoginCallback" element={<KakaoLoginCallback />} />
             <Route path="/auth/naver/NaverLoginCallback" element={<NaverLoginCallback />} />
           </Routes>
-          <Router />
         </div>
       </section>
       <Footer />

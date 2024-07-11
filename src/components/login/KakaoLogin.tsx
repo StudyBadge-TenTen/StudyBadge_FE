@@ -12,7 +12,7 @@ const KakaoLogin: React.FC = () => {
   return (
     <button 
       onClick={handleKakaoLogin}
-      className="w-full max-w-80 bg-yellow-400 text-black py-2 rounded mt-4 hover:bg-yellow-500 transition-all"
+      className="w-full max-w-80 btn-blue bg-yellow-400 text-black py-2 rounded mt-4 hover:bg-yellow-500 transition-all"
     >
       카카오 로그인
     </button>
