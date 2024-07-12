@@ -9,6 +9,7 @@ import PasswordReset from "../pages/PasswordReset";
 import KakaoLoginCallback from "../auth/kakao/KakaoLoginCallback";
 import NaverLoginCallback from "../auth/naver/NaverLoginCallback";
 import ProfilePage from "../pages/ProfilePage";
+import PaymentListPage from "../pages/PaymentListPage";
 
 const Router = (): JSX.Element => {
   return (
@@ -21,6 +22,7 @@ const Router = (): JSX.Element => {
       <Route path="/auth/kakao/KakaoLoginCallback" element={<KakaoLoginCallback />} />
       <Route path="/auth/naver/NaverLoginCallback" element={<NaverLoginCallback />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/paymentList" element={<PaymentListPage />} />
       <Route path="/channel/:channelId" element={<ChannelPage />} />
       <Route path="/channel/:channelId/schedule_edit" element={<ScheduleEditPage />} />
     </Routes>
