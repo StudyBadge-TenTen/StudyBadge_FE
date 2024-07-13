@@ -47,4 +47,13 @@ export const placeInfo = {
   placeAddress: "서울시 OO구 OO동 OO로 1길",
 };
 
-// ~~~ data
+// userInfo data
+export const userInfo = {
+  email: "studybadge@email.com",
+  name: "홍길동",
+  nickname: "김스뱃",
+  badgeLevel: "NONE",
+  account: "000000000000",
+  introduction: "안녕하세요, 프론트엔드 개발자 김스뱃입니다",
+  imgUrl: "",
+};

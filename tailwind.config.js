@@ -28,6 +28,7 @@ export default {
       },
       Red: {
         1: "#ff6666",
+        2: "#bf230b",
       },
     },
     extend: {

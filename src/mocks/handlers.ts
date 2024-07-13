@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { placeInfo, scheduleList } from "./data";
+import { placeInfo, scheduleList, userInfo } from "./data";
 
 export const handlers = [
   // schedule handlers
@@ -27,5 +27,11 @@ export const handlers = [
     return HttpResponse.json({}, { status: 201 });
   }),
 
-  // ~~ handlers
+  // profile handlers
+  http.put("/api/members/my-info/update", async ({ request }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "PUT /api/members/my-info/update" request`);
+    console.log(requestBody);
+    return HttpResponse.json(userInfo, { status: 200 });
+  }),
 ];
