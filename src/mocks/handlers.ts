@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { placeInfo, scheduleList } from "./data";
+import { paymentResponse, placeInfo, scheduleList, userInfo } from "./data";
 
 export const handlers = [
   // schedule handlers
@@ -27,5 +27,32 @@ export const handlers = [
     return HttpResponse.json({}, { status: 201 });
   }),
 
-  // ~~ handlers
+  // profile handlers
+  http.put("/api/members/my-info/update", async ({ request }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "PUT /api/members/my-info/update" request`);
+    console.log(requestBody);
+    return HttpResponse.json(userInfo, { status: 200 });
+  }),
+
+  // payment handlers
+  http.post("/api/v1/payments/toss", async ({ request }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "POST /api/v1/payments/toss" request`);
+    console.log(requestBody);
+    return HttpResponse.json(paymentResponse, { status: 200 });
+  }),
+
+  http.get("/api/v1/payments/toss/success", async ({ request }) => {
+    const url = new URL(request.url);
+
+    const paymentKey = url.searchParams.get("paymentKey");
+    const orderId = url.searchParams.get("orderId");
+    const amount = url.searchParams.get("amount");
+
+    console.log(
+      `Captured a "GET /api/v1/payments/toss/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}" request`,
+    );
+    return HttpResponse.json();
+  }),
 ];
