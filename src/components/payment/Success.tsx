@@ -25,6 +25,7 @@ const Success = (): JSX.Element => {
         if (paymentKey && orderId && amount) {
           const response = await getConfirmResponse(paymentKey, orderId, Number(amount));
           // response의 data를 저장할 필요가 생길 경우 아래 로직 작성
+          console.log(response);
         }
       } catch (error: any) {
         console.error("Error fetching data:", error);

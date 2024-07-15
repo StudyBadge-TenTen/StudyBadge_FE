@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import SelectAmount from "../payment/SelectAmount";
 import Checkout from "../payment/Checkout";
 import { useLocation, useNavigate } from "react-router";
-import Success from "../payment/Success";
-import Fail from "../payment/Fail";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
@@ -18,6 +16,8 @@ const Profile = (): JSX.Element => {
 
   useEffect(() => {
     console.log(location);
+    console.log(setUserImage); // 배포테스트를 위한 콘솔 코드
+
     return setIsEditMode(() => false);
   }, []);
 

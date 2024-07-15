@@ -1,8 +1,19 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+
 const Card = ({ studyInfo }: { studyInfo: string }): JSX.Element => {
   // props의 타입지정은 임시로 해 두었습니다.
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(studyInfo);
+  }, [studyInfo]);
 
   return (
-    <div className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer">
+    <div
+      onClick={() => navigate("/channel")}
+      className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer"
+    >
       <div className="badge flex justify-between items-center mb-2">
         <div className="badge-basic bg-Red-1 text-white">오프라인</div>
         <div className="badge-basic bg-Blue-2 text-white">컴퓨터/IT/개발</div>
