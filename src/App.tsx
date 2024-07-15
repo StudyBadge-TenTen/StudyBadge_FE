@@ -8,8 +8,8 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <section className="main min-h-96 flex justify-center items-center">
-        <div className="w-[1025px] min-h-96 flex justify-center items-center">
+      <section className="main min-h-screen flex justify-center items-center">
+        <div className="w-[1025px] min-h-screen flex justify-center items-center">
           <Router />
         </div>
       </section>

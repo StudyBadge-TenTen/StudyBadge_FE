@@ -12,12 +12,15 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.49.2",
+    "@tosspayments/payment-widget-sdk": "^0.11.1",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
+    "nanoid": "^5.0.7",
     "react": "^18.3.1",
     "react-calendar": "^5.0.0",
     "react-dom": "^18.3.1",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",

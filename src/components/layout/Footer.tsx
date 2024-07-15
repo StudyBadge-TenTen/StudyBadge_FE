@@ -2,7 +2,7 @@ import LOGO from "../../assets/logo/STUDY-BADGE-LOGO_PNG.png";
 
 const Footer = (): JSX.Element => {
   return (
-    <section className="h-52 flex justify-center items-center bg-[#1C4587]">
+    <section className="h-52 flex justify-center items-center bg-Blue-2">
       <div className="w-[1025px] h-52 flex justify-between items-center text-[4px] md:text-xs text-white">
         <div className="ml-8">
           Study Badge @ 2024. All rights reserved.
