@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import SelectAmount from "../payment/SelectAmount";
 import Checkout from "../payment/Checkout";
 import { useLocation, useNavigate } from "react-router";
-import Success from "../payment/Success";
-import Fail from "../payment/Fail";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
