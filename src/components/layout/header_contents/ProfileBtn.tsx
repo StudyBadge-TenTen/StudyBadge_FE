@@ -5,6 +5,7 @@ const ProfileBtn = (): JSX.Element => {
   // todo: 유저 전역 상태값 가져와 로그인 상태 판별
   // 로그인 상태에 따라 버튼 클릭 시 경로가 달라져야 함
   // 로그인o: 프로필페이지 / 로그인x: 로그인페이지
+  // 사용자 경험을 위해 로그인 페이지로 바로 이동하지 않고 안내 모달을 띄우고 확인을 클릭 시 이동하는 쪽을 고려
 
   // 임시 유저 상태값
   const [userState, setUserState] = useState(true);

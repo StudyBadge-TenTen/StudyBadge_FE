@@ -2,12 +2,22 @@ import SAMPLE_IMG from "../../assets/image/CAROUSEL_IMG_1.jpg";
 import GOLD_BADGE from "../../assets/GOLD-BADGE_PNG.png";
 import ProfileEdit from "./ProfileEdit";
 import { useEffect, useState } from "react";
+import SelectAmount from "../payment/SelectAmount";
+import Checkout from "../payment/Checkout";
+import { useLocation, useNavigate } from "react-router";
+import Success from "../payment/Success";
+import Fail from "../payment/Fail";
 
 const Profile = (): JSX.Element => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [userImage, setUserImage] = useState(SAMPLE_IMG);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [confirm, setConfirm] = useState(false);
+  const [chargeAmount, setChargeAmount] = useState(10000);
 
   useEffect(() => {
+    console.log(location);
     return setIsEditMode(() => false);
   }, []);
 
@@ -52,8 +62,21 @@ const Profile = (): JSX.Element => {
             <div className="text-xl">
               충전금액 : <span className="ml-4 font-bold">10,000원</span>
             </div>
-            <button className="btn-blue mt-8 md:mt-0">충전하기</button>
+            <button
+              onClick={() => {
+                navigate("/payment");
+              }}
+              className="btn-blue mt-8 md:mt-0"
+            >
+              충전하기
+            </button>
           </div>
+          {location.pathname === "/payment" && !confirm && (
+            <SelectAmount setConfirm={setConfirm} chargeAmount={chargeAmount} setChargeAmount={setChargeAmount} />
+          )}
+          {location.pathname === "/payment" && confirm && (
+            <Checkout setConfirm={setConfirm} chargeAmount={chargeAmount} />
+          )}
         </>
       )}
     </>
