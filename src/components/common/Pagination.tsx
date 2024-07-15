@@ -20,6 +20,11 @@ const Pagination = ({
   const [curPageGroup, setCurPageGroup] = useState(1);
   const [pageList, setPageList] = useState<number[]>([]);
 
+  // 배포 테스트를 위한 콘솔 코드
+  useEffect(() => {
+    console.log(setCurPage, setCurPageGroup);
+  }, [curPage]);
+
   useEffect(() => {
     let newPageList = [];
     const lastPage = curPageGroup * PAGE_COUNT;

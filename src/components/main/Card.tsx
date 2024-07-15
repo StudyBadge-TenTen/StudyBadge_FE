@@ -1,5 +1,11 @@
+import { useEffect } from "react";
+
 const Card = ({ studyInfo }: { studyInfo: string }): JSX.Element => {
   // props의 타입지정은 임시로 해 두었습니다.
+
+  useEffect(() => {
+    console.log(studyInfo);
+  }, [studyInfo]);
 
   return (
     <div className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer">

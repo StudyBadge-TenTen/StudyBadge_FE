@@ -21,6 +21,8 @@ const useLoginStore = create<LoginStore>((set) => ({
 
 // 가상의 로그인 함수 (실제로는 백엔드 API를 호출해야 합니다)
 const checkCredentials = async (email: string, password: string): Promise<boolean> => {
+  // 배포 테스트를 위한 콘솔코드입니다 추후 수정 바람
+  console.log(email, password);
   // 여기서 실제로 백엔드 API를 호출하여 이메일과 비밀번호를 확인해야 합니다
   // 이 예제에서는 간단히 true를 반환합니다
   return new Promise((resolve) => {

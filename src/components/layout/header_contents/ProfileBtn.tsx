@@ -8,7 +8,7 @@ const ProfileBtn = (): JSX.Element => {
   // 사용자 경험을 위해 로그인 페이지로 바로 이동하지 않고 안내 모달을 띄우고 확인을 클릭 시 이동하는 쪽을 고려
 
   // 임시 유저 상태값
-  const [userState, setUserState] = useState(true);
+  const [userState, _] = useState(true);
 
   const navigate = useNavigate();
 

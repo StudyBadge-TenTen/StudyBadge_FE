@@ -16,6 +16,8 @@ const Profile = (): JSX.Element => {
 
   useEffect(() => {
     console.log(location);
+    console.log(setUserImage); // 배포테스트를 위한 콘솔 코드
+
     return setIsEditMode(() => false);
   }, []);
 
