@@ -6,7 +6,8 @@ const Header = (): JSX.Element => {
   const navigate = useNavigate();
 
   return (
-    <section className="header h-32 flex justify-center items-center bg-white sticky top-0 shadow-md z-50">
+    // section 클래스에 css position sticky를 넣어서 스크롤을 내려도 검색바가 보이도록 했는데 별로면 말씀해주세요!
+    <section className="header h-32 flex justify-center items-center bg-white sticky top-0 shadow-md z-30">
       <div className="w-[1025px] flex justify-between md:justify-center items-center">
         <button className="md:hidden search-btn ml-8">
           <svg
