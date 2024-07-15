@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import CREATE_STUDY_SVG from "../assets/image/CREATE_STUDY_SVG.svg";
+import Pagination from "../components/common/Pagination";
 import Card from "../components/main/Card";
 
 const Main = (): JSX.Element => {
   // 페이지 폴더 컴포넌트들은 여기에 로직 없이
   // return에 컴포넌트들을 담아 페이지에 보여주는 용으로만 사용하기로 해요!
   // 이렇게 해야 나중에 해당 페이지에 속한 컴포넌트를 금방 찾아갈 수 있습니다!
-
   const navigate = useNavigate();
-  
+  const [curPage, setCurPage] = useState(1);
+
   const handleCreateStudy = () => {
-    navigate('/createStudy');
+    navigate("/createStudy");
   };
 
   return (
@@ -21,10 +24,12 @@ const Main = (): JSX.Element => {
           <p className="mb-8 text-center sm:text-start break-keep">
             지금 바로 새로운 스터디 그룹을 생성하고, 멤버들을 모아보세요!
           </p>
-          <button className="btn-blue w-fit" onClick={handleCreateStudy}>스터디 생성하기</button>
+          <button className="btn-blue w-fit" onClick={handleCreateStudy}>
+            스터디 생성하기
+          </button>
         </div>
         <div className="w-full sm:w-1/2 h-full bg-Gray-2 flex justify-center items-center mt-4 sm:mt-0 sm:ml-4">
-          image
+          <img src={CREATE_STUDY_SVG} alt="스터디 일러스트" />
         </div>
       </div>
       <div className="study-list w-full px-8 my-20 mt-40 flex flex-col justify-center items-center">
@@ -100,6 +105,7 @@ const Main = (): JSX.Element => {
         </div>
         <div className="study-cards-container w-full flex justify-center items-center flex-wrap">
           {/* 받은 채널 리스트의 길이만큼 map을 이용해 Card 생성 */}
+          {/* api: GET /api/study-channels?pageNumber=2&order=RECENT&type=ONLINE&category=IT */}
           <Card studyInfo={""} />
           <Card studyInfo={""} />
           <Card studyInfo={""} />
@@ -108,6 +114,7 @@ const Main = (): JSX.Element => {
           <Card studyInfo={""} />
         </div>
         {/* 페이지네이션 컴포넌트 */}
+        <Pagination curPage={curPage} setCurPage={setCurPage} />
       </div>
     </div>
   );
