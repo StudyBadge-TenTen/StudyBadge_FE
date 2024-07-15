@@ -59,7 +59,7 @@ const SignUpUser: React.FC = () => {
 
     try {
       // 회원가입 정보를 백엔드로 전송
-      const response = await axios.post("/api/signup", store);
+      const response = await axios.post("/api/members/sign-up", store);
       console.log("회원가입 정보 전송 성공:", response.data);
       setIsSubmitted(true);
     } catch (error) {
