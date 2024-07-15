@@ -106,7 +106,7 @@ const SignUpUser: React.FC = () => {
       {renderInput("비밀번호 확인", "checkPassword", "password", "비밀번호를 한 번 더 입력해주세요")}
       <button
         type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10"
+        className="btn-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10"
       >
         회원가입
       </button>

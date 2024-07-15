@@ -48,7 +48,7 @@ const LoginUser: React.FC = () => {
       alert("이메일과 비밀번호를 입력하세요.");
       return;
     }
-    
+
     try {
       const isValid = await checkCredentials(email, password);
       if (isValid) {
@@ -92,7 +92,7 @@ const LoginUser: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="w-full max-w-80 bg-blue-500 text-white py-2 rounded mt-4 hover:bg-blue-600 transition-all"
+          className="w-full max-w-80 btn-blue text-white py-2 rounded mt-4 hover:bg-blue-600 transition-all"
         >
           LOGIN
         </button>

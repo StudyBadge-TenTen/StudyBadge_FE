@@ -14,7 +14,7 @@ const NaverLogin: React.FC = () => {
   return (
     <button 
         onClick={handleNaverLogin}
-        className="w-full max-w-80 bg-green-500 text-white py-2 rounded mt-4"
+        className="w-full max-w-80 btn-blue text-white py-2 rounded mt-4"
     >
       네이버 로그인
     </button>
