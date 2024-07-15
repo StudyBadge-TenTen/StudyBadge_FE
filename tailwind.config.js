@@ -26,6 +26,10 @@ export default {
       Yellow: {
         1: "#FFCD32",
       },
+      Red: {
+        1: "#ff6666",
+        2: "#bf230b",
+      },
     },
     extend: {
       boxShadow: {
