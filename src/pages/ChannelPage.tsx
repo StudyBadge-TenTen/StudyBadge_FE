@@ -2,6 +2,8 @@ import ChannelBook from "../components/channel/ChannelBook";
 import KingOfAttendance from "../components/channel/KingOfAttendance";
 
 const ChannelPage = (): JSX.Element => {
+  // 함수 작성 금지
+
   return (
     <div className="w-full h-fit flex flex-col justify-center items-center">
       <div className="w-screen h-60 bg-Blue-2 flex justify-center items-center">
