@@ -110,7 +110,7 @@ const SignUpUser: React.FC = () => {
       {renderInput("계좌", "account", "text", "계좌번호를 입력해주세요")}
       {renderInput("비밀번호", "password", "password", "(영문,특수문자 포함 6~12자리)")}
       {renderInput("비밀번호 확인", "checkPassword", "password", "비밀번호를 한 번 더 입력해주세요")}
-      <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10">
+      <button type="submit" className="btn-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10">
         회원가입
       </button>
     </form>
