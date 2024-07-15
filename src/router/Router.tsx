@@ -29,6 +29,9 @@ const Router = (): JSX.Element => {
       <Route path="/paymentSuccess/*" element={<Success />} />
       <Route path="/paymentFail/*" element={<Fail />} />
       <Route path="/paymentList" element={<PaymentListPage />} />
+      {/* 임시 채널 테스트용 경로 */}
+      <Route path="/channel" element={<ChannelPage />} />
+      {/* 임시 채널 테스트용 경로 */}
       <Route path="/channel/:channelId" element={<ChannelPage />} />
       <Route path="/channel/:channelId/schedule_edit" element={<ScheduleEditPage />} />
       <Route path="/createStudy" element={<CreateStudy />} />
