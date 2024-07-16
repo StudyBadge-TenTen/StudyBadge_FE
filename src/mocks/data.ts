@@ -74,3 +74,115 @@ export const paymentResponse = {
   cancelReason: "cancelReason",
   createdAt: "createdAt",
 };
+
+// studyList data
+export const studyListResponse = {
+  totalPage: 2,
+  totalCount: 8,
+  pageNumber: 1,
+  pageSize: 6,
+  studyChannels: [
+    {
+      studyChannelId: 1,
+      name: "A 북스터디",
+      category: "IT",
+      description:
+        "A 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
+      recruitmentStatus: "RECRUITING",
+      meetingType: "ONLINE",
+      startDate: "2024.06.01",
+      endDate: "2024.09.01",
+      deposit: 10000,
+      viewCount: 45,
+      leader: {
+        id: 15125,
+        name: "홍길동",
+      },
+    },
+    {
+      studyChannelId: 2,
+      name: "B 북스터디",
+      category: "DEVELOPMENT",
+      description:
+        "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
+      recruitmentStatus: "RECRUITING",
+      meetingType: "OFFLINE",
+      startDate: "2024.09.01",
+      endDate: "2024.11.01",
+      deposit: 20000,
+      viewCount: 80,
+      leader: {
+        id: 15126,
+        name: "크레용",
+      },
+    },
+    {
+      studyChannelId: 3,
+      name: "C 북스터디",
+      category: "IT",
+      description:
+        "A 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
+      recruitmentStatus: "RECRUITING",
+      meetingType: "ONLINE",
+      startDate: "2024.06.01",
+      endDate: "2024.09.01",
+      deposit: 10000,
+      viewCount: 45,
+      leader: {
+        id: 15127,
+        name: "김철수",
+      },
+    },
+    {
+      studyChannelId: 4,
+      name: "D 북스터디",
+      category: "DEVELOPMENT",
+      description:
+        "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
+      recruitmentStatus: "RECRUITING",
+      meetingType: "OFFLINE",
+      startDate: "2024.09.01",
+      endDate: "2024.11.01",
+      deposit: 20000,
+      viewCount: 80,
+      leader: {
+        id: 15128,
+        name: "김영희",
+      },
+    },
+    {
+      studyChannelId: 5,
+      name: "E 북스터디",
+      category: "IT",
+      description:
+        "A 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
+      recruitmentStatus: "RECRUITING",
+      meetingType: "ONLINE",
+      startDate: "2024.06.01",
+      endDate: "2024.09.01",
+      deposit: 10000,
+      viewCount: 45,
+      leader: {
+        id: 15129,
+        name: "김스뱃",
+      },
+    },
+    {
+      studyChannelId: 6,
+      name: "F 북스터디",
+      category: "DEVELOPMENT",
+      description:
+        "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
+      recruitmentStatus: "RECRUITING",
+      meetingType: "OFFLINE",
+      startDate: "2024.09.01",
+      endDate: "2024.11.01",
+      deposit: 20000,
+      viewCount: 80,
+      leader: {
+        id: 15130,
+        name: "한스뱃",
+      },
+    },
+  ],
+};

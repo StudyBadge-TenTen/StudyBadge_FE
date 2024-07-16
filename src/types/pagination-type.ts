@@ -1,7 +1,9 @@
-interface PaginationType {
-  curPage: number;
-  setCurPage: React.Dispatch<React.SetStateAction<number>>;
+import { StudyListRequestType } from "./study-channel-type";
+
+interface PaginationPropsType {
+  filter: StudyListRequestType;
+  setFilter: (filter: StudyListRequestType) => void;
   dataListLength: number;
 }
 
-export type { PaginationType };
+export type { PaginationPropsType };
