@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { StudyCategoryType, StudyListObjectType } from "../../types/study-channel-type";
+import { useNavigate } from "react-router";
 
-const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element => {
+const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element => 
+  const navigate = useNavigate();
+
   useEffect(() => {
     console.log(studyInfo);
   }, [studyInfo]);
@@ -26,7 +29,10 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
   };
 
   return (
-    <div className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer">
+    <div
+      onClick={() => navigate("/channel")}
+      className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer"
+    >
       <div className="badge flex justify-between items-center mb-2">
         <div className="badge-basic bg-Red-1 text-white">
           {studyInfo.meetingType === "ONLINE" ? "온라인" : "오프라인"}
