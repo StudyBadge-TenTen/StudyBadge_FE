@@ -27,6 +27,10 @@ const StudyList = (): JSX.Element => {
   useEffect(() => {
     // 상단 로고를 클릭해 처음 상태로 돌아가는 것을 구현하기 위한 초기화 코드입니다
     if (location.pathname === "/") {
+      const element = document.getElementById("root");
+      if (element) {
+        element.scrollIntoView();
+      }
       setFilter(initialFilter);
     }
   }, [location]);
