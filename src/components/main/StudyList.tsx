@@ -64,7 +64,10 @@ const StudyList = (): JSX.Element => {
   };
 
   return (
-    <div className="study-list w-full px-8 my-20 mt-40 flex flex-col justify-center items-center">
+    <div
+      id="studyListContainer"
+      className="study-list w-full px-8 my-20 mt-40 flex flex-col justify-center items-center scroll-mt-32"
+    >
       <h2 className="text-3xl font-bold text-Blue-2 mb-10">스터디 채널</h2>
       <Filter />
       <div className="order-container w-full flex justify-end px-8 mb-4 relative">

@@ -21,6 +21,9 @@ const Header = (): JSX.Element => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setKeywordValue(inputValue ?? null);
+
+    const studyList = document.getElementById("studyListContainer");
+    studyList?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
