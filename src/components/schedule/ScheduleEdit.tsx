@@ -60,6 +60,12 @@ const ScheduleEdit = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    if (repeatState === "NONE") {
+      setRepeatEndDate(() => selectedDate);
+    }
+  }, [repeatState]);
+
+  useEffect(() => {
     if (originInfo) {
       if (repeatState === "NONE") {
         setNewSchedule({
