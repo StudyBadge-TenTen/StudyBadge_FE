@@ -1,42 +1,69 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import {
+  FilterStoreType,
+  KeywordStoreType,
+  StudyListRequestType,
+  StudyListStoreType,
+  StudyStoreType,
+} from "../types/study-channel-type";
 
-interface StudyState {
-  title: string;
-  description: string;
-  category: string;
-  startDate: string;
-  endDate: string;
-  maxParticipants: number;
-  meetingType: 'offline' | 'online';
-  location: string;
-  link: string;
-  fee: number;
-  setField: (field: keyof Omit<StudyState, 'setField' | 'resetForm'>, value: any) => void;
-  resetForm: () => void;
-}
-
-export const useStudyStore = create<StudyState>((set) => ({
-  title: '',
-  description: '',
-  category: '',
-  startDate: '',
-  endDate: '',
+const useStudyStore = create<StudyStoreType>((set) => ({
+  title: "",
+  description: "",
+  category: "",
+  startDate: "",
+  endDate: "",
   maxParticipants: 3,
-  meetingType: 'offline',
-  location: '',
-  link: '',
+  meetingType: "OFFLINE",
+  location: "",
+  link: "",
   fee: 0,
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-  resetForm: () => set({
-    title: '',
-    description: '',
-    category: '',
-    startDate: '',
-    endDate: '',
-    maxParticipants: 3,
-    meetingType: 'offline',
-    location: '',
-    link: '',
-    fee: 0,
-  }),
+  resetForm: () =>
+    set({
+      title: "",
+      description: "",
+      category: "",
+      startDate: "",
+      endDate: "",
+      maxParticipants: 3,
+      meetingType: "OFFLINE",
+      location: "",
+      link: "",
+      fee: 0,
+    }),
 }));
+
+const useStudyListStore = create<StudyListStoreType>((set) => ({
+  studyList: [],
+  setStudyList: (studyList) => set({ studyList: [...studyList] }),
+}));
+
+const initialFilter: StudyListRequestType = {
+  type: null,
+  category: null,
+  status: null,
+  order: "RECENT",
+  page: 1,
+};
+
+const useFilterStore = create(
+  persist<FilterStoreType>(
+    (set) => ({
+      filter: initialFilter,
+      setFilter: (filter) => set(() => ({ filter: filter })),
+    }),
+    {
+      name: "filterStorage",
+      storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
+);
+
+const useKeywordStore = create<KeywordStoreType>((set) => ({
+  keywordValue: null,
+  setKeywordValue: (keyword) => set({ keywordValue: keyword }),
+}));
+
+export { useStudyStore, useStudyListStore, initialFilter, useFilterStore, useKeywordStore };

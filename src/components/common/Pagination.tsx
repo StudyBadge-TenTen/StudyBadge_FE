@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { DATA_LENGTH_PER_PAGE, PAGE_COUNT } from "../../constants/page";
-import { PaginationType } from "../../types/pagination-type";
+import { PaginationPropsType } from "../../types/pagination-type";
 
-const Pagination = ({ curPage, setCurPage, dataListLength }: PaginationType): JSX.Element => {
+const Pagination = ({ filter, setFilter, dataListLength }: PaginationPropsType): JSX.Element => {
   const [curPageGroup, setCurPageGroup] = useState(1);
   const [pageList, setPageList] = useState<number[]>([]);
   const totalPage = Math.ceil(dataListLength / DATA_LENGTH_PER_PAGE);
@@ -34,7 +34,10 @@ const Pagination = ({ curPage, setCurPage, dataListLength }: PaginationType): JS
         setCurPageGroup((origin) => origin + 1);
       }
     } else if (target.classList.contains("page-btn")) {
-      setCurPage(() => Number(target.innerText));
+      setFilter({
+        ...filter,
+        page: Number(target.innerText),
+      });
     }
   };
 
@@ -47,7 +50,7 @@ const Pagination = ({ curPage, setCurPage, dataListLength }: PaginationType): JS
       {pageList.map((page) => (
         <button
           key={`page_${page}`}
-          className={`page-btn btn-blue rounded-none mt-10 ${page === curPage && "bg-Blue-1"}`}
+          className={`page-btn btn-blue rounded-none mt-10 ${page === filter.page && "bg-Blue-1"}`}
           onClick={(e) => handlePageClick(e)}
         >
           {page}
