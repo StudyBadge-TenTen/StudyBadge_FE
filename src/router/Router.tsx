@@ -6,8 +6,7 @@ import ScheduleEditPage from "../pages/ScheduleEditPage";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import PasswordReset from "../pages/PasswordReset";
-import KakaoLoginCallback from "../auth/kakao/KakaoLoginCallback";
-import NaverLoginCallback from "../auth/naver/NaverLoginCallback";
+import SocialLoginCallback from "../components/layout/login/SocialLoginCallback";
 import ProfilePage from "../pages/ProfilePage";
 import PaymentListPage from "../pages/PaymentListPage";
 import Success from "../components/payment/Success";
@@ -22,8 +21,7 @@ const Router = (): JSX.Element => {
       <Route path="/login" element={<Login />} />
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/PasswordReset" element={<PasswordReset />} />
-      <Route path="/auth/kakao/KakaoLoginCallback" element={<KakaoLoginCallback />} />
-      <Route path="/auth/naver/NaverLoginCallback" element={<NaverLoginCallback />} />
+      <Route path="/SocialLoginCallback" element={<SocialLoginCallback />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/payment" element={<ProfilePage />} />
       <Route path="/paymentSuccess/*" element={<Success />} />
