@@ -5,6 +5,7 @@ import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedul
 import { ScheduleCalcResponseType, ScheduleType } from "../../types/schedule-type";
 import { getScheduleInfo, scheduleCalculator } from "../../utils/schedule-function";
 import AddScheduleBtn from "../schedule/leader/AddScheduleBtn";
+import moment from "moment";
 
 const Schedules = (): JSX.Element => {
   const { channelId } = useParams();
@@ -13,6 +14,8 @@ const Schedules = (): JSX.Element => {
   const [marks, setMarks] = useState<string[]>([]);
   const [scheduleState, setScheduleState] = useState<ScheduleCalcResponseType>();
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | false>();
+  const today = new Date();
+  const todayString = moment(today).format("YYYY-MM-DD");
   // const attendList = ["홍길동", "김철수", "김영희"];
 
   useEffect(() => {
@@ -126,7 +129,7 @@ const Schedules = (): JSX.Element => {
         </div>
       </div>
       {/* 스터디 리더 용 일정등록/변경 버튼 */}
-      <AddScheduleBtn originInfo={scheduleInfo} />
+      {new Date(selectedDate) >= new Date(todayString) && <AddScheduleBtn originInfo={scheduleInfo} />}
     </>
   );
 };
