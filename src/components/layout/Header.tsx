@@ -43,13 +43,13 @@ const Header = (): JSX.Element => {
           </svg>
         </button>
         <img src={LOGO} className="h-24 md:h-16 cursor-pointer" alt="STUDY-BADGE-LOGO" onClick={() => navigate("/")} />
-        <form className="w-1/2 mx-8" onSubmit={handleSubmit}>
+        <form className="hidden md:inline-block w-1/2 mx-8" onSubmit={handleSubmit}>
           <input
             id="searchBar"
             type="text"
             value={inputValue}
             onChange={handleInputChange}
-            className="hidden md:inline-block w-full h-12 border border-solid border-Gray-3 rounded-[50px] indent-5"
+            className=" w-full h-12 border border-solid border-Gray-3 rounded-[50px] indent-5"
           />
         </form>
         <div className="user-container flex flex-col md:flex-row justify-center items-center">
