@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { loadPaymentWidget, PaymentWidgetInstance } from "@tosspayments/payment-widget-sdk";
-import { PaymentMethodsWidget } from "@tosspayments/payment-widget__types/types/index";
+import { PaymentMethodsWidget } from "../../types/payment-type";
 import { nanoid } from "nanoid";
 import { SelectAmountPropsType } from "../../types/payment-type";
 import { useNavigate } from "react-router";

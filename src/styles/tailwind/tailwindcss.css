@@ -12,4 +12,7 @@
   .badge-basic {
     @apply px-2 py-1 bg-[#DCE1E7] rounded-[50px] text-xs text-center;
   }
+  .input {
+    @apply w-full border border-solid border-Gray-2 rounded-[10px] px-3 py-2;
+  }
 }

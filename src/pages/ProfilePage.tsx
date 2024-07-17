@@ -4,6 +4,8 @@ import Profile from "../components/profile/Profile";
 const ProfilePage = (): JSX.Element => {
   const navigate = useNavigate();
 
+  // 함수 작성 금지
+
   return (
     <div className="w-full min-h-96 p-8 py-14">
       <h2 className="text-3xl text-Blue-2 font-bold">My Profile</h2>

@@ -49,4 +49,29 @@ interface FailResponseType {
   orderId: string;
 }
 
-export type { SelectAmountPropsType, PaymentBodyType, PaymentResponseType, ConfirmResponseType, FailResponseType };
+// 혹시 타입 인식이 안될 경우를 위해 따로 빼놓음
+interface PaymentMethodsWidget {
+  updateAmount: (amount: number, reason?: string | string[]) => void;
+  UPDATE_REASON: {
+    COUPON: string;
+    POINT: string;
+  };
+  on: (eventName: string, callback: (selectedPaymentMethod: string) => unknown) => void;
+  getSelectedPaymentMethod: () => {
+    type: "NORMAL" | "BRANDPAY" | "KEYIN" | "CUSTOM";
+    method?: string;
+    easyPay?: {
+      provider: string;
+    };
+    paymentMethodKey?: string;
+  };
+}
+
+export type {
+  SelectAmountPropsType,
+  PaymentBodyType,
+  PaymentResponseType,
+  ConfirmResponseType,
+  FailResponseType,
+  PaymentMethodsWidget,
+};

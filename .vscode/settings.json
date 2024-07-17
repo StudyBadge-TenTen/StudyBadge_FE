@@ -3,5 +3,5 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "cSpell.words": ["Kakao", "Naver", "tailwindcss", "tanstack", "tosspayments", "zustand"]
+  "cSpell.words": ["BRANDPAY", "Kakao", "KEYIN", "Naver", "tailwindcss", "tanstack", "tosspayments", "zustand"]
 }
