@@ -9,10 +9,14 @@ const ProfileEdit = (): JSX.Element => {
     nickname: "",
     introduction: "",
     account: "",
+    accountBank: "",
     imgUrl: "",
   });
   const [imageFile, setImageFile] = useState<File>();
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const nicknameRef = useRef<HTMLInputElement>(null);
+  const accountRef = useRef<HTMLInputElement>(null);
+  const accountBankRef = useRef<HTMLSelectElement>(null);
 
   // input 값의 change를 감지해 상태로 저장
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -71,6 +75,31 @@ const ProfileEdit = (): JSX.Element => {
 
   // 프로필 수정을 저장할 때 반영하도록 하는 함수
   const handleSaveClick = async (profileInfo: ProfileInfoType, imageFile: ProfilePutType["file"]) => {
+    // 계좌정보 값 필수 체크
+    if (accountRef.current) {
+      if (!accountRef.current.value) {
+        alert("계좌정보 기재는 필수입니다.");
+        accountRef.current.classList.add("outline-Red-2");
+        accountRef.current.focus();
+        return;
+      }
+      if (accountRef.current.value.length < 10) {
+        alert("올바른 계좌번호가 아닙니다. 계좌번호를 다시 한 번 확인해주시기 바랍니다.");
+        accountRef.current.classList.add("outline-Red-2");
+        accountRef.current.focus();
+        return;
+      }
+    }
+
+    if (nicknameRef.current) {
+      if (!nicknameRef.current.value) {
+        alert("닉네임 입력은 필수입니다.");
+        nicknameRef.current.classList.add("outline-Red-2");
+        nicknameRef.current.focus();
+        return;
+      }
+    }
+
     const profileObj = {
       memberUpdateRequest: profileInfo,
       file: imageFile,
@@ -120,6 +149,8 @@ const ProfileEdit = (): JSX.Element => {
             className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2 mb-8"
             value={profileInfo.nickname}
             onChange={handleInputChange}
+            ref={nicknameRef}
+            required
           ></input>
           <label htmlFor="editIntroduction" className="mb-2 text-Blue-2">
             소개
@@ -143,10 +174,23 @@ const ProfileEdit = (): JSX.Element => {
             id="editAccount"
             name="editAccount"
             type="text"
-            className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2 mb-8"
+            className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2"
             value={profileInfo.account}
             onChange={handleInputChange}
+            ref={accountRef}
+            required
           ></input>
+          {/* 은행 선택 드롭다운 - 추후 은행 리스트 길이만큼 map으로 option생성 */}
+          <select
+            name="bank"
+            id="bankDropdown"
+            className="w-fit p-1 border border-solid border-Gray-2 rounded-[10px] mt-2 mb-8"
+            value={profileInfo.accountBank}
+            ref={accountBankRef}
+          >
+            <option value="">-- 금융기관을 선택해주세요 --</option>
+            <option value="국민">KB국민</option>
+          </select>
           <button onClick={() => handleSaveClick(profileInfo, imageFile)} className="btn-blue w-fit self-center mt-10">
             저장하기
           </button>
