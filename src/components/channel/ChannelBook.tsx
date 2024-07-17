@@ -1,11 +1,6 @@
-import { useEffect } from "react";
 import Schedules from "./Schedules";
 
-const ChannelBook = ({ isLeader }: { isLeader: boolean }): JSX.Element => {
-  useEffect(() => {
-    console.log(isLeader);
-  }, [isLeader]);
-
+const ChannelBook = (): JSX.Element => {
   return (
     <>
       <div className="container w-fit min-w-80 h-fit flex flex-col rounded-[50px] shadow-card">

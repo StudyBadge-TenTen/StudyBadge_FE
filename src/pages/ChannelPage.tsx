@@ -1,4 +1,4 @@
-import ChannelBook from "../components/channel/ChannelBook";
+import { Outlet } from "react-router";
 import KingOfAttendance from "../components/channel/KingOfAttendance";
 
 const ChannelPage = (): JSX.Element => {
@@ -12,7 +12,7 @@ const ChannelPage = (): JSX.Element => {
         </div>
       </div>
       <div className="w-full h-fit my-24 flex justify-center items-center">
-        <ChannelBook isLeader={true} />
+        <Outlet />
       </div>
     </div>
   );
