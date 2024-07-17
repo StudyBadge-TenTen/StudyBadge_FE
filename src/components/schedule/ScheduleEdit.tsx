@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import AddPlaceBtn from "./leader/AddPlaceBtn";
 import { useLocation, useNavigate, useParams } from "react-router";
-import TimeSelector from "./leader/TimeSelector";
-import RepeatSetter from "./leader/RepeatSetter";
 import { RepeatCycleType, ScheduleType, SelectorType } from "../../types/schedule-type";
-import { useSelectedDateStore } from "../../store/schedule-store";
-import Calendar from "./Calendar";
-import { postSchedule } from "../../services/schedule-api";
+import { useNewScheduleStore, useSelectedDateStore } from "../../store/schedule-store";
+import { situationCalculator } from "../../utils/schedule-function";
+import ConfirmModal from "./leader/ConfirmModal";
+import Setters from "./leader/Setters";
 
 const ScheduleEdit = (): JSX.Element => {
   const { channelId } = useParams();
@@ -15,11 +14,24 @@ const ScheduleEdit = (): JSX.Element => {
     state: { originInfo },
   }: { state: { originInfo: false | ScheduleType | undefined } } = useLocation();
   const { selectedDate } = useSelectedDateStore();
-  const [inputValue, setInputValue] = useState({ scheduleName: "", scheduleContent: "" });
   const [selector, setSelector] = useState<SelectorType>("");
-  const [time, setTime] = useState({ start: ["00", "00"], end: ["00", "00"] });
+  const [inputValue, setInputValue] = useState({
+    name: originInfo ? originInfo.scheduleName : "",
+    content: originInfo ? originInfo.scheduleContent : "",
+  });
+  const [time, setTime] = useState({
+    start: ["00", "00"],
+    end: ["00", "00"],
+  });
   const [repeatState, setRepeatState] = useState<RepeatCycleType | "NONE">("NONE");
   const [repeatEndDate, setRepeatEndDate] = useState("NONE");
+  const [placeId, setPlaceId] = useState<number>(); // 맵에서 id를 넘겨받아 세팅
+  const { newSchedule, setNewSchedule } = useNewScheduleStore();
+  const [modalInfo, setModalInfo] = useState({
+    isOpen: false,
+    modalFor: "EDIT",
+    isAfterCheck: false,
+  });
 
   const selectedDay = new Date(selectedDate).getDay();
 
@@ -27,62 +39,107 @@ const ScheduleEdit = (): JSX.Element => {
     // 드롭다운모달 밖을 클릭할 때를 감지하기 위한 이벤트 등록
     window.addEventListener("click", (e) => handleSelectorReset(e));
 
-    // 기존에 등록된 일정이 있을 경우
+    // 기존에 등록된 일정이 있을 경우 등록된 일정으로 상태 세팅
     if (originInfo) {
       setTime(() => ({
         start: [originInfo.scheduleStartTime.split(":")[0], originInfo.scheduleStartTime.split(":")[1]],
         end: [originInfo.scheduleEndTime.split(":")[0], originInfo.scheduleEndTime.split(":")[1]],
       }));
-
       // 반복일정인 경우
       if (originInfo.repeated && originInfo.repeatCycle) {
         setRepeatState(() => originInfo.repeatCycle!);
         setRepeatEndDate(() => originInfo.repeatEndDate!);
+      }
+      // 오프라인 일정의 경우
+      if (originInfo.placeId) {
+        setPlaceId(() => originInfo.placeId);
       }
     }
 
     return window.removeEventListener("click", (e) => handleSelectorReset(e));
   }, []);
 
+  useEffect(() => {
+    if (repeatState === "NONE") {
+      setRepeatEndDate(() => selectedDate);
+    }
+  }, [repeatState]);
+
+  useEffect(() => {
+    if (originInfo) {
+      if (repeatState === "NONE") {
+        setNewSchedule({
+          memberId: 1, // 유저 아이디 필요
+          scheduleId: originInfo.id,
+          scheduleName: inputValue.name,
+          scheduleContent: inputValue.content,
+          originType: originInfo.repeated ? "repeat" : "single",
+          editType: "single",
+          selectedDate: selectedDate,
+          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
+          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
+          placeId: placeId ? placeId : null,
+        });
+      } else {
+        setNewSchedule({
+          memberId: 1, // 유저 아이디 필요
+          scheduleId: originInfo.id,
+          scheduleName: inputValue.name,
+          scheduleContent: inputValue.content,
+          originType: originInfo.repeated ? "repeat" : "single",
+          editType: "repeat",
+          selectedDate: selectedDate,
+          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
+          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
+          repeatCycle: repeatState,
+          repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
+          repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
+          placeId: placeId ? placeId : null,
+        });
+      }
+    } else {
+      if (repeatState === "NONE") {
+        setNewSchedule({
+          memberId: 1, // 유저 아이디 필요
+          scheduleDate: selectedDate,
+          scheduleName: inputValue.name,
+          scheduleContent: inputValue.content,
+          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
+          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
+          placeId: placeId ? placeId : null,
+        });
+      } else {
+        setNewSchedule({
+          memberId: 1, // 유저 아이디 필요
+          scheduleDate: selectedDate,
+          scheduleName: inputValue.name,
+          scheduleContent: inputValue.content,
+          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
+          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
+          repeatCycle: repeatState,
+          repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
+          repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
+          placeId: placeId ? placeId : null,
+        });
+      }
+    }
+  }, [selectedDate, inputValue, repeatState, repeatEndDate, placeId, time]);
+
   // 일정 이름, 내용 input의 handler함수
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === "scheduleName") {
       setInputValue((origin) => ({
         ...origin,
-        scheduleName: e.target.value,
+        name: e.target.value,
       }));
     }
     if (e.target.id === "scheduleContent") {
       setInputValue((origin) => ({
         ...origin,
-        scheduleContent: e.target.value,
+        content: e.target.value,
       }));
     }
   };
-
-  // 설정 클릭 시, 드롭다운모달을 활성화하기위한 함수
-  const handleSelectorClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const btn = e.target as HTMLButtonElement;
-    if (btn.classList.contains("start-hour")) {
-      setSelector(() => "start-hour");
-    }
-    if (btn.classList.contains("start-minute")) {
-      setSelector(() => "start-minute");
-    }
-    if (btn.classList.contains("end-hour")) {
-      setSelector(() => "end-hour");
-    }
-    if (btn.classList.contains("end-minute")) {
-      setSelector(() => "end-minute");
-    }
-    if (btn.id === "repeat-check") {
-      setSelector(() => "repeat-check");
-    }
-    if (btn.id === "repeatEndDate") {
-      setSelector(() => "repeatEndDate");
-    }
-  };
-
   // 드롭다운모달을 닫기 위한 함수
   const handleSelectorReset = (e: MouseEvent) => {
     e.stopPropagation();
@@ -102,116 +159,58 @@ const ScheduleEdit = (): JSX.Element => {
       }
     }
   };
-
-  // 숫자로 된 값을 요일로 바꾸는 함수
-  const transDay = (selectedDay: number) => {
-    let result;
-    switch (selectedDay) {
-      case 0:
-        result = "일요일";
-        break;
-      case 1:
-        result = "월요일";
-        break;
-      case 2:
-        result = "화요일";
-        break;
-      case 3:
-        result = "수요일";
-        break;
-      case 4:
-        result = "목요일";
-        break;
-      case 5:
-        result = "금요일";
-        break;
-      case 6:
-        result = "토요일";
-        break;
-
-      default:
-        break;
-    }
-
-    return result;
-  };
-
-  // 반복 조건을 post할 데이터타입으로 반환하는 함수
-  const situationCalculator = (repeatState: RepeatCycleType, selectedDate: string, selectedDay: number) => {
-    let result;
-
-    if (repeatState === "DAILY") {
-      result = "EVERYDAY";
-    }
-    if (repeatState === "WEEKLY") {
-      switch (selectedDay) {
-        case 0:
-          result = "SUNDAY";
-          break;
-        case 1:
-          result = "MONDAY";
-          break;
-        case 2:
-          result = "TUESDAY";
-          break;
-        case 3:
-          result = "WEDNESDAY";
-          break;
-        case 4:
-          result = "THURSDAY";
-          break;
-        case 5:
-          result = "FRIDAY";
-          break;
-        case 6:
-          result = "SATURDAY";
-          break;
-      }
-    }
-    if (repeatState === "MONTHLY") {
-      result = Number(selectedDate.split("-")[2]);
-    }
-
-    return result;
-  };
-
-  // 일정 등록을 클릭 시, post요청하는 함수
+  // 일정 저장을 클릭 시, 확인 모달 띄우기
   const handleSubmitClick = async () => {
-    try {
-      if (repeatState === "NONE") {
-        await postSchedule(Number(channelId), {
-          type: "single",
-          scheduleName: inputValue.scheduleName,
-          scheduleContent: inputValue.scheduleContent,
-          scheduleDate: selectedDate,
-          scheduleStartTime: `${time.start.join(":")}:00`,
-          scheduleEndTime: `${time.end.join(":")}:00`,
-        });
+    if (
+      new Date(selectedDate + " " + `${time.start[0]}:${time.start[1]}:00`) >=
+      new Date(selectedDate + " " + `${time.end[0]}:${time.end[1]}:00`)
+    ) {
+      alert("종료 시간은 반드시 시작 시간보다 이후여야 합니다.");
+      return;
+    } else if (repeatEndDate < selectedDate) {
+      alert("반복 종료일은 반드시 선택한 날짜 이후여야 합니다.");
+      return;
+    } else if (originInfo) {
+      // 일정 수정
+      if (originInfo.repeated && repeatState === "NONE") {
+        // 반복 -> 단일 수정 시
+        setModalInfo(() => ({
+          isOpen: true,
+          modalFor: "EDIT",
+          isAfterCheck: true,
+        }));
       } else {
-        await postSchedule(Number(channelId), {
-          type: "repeat",
-          repeatCycle: repeatState,
-          repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
-          repeatEndDate: repeatEndDate,
-          scheduleName: inputValue.scheduleName,
-          scheduleContent: inputValue.scheduleContent,
-          scheduleDate: selectedDate,
-          scheduleStartTime: `${time.start.join(":")}:00`,
-          scheduleEndTime: `${time.end.join(":")}:00`,
-        });
+        // 나머지
+        setModalInfo(() => ({
+          isOpen: true,
+          modalFor: "EDIT",
+          isAfterCheck: false,
+        }));
       }
-      navigate(`/channel/${channelId}`);
-    } catch (error) {
-      console.log(error);
-      alert("일정 등록에 실패하였습니다.");
+    } else {
+      // 일정 생성
+      setModalInfo(() => ({
+        isOpen: true,
+        modalFor: "EDIT",
+        isAfterCheck: false,
+      }));
     }
   };
+  // 일정 삭제 클릭 시, 확인 모달 띄우기
+  const handleDeleteClick = () => {
+    // 삭제 확인 모달 띄우기
+    if (originInfo) {
+      setModalInfo(() => ({
+        isOpen: true,
+        modalFor: "DELETE",
+        isAfterCheck: originInfo.repeated,
+      }));
+    }
+  };
+  // 모달의 예/아니오 버튼 클릭 시 서버로 전송
 
   return (
     <div className="w-full h-fit flex flex-col justify-center items-center">
-      <div className="w-screen h-60 bg-Blue-2 flex justify-center items-center">
-        <div className="w-[1025px] flex flex-col justify-center items-center"></div>
-      </div>
       <div className="container w-fit min-w-80 h-fit flex flex-col rounded-[50px] shadow-card my-16">
         <div className="text-white h-20 bg-Blue-2 rounded-t-[50px] flex justify-center items-center text-lg">
           일정 등록
@@ -222,116 +221,36 @@ const ScheduleEdit = (): JSX.Element => {
               <input
                 id="scheduleName"
                 type="text"
-                placeholder="일정 이름"
+                placeholder="일정 이름 (*최대 한글 기준 20자)"
                 defaultValue={originInfo ? originInfo.scheduleName : undefined}
-                value={inputValue.scheduleName}
+                value={inputValue.name}
                 onChange={(e) => handleChange(e)}
                 className="w-full p-4 px-6 bg-Gray-1 border-b border-solid border-Gray-3 rounded-t-[30px]"
+                maxLength={20}
+                required
               />
               <input
                 id="scheduleContent"
                 type="text"
-                placeholder="내용"
+                placeholder="내용 (*최대 한글 기준 70자)"
                 defaultValue={originInfo ? originInfo.scheduleContent : undefined}
-                value={inputValue.scheduleContent}
+                value={inputValue.content}
                 onChange={(e) => handleChange(e)}
                 className="w-full p-4 px-6 bg-Gray-1 rounded-b-[30px]"
+                maxLength={70}
               />
             </div>
-            <div className="bg-Gray-1 w-full h-fit rounded-[30px] relative">
-              <div className="p-4 px-6 border-b border-solid border-Gray-3 flex items-center relative">
-                <label htmlFor="scheduleStartTime" className="mr-8">
-                  시작시간
-                </label>
-                <div id="scheduleStartTime" className="bg-Gray-1 flex items-center">
-                  <button
-                    type="button"
-                    onClick={(e) => handleSelectorClick(e)}
-                    className="w-fit min-w-4 start-hour bg-white text-center px-4 py-1 rounded-[50px] mr-2"
-                  >
-                    {time.start[0]}
-                  </button>
-                  <span className="mr-4">시</span>
-                  <button
-                    type="button"
-                    onClick={(e) => handleSelectorClick(e)}
-                    className="w-fit min-w-4 start-minute bg-white text-center px-4 py-1 rounded-[50px] mr-2"
-                  >
-                    {time.start[1]}
-                  </button>
-                  <span>분</span>
-                </div>
-                <TimeSelector name="start" selector={selector} setTime={setTime} />
-              </div>
-              <div className="p-4 px-6 border-b border-solid border-Gray-3 flex items-center relative">
-                <label htmlFor="scheduleEndTime" className="mr-8">
-                  종료시간
-                </label>
-                <div id="scheduleEndTime" className="bg-Gray-1 flex items-center">
-                  <button
-                    type="button"
-                    onClick={(e) => handleSelectorClick(e)}
-                    className="w-fit min-w-4 end-hour bg-white text-center px-4 py-1 rounded-[50px] mr-2"
-                  >
-                    {time.end[0]}
-                  </button>
-                  <span className="mr-4">시</span>
-                  <button
-                    type="button"
-                    onClick={(e) => handleSelectorClick(e)}
-                    className="w-fit min-w-4 end-minute bg-white text-center px-4 py-1 rounded-[50px] mr-2"
-                  >
-                    {time.end[1]}
-                  </button>
-                  <span>분</span>
-                </div>
-                <TimeSelector name="end" selector={selector} setTime={setTime} />
-              </div>
-              <div className="p-4 px-6 border-b border-solid border-Gray-3 flex items-center">
-                <label htmlFor="repeat-check" className="mr-16">
-                  반복
-                </label>
-                <button
-                  type="button"
-                  id="repeat-check"
-                  onClick={(e) => handleSelectorClick(e)}
-                  className="w-40 bg-white py-1 rounded-[50px] flex justify-center items-center"
-                >
-                  {repeatState === "NONE" && <>없음</>}
-                  {repeatState === "DAILY" && <>매일</>}
-                  {repeatState === "WEEKLY" && <>매주 {transDay(selectedDay)}</>}
-                  {repeatState === "MONTHLY" && <>매월 {selectedDate.split("-")[2]}일</>}
-                </button>
-              </div>
-              {selector === "repeat-check" && (
-                <>
-                  <RepeatSetter
-                    repeatState={repeatState}
-                    setRepeatState={setRepeatState}
-                    day={transDay(selectedDay)}
-                    setSelector={setSelector}
-                  />
-                </>
-              )}
-              <div className={`${repeatState === "NONE" && "opacity-0"} p-4 px-6 flex items-center`}>
-                <label htmlFor="repeatEndDate" className="mr-8">
-                  종료날짜
-                </label>
-                <button
-                  type="button"
-                  id="repeatEndDate"
-                  onClick={(e) => handleSelectorClick(e)}
-                  className="w-40 bg-white py-1 rounded-[50px] flex justify-center items-center"
-                >
-                  {repeatEndDate === "NONE" ? `${selectedDate}` : `${repeatEndDate}`}
-                </button>
-              </div>
-              {selector === "repeatEndDate" && (
-                <>
-                  <Calendar setRepeatEndDate={setRepeatEndDate} />
-                </>
-              )}
-            </div>
+            <Setters
+              selector={selector}
+              setSelector={setSelector}
+              time={time}
+              setTime={setTime}
+              repeatState={repeatState}
+              selectedDay={selectedDay}
+              setRepeatState={setRepeatState}
+              repeatEndDate={repeatEndDate}
+              setRepeatEndDate={setRepeatEndDate}
+            />
             {/* 오프라인 채널일 경우 장소 선택 버튼 - 클릭하면 맵 페이지로 이동 */}
             {/* 돌아오면서 placeId를 navigate의 state로 전달해주는 방향이면 좋을 듯*/}
             <AddPlaceBtn />
@@ -345,10 +264,20 @@ const ScheduleEdit = (): JSX.Element => {
             </button>
           </div>
           {/* 일정 수정일 경우 보여야할 삭제 버튼 */}
-          <button type="button" className="btn-red w-2/3 mt-8 self-center">
-            일정 삭제
-          </button>
+          {originInfo && (
+            <button type="button" onClick={() => handleDeleteClick()} className="btn-red w-2/3 mt-8 self-center">
+              일정 삭제
+            </button>
+          )}
         </form>
+        <ConfirmModal
+          channelId={channelId}
+          originInfo={originInfo}
+          modalInfo={modalInfo}
+          setModalInfo={setModalInfo}
+          newSchedule={newSchedule}
+          repeatState={repeatState}
+        />
       </div>
     </div>
   );

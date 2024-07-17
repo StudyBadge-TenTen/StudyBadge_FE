@@ -1,3 +1,4 @@
+type ScheduleRepeatType = "single" | "repeat";
 type RepeatCycleType = "DAILY" | "WEEKLY" | "MONTHLY";
 type RepeatDailyType = "EVERYDAY";
 type RepeatWeeklyType = "SUNDAY" | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY";
@@ -99,17 +100,111 @@ interface RepeatSetterPropsType {
   setSelector: React.Dispatch<React.SetStateAction<SelectorType>>;
 }
 
-interface SchedulePostType {
-  type: "repeat" | "single";
+interface SettersPropsType {
+  selector: SelectorType;
+  setSelector: React.Dispatch<React.SetStateAction<SelectorType>>;
+  time: {
+    start: string[];
+    end: string[];
+  };
+  setTime: React.Dispatch<
+    React.SetStateAction<{
+      start: string[];
+      end: string[];
+    }>
+  >;
+  repeatState: RepeatCycleType | "NONE";
+  setRepeatState: React.Dispatch<React.SetStateAction<RepeatCycleType | "NONE">>;
+  selectedDay: number;
+  repeatEndDate: "YYYY-MM-DD" | string;
+  setRepeatEndDate: React.Dispatch<React.SetStateAction<string>>;
+}
+
+interface SingleSchedulePostType {
+  memberId: 1;
   scheduleName: string;
   scheduleContent: string;
   scheduleDate: "YYYY-MM-DD" | string;
   scheduleStartTime: "00:00:00" | string;
   scheduleEndTime: "00:00:00" | string;
-  repeatCycle?: RepeatCycleType;
-  repeatSituation?: string | number;
-  repeatEndDate?: "YYYY-MM-DD" | string;
-  placeId?: number;
+}
+interface RepeatSchedulePostType {
+  memberId: 1;
+  scheduleName: string;
+  scheduleContent: string;
+  scheduleDate: "YYYY-MM-DD" | string;
+  scheduleStartTime: "00:00:00" | string;
+  scheduleEndTime: "00:00:00" | string;
+  repeatCycle: RepeatCycleType;
+  repeatSituation: RepeatDailyType | RepeatMonthlyType | RepeatWeeklyType;
+  repeatEndDate: "YYYY-MM-DD" | string;
+}
+interface ToSingleSchedulePutType {
+  memberId: number;
+  scheduleId: number;
+  scheduleName: string;
+  scheduleContent: string;
+  originType: ScheduleRepeatType;
+  editType: ScheduleRepeatType;
+  selectedDate: "YYYY-MM-DD" | string;
+  scheduleStartTime: "00:00:00" | string;
+  scheduleEndTime: "00:00:00" | string;
+  placeId: null | number;
+}
+interface ToRepeatSchedulePutType {
+  memberId: number;
+  scheduleId: number;
+  scheduleName: string;
+  scheduleContent: string;
+  originType: ScheduleRepeatType;
+  editType: ScheduleRepeatType;
+  selectedDate: "YYYY-MM-DD" | string;
+  scheduleStartTime: "00:00:00" | string;
+  scheduleEndTime: "00:00:00" | string;
+  repeatCycle: RepeatCycleType;
+  repeatSituation: RepeatDailyType | RepeatMonthlyType | RepeatWeeklyType;
+  repeatEndDate: "YYYY-MM-DD" | string;
+  placeId: null | number;
+}
+
+type NewScheduleType =
+  | {}
+  | SingleSchedulePostType
+  | RepeatSchedulePostType
+  | ToSingleSchedulePutType
+  | ToRepeatSchedulePutType;
+
+interface NewScheduleStoreType {
+  newSchedule: NewScheduleType;
+  setNewSchedule: (newSchedule: NewScheduleType) => void;
+}
+
+interface DeleteRequestBodyType {
+  scheduleId: number;
+  selectedDate: "YYYY-MM-DD" | string;
+}
+
+interface ModalInfoType {
+  isOpen: boolean;
+  modalFor: string;
+  isAfterCheck: boolean;
+}
+
+type SetModalInfoType = React.Dispatch<
+  React.SetStateAction<{
+    isOpen: boolean;
+    modalFor: string;
+    isAfterCheck: boolean;
+  }>
+>;
+
+interface ConfirmModalPropsType {
+  channelId: string | undefined;
+  originInfo: false | ScheduleType | undefined;
+  modalInfo: ModalInfoType;
+  setModalInfo: SetModalInfoType;
+  newSchedule: NewScheduleType;
+  repeatState: RepeatCycleType | "NONE";
 }
 
 // -------- 임시) 장소 관련 ----------
@@ -126,6 +221,7 @@ interface PlaceType {
 }
 
 export type {
+  ScheduleRepeatType,
   RepeatCycleType,
   RepeatDailyType,
   RepeatWeeklyType,
@@ -139,7 +235,17 @@ export type {
   TimeSelectorPropsType,
   RepeatStateType,
   RepeatSetterPropsType,
-  SchedulePostType,
+  SettersPropsType,
+  SingleSchedulePostType,
+  RepeatSchedulePostType,
+  ToSingleSchedulePutType,
+  ToRepeatSchedulePutType,
+  NewScheduleType,
+  NewScheduleStoreType,
+  DeleteRequestBodyType,
+  ModalInfoType,
+  SetModalInfoType,
+  ConfirmModalPropsType,
   //
   PlaceParamsType,
   PlaceType,
