@@ -18,7 +18,7 @@ const Router = (): JSX.Element => {
     <Routes>
       <Route path="*" element={<Error />} />
       <Route path="/" element={<Main />} />
-      <Route path="/:type/:status/:category/:keyword/:order/:page" element={<Main />} />
+      <Route path="/:type/:status/:category/:keywordValue/:order/:page" element={<Main />} />
       <Route path="/login" element={<Login />} />
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/PasswordReset" element={<PasswordReset />} />

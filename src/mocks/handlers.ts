@@ -1,7 +1,22 @@
 import { http, HttpResponse } from "msw";
-import { paymentResponse, placeInfo, scheduleList, userInfo } from "./data";
+import { paymentResponse, placeInfo, scheduleList, studyListResponse, userInfo } from "./data";
 
 export const handlers = [
+  // study-channel-list handlers
+  http.get(`/api/study-channels`, ({ request }) => {
+    const url = new URL(request.url);
+    const page = url.searchParams.get("page");
+    const order = url.searchParams.get("order");
+    const type = url.searchParams.get("type");
+    const category = url.searchParams.get("category");
+    const status = url.searchParams.get("status");
+
+    console.log(
+      `Captured a "GET /api/study-channels?page=${page}&order=${order}&type=${type}&category=${category}&status=${status}`,
+    );
+    return HttpResponse.json(studyListResponse);
+  }),
+
   // schedule handlers
   http.get(`/api/study-channels/:studyChannelId/schedules`, ({ request, params }) => {
     const url = new URL(request.url);
