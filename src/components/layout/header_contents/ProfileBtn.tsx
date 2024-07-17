@@ -16,7 +16,7 @@ const ProfileBtn = (): JSX.Element => {
     console.log("click profile btn");
 
     if (userState) {
-      navigate("/profile");
+      navigate("/profile/myInfo");
     } else {
       navigate("/login");
     }

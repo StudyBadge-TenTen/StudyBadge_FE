@@ -1,43 +1,15 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { create } from "zustand";
+import { useAuthStore } from "../../../store/auth-store";
 import NaverLogin from "./NaverLogin";
 import KakaoLogin from "./KakaoLogin";
 
-// Zustand store 정의
-interface LoginStore {
-  email: string;
-  password: string;
-  setField: (field: "email" | "password", value: string) => void;
-  reset: () => void;
-}
-
-const useLoginStore = create<LoginStore>((set) => ({
-  email: "",
-  password: "",
-  setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-  reset: () => set({ email: "", password: "" }),
-}));
-
-// 가상의 로그인 함수 (실제로는 백엔드 API를 호출해야 합니다)
-const checkCredentials = async (email: string, password: string): Promise<boolean> => {
-  // 배포 테스트를 위한 콘솔코드입니다 추후 수정 바람
-  console.log(email, password);
-  // 여기서 실제로 백엔드 API를 호출하여 이메일과 비밀번호를 확인해야 합니다
-  // 이 예제에서는 간단히 true를 반환합니다
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true); // 실제로는 서버 응답에 따라 true 또는 false를 반환해야 합니다
-    }, 1000); // 서버 응답을 시뮬레이트하기 위한 지연
-  });
-};
-
 const LoginUser: React.FC = () => {
   const navigate = useNavigate();
-  const { email, password, setField, reset } = useLoginStore();
+  const { email, password, setField, login, reset } = useAuthStore();
 
   const moveSignUpPage = () => {
-    navigate("/SignUp"); // 회원가입 페이지 경로
+    navigate("/SignUp");
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -52,17 +24,13 @@ const LoginUser: React.FC = () => {
     }
 
     try {
-      const isValid = await checkCredentials(email, password);
-      if (isValid) {
-        console.log("로그인 성공");
-        reset();
-        navigate("/");
-      } else {
-        alert("이메일 또는 비밀번호가 올바르지 않습니다.");
-      }
+      await login(email, password);
+      console.log("로그인 성공");
+      reset();
+      navigate("/");
     } catch (error) {
       console.error("로그인 실패:", error);
-      alert("로그인에 실패했습니다. 다시 시도해주세요.");
+      alert("이메일 또는 비밀번호가 올바르지 않습니다.");
     }
   };
 

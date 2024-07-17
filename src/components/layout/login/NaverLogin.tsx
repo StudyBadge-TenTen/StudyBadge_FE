@@ -3,7 +3,7 @@ import React from "react";
 
 const NaverLogin: React.FC = () => {
   // const navigate = useNavigate();
-  const clientId = "K0QHPjde2ULw2GQ6IyMP";
+  const clientId = 'VITE_APP_NAVER_LOGIN_CLIENT_KEY';
   const redirectUri = encodeURIComponent("./auth/naver/NaverLoginCallback");
 
   const handleNaverLogin = () => {

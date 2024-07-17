@@ -1,54 +1,20 @@
 import React, { useState } from "react";
-import { create } from "zustand";
-import axios from "axios";
+import { useAuthStore } from "../../../store/auth-store";
 
-interface SignUpStore {
-  email: string;
-  name: string;
-  nickname: string;
-  introduction: string;
-  account: string;
-  password: string;
-  checkPassword: string;
-  setField: (field: keyof Omit<SignUpStore, "setField" | "resetForm">, value: string) => void;
-  resetForm: () => void;
-}
-
-const useSignUpStore = create<SignUpStore>((set) => ({
-  email: "",
-  name: "",
-  nickname: "",
-  introduction: "",
-  account: "",
-  password: "",
-  checkPassword: "",
-  setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-  resetForm: () =>
-    set({
-      email: "",
-      name: "",
-      nickname: "",
-      introduction: "",
-      account: "",
-      password: "",
-      checkPassword: "",
-    }),
-}));
-
-const SignUpUser: React.FC = () => {
+const SignUp: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const store = useSignUpStore();
+  const store = useAuthStore();
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-
     if (!store.email) newErrors.email = "이메일을 입력해주세요.";
     if (!store.name) newErrors.name = "이름을 입력해주세요.";
     if (!store.nickname) newErrors.nickname = "닉네임을 입력해주세요.";
+    if (!store.bankName) newErrors.bankName = "은행 이름을 입력해주세요.";
+    if (!store.account) newErrors.account = "계좌번호를 입력해주세요.";
     if (!store.password) newErrors.password = "비밀번호를 입력해주세요.";
     if (store.password !== store.checkPassword) newErrors.checkPassword = "비밀번호가 일치하지 않습니다.";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -56,24 +22,17 @@ const SignUpUser: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     try {
-      // 회원가입 정보를 백엔드로 전송
-      const response = await axios.post("/api/members/sign-up", store);
-      console.log("회원가입 정보 전송 성공:", response.data);
+      await store.signUp();
       setIsSubmitted(true);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("회원가입 실패:", error.response?.data);
-      } else {
-        console.error("회원가입 오류:", error);
-      }
+      console.error("회원가입 실패:", error);
     }
   };
 
   const renderInput = (
     label: string,
-    name: keyof Omit<SignUpStore, "setField" | "resetForm">,
+    name: keyof Omit<typeof store, "setField" | "resetForm" | "login" | "signUp">,
     type: string,
     placeholder: string,
   ) => (
@@ -84,7 +43,7 @@ const SignUpUser: React.FC = () => {
         name={name}
         className="input w-44 sm:w-56 sm:ml-12 placeholder:text-slate-400 placeholder:text-xs"
         placeholder={placeholder}
-        value={store[name]}
+        value={store[name] as string}
         onChange={(e) => store.setField(name, e.target.value)}
       />
       {errors[name] && <span className="text-red-500 text-xs">{errors[name]}</span>}
@@ -107,7 +66,8 @@ const SignUpUser: React.FC = () => {
       {renderInput("이름", "name", "text", "이름을 입력해주세요")}
       {renderInput("닉네임", "nickname", "text", "닉네임을 입력해주세요")}
       {renderInput("소개", "introduction", "text", "소개를 입력해주세요")}
-      {renderInput("계좌", "account", "text", "계좌번호를 입력해주세요")}
+      {renderInput("은행 이름", "bankName", "text", "은행 이름을 입력해주세요")}
+      {renderInput("계좌번호", "account", "text", "계좌번호를 입력해주세요")}
       {renderInput("비밀번호", "password", "password", "(영문,특수문자 포함 6~12자리)")}
       {renderInput("비밀번호 확인", "checkPassword", "password", "비밀번호를 한 번 더 입력해주세요")}
       <button type="submit" className="btn-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10">
@@ -117,4 +77,4 @@ const SignUpUser: React.FC = () => {
   );
 };
 
-export default SignUpUser;
+export default SignUp;

@@ -1,9 +1,30 @@
 import { useNavigate } from "react-router";
 import LOGO from "../../assets/logo/STUDY-BADGE-LOGO_PNG.png";
 import ProfileBtn from "./header_contents/ProfileBtn";
+import { useKeywordStore } from "../../store/study-store";
+import { useEffect, useState } from "react";
 
 const Header = (): JSX.Element => {
   const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState<string>("");
+  const { keywordValue, setKeywordValue } = useKeywordStore();
+
+  useEffect(() => {
+    console.log("inputValue: ", inputValue);
+    console.log("keywordValue: ", keywordValue);
+  }, [inputValue, keywordValue]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(() => e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setKeywordValue(inputValue ?? null);
+
+    const studyList = document.getElementById("studyListContainer");
+    studyList?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     // section 클래스에 css position sticky를 넣어서 스크롤을 내려도 검색바가 보이도록 했는데 별로면 말씀해주세요!
@@ -21,11 +42,16 @@ const Header = (): JSX.Element => {
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
           </svg>
         </button>
-        <img src={LOGO} className="h-24 md:h-16" alt="STUDY-BADGE-LOGO" />
-        <input
-          type="text"
-          className="hidden md:inline-block w-1/2 h-12 border border-solid border-Gray-3 rounded-[50px] indent-5 mx-8"
-        />
+        <img src={LOGO} className="h-24 md:h-16 cursor-pointer" alt="STUDY-BADGE-LOGO" onClick={() => navigate("/")} />
+        <form className="w-1/2 mx-8" onSubmit={handleSubmit}>
+          <input
+            id="searchBar"
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            className="hidden md:inline-block w-full h-12 border border-solid border-Gray-3 rounded-[50px] indent-5"
+          />
+        </form>
         <div className="user-container flex flex-col md:flex-row justify-center items-center">
           <div className="flex justify-center items-center">
             <ProfileBtn />
