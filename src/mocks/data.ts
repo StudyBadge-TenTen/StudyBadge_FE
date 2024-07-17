@@ -53,10 +53,29 @@ export const userInfo = {
   name: "홍길동",
   nickname: "김스뱃",
   badgeLevel: "NONE",
-  account: "000000000000",
+  account: "12345678901",
   introduction: "안녕하세요, 프론트엔드 개발자 김스뱃입니다",
   imgUrl: "",
+  point: 20000,
+  banCnt: 0,
 };
+export const myStudyList = [
+  {
+    studyId: 1,
+    studyName: "모각코",
+    role: "LEADER",
+  },
+  {
+    studyId: 2,
+    studyName: "이런 북스터디",
+    role: "MEMBER",
+  },
+  {
+    studyId: 3,
+    studyName: "내일은 코딩왕",
+    role: "MEMBER",
+  },
+];
 
 // payment data
 export const paymentResponse = {
@@ -73,6 +92,15 @@ export const paymentResponse = {
   cancelYN: true,
   cancelReason: "cancelReason",
   createdAt: "createdAt",
+};
+export const paymentSuccessResponse = {
+  paymentKey: "woighogvh8593hff",
+  orderId: "sdht489sfsg",
+  orderName: "포인트 충전",
+  method: "CARD",
+  totalAmount: 10000,
+  requestedAt: new Date(),
+  approvedAt: new Date(),
 };
 
 // studyList data

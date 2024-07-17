@@ -1,4 +1,4 @@
-import { ConfirmResponseType, PaymentBodyType, PaymentResponseType } from "../types/payment-type";
+import { SuccessResponseType, PaymentBodyType, PaymentResponseType } from "../types/payment-type";
 import fetchCall from "./common";
 
 const postPayment = async (paymentBody: PaymentBodyType) => {
@@ -6,12 +6,12 @@ const postPayment = async (paymentBody: PaymentBodyType) => {
   return paymentResponse;
 };
 
-const getConfirmResponse = async (paymentKey: string, orderId: string, amount: number) => {
-  const confirmResponse = await fetchCall<ConfirmResponseType>(
-    `/api/v1/payments/toss/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}`,
-    "get",
+const postSuccessResponse = async (paymentKey: string, orderId: string, amount: number) => {
+  const successResponse = await fetchCall<SuccessResponseType>(
+    `/api/v1/payments/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}`,
+    "post",
   );
-  return confirmResponse;
+  return successResponse;
 };
 
-export { postPayment, getConfirmResponse };
+export { postPayment, postSuccessResponse };

@@ -9,38 +9,48 @@ interface PaymentBodyType {
   payType: string;
   amount: number;
   orderName: string;
-  successUrl: string;
-  failUrl: string;
 }
 
+// interface PaymentBodyType {
+//   payType: string;
+//   amount: number;
+//   orderName: string;
+//   successUrl: string;
+//   failUrl: string;
+// }
+
 interface PaymentResponseType {
-  amount: number;
-  orderId: string;
+  payType: string;
+  amount: 0;
   orderName: string;
+  orderId: string;
+  customerEmail: string;
   customerName: string;
   successUrl: string;
   failUrl: string;
-  customerEmail: string;
+  failReason: string;
+  cancelYN: true;
+  cancelReason: string;
 }
 
-interface ConfirmResponseType {
-  mid: string;
-  version: string;
+// interface PaymentResponseType {
+//   amount: number;
+//   orderId: string;
+//   orderName: string;
+//   customerName: string;
+//   successUrl: string;
+//   failUrl: string;
+//   customerEmail: string;
+// }
+
+interface SuccessResponseType {
   paymentKey: string;
   orderId: string;
   orderName: string;
-  currency: string;
   method: string;
-  totalAmount: string;
-  balanceAmount: string;
-  suppliedAmount: string;
-  vat: string;
-  status: string;
-  requestedAt: string;
-  approvedAt: string;
-  useEscrow: string;
-  cultureExpense: string;
-  type: string;
+  totalAmount: 0;
+  requestedAt: Date;
+  approvedAt: Date;
 }
 
 interface FailResponseType {
@@ -71,7 +81,7 @@ export type {
   SelectAmountPropsType,
   PaymentBodyType,
   PaymentResponseType,
-  ConfirmResponseType,
+  SuccessResponseType,
   FailResponseType,
   PaymentMethodsWidget,
 };
