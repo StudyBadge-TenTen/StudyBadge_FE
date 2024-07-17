@@ -211,9 +211,6 @@ const ScheduleEdit = (): JSX.Element => {
 
   return (
     <div className="w-full h-fit flex flex-col justify-center items-center">
-      <div className="w-screen h-60 bg-Blue-2 flex justify-center items-center">
-        <div className="w-[1025px] flex flex-col justify-center items-center"></div>
-      </div>
       <div className="container w-fit min-w-80 h-fit flex flex-col rounded-[50px] shadow-card my-16">
         <div className="text-white h-20 bg-Blue-2 rounded-t-[50px] flex justify-center items-center text-lg">
           일정 등록
