@@ -20,23 +20,6 @@ const Calendar = ({
   const [mark, setMark] = useState(marks);
   // 달력에 일정표시할 날짜들을 mark배열에 "YYYY-MM-DD"형태로 담을 예정
 
-  // useQuery이용해서 데이터 가져오기(예시)
-  // const { data } = useQuery(
-  //   ["logDate", month],
-  //   async () => {
-  //     const result = await axios.get(
-  //       `일정 호출할 api 주소`
-  //     );
-  //     return result.data;
-  //   },
-  //   {
-  //     onSuccess: (data: any) => {
-  //       setMark(data);
-  //      // ["2022-02-02", "2022-02-02", "2022-02-10"] 형태로 mark배열에 담으면 해당 날짜에 표시
-  //     },
-  //   }
-  // );
-
   useEffect(() => {
     setMark(() => marks);
   }, [marks]);

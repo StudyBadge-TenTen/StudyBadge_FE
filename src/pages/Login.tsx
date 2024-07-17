@@ -1,6 +1,8 @@
 import LoginUser from "../components/layout/login/LoginUser";
 
 const Login = (): JSX.Element => {
+  // 함수 작성 금지
+
   return (
     <>
       <LoginUser />
