@@ -5,6 +5,7 @@ import {
   paymentSuccessResponse,
   placeInfo,
   scheduleList,
+  studyInfoResponse,
   studyListResponse,
   userInfo,
 } from "./data";
@@ -74,13 +75,13 @@ export const handlers = [
     return HttpResponse.json({}, { status: 201 });
   }),
 
-  http.delete(`/api/study-channels/{studyChannelId}/schedules`, async ({ request, params }) => {
+  http.delete(`/api/study-channels/:studyChannelId/schedules`, async ({ request, params }) => {
     const requestBody = await request.json();
     console.log(`Captured a "DELETE /api/study-channels/${params.studyChannelId}/schedules" request`);
     console.log(requestBody);
     return HttpResponse.json({}, { status: 201 });
   }),
-  http.delete(`/api/study-channels/{studyChannelId}/schedules/isAfterEvent`, async ({ request, params }) => {
+  http.delete(`/api/study-channels/:studyChannelId/schedules/isAfterEvent`, async ({ request, params }) => {
     const url = new URL(request.url);
     const Same = url.searchParams.get("Same");
 
@@ -127,5 +128,11 @@ export const handlers = [
       `Captured a "POST /api/v1/payments/toss/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}" request`,
     );
     return HttpResponse.json(paymentSuccessResponse, { status: 200 });
+  }),
+
+  // studyChannel handlers
+  http.get("/api/study-channels/:studyChannelId", async ({ params }) => {
+    console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}" request`);
+    return HttpResponse.json(studyInfoResponse);
   }),
 ];

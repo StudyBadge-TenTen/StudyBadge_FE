@@ -214,3 +214,21 @@ export const studyListResponse = {
     },
   ],
 };
+
+// studyInfo data
+export const studyInfoResponse = {
+  studyChannelId: 1,
+  studyChannelName: "내일은 코딩왕",
+  studyChannelDescription:
+    "내일은 코딩왕 스터디 모임입니다. 매주 모여서 코딩을 합니다. 코딩에 관심있으신 분들 신청주세요!",
+  chattingUrl: "http://study-chattingurl",
+  capacity: 10,
+  category: "IT",
+  meetingType: "OFFLINE",
+  region: "서울시 성동구",
+  startDate: "2023-06-01",
+  endDate: "2023-08-31",
+  deposit: 20000,
+  leaderName: "홍길동",
+  subLeaderName: "김스뱃",
+};
