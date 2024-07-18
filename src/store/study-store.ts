@@ -37,7 +37,7 @@ const useStudyStore = create<StudyStoreType>((set) => ({
 
 const useStudyListStore = create<StudyListStoreType>((set) => ({
   studyList: [],
-  setStudyList: (studyList) => set({ studyList: [...studyList] }),
+  setStudyList: (studyList) => set({ studyList: studyList }),
 }));
 
 const initialFilter: StudyListRequestType = {
