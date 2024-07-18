@@ -115,7 +115,6 @@ export const handlers = [
     console.log(requestBody);
     return HttpResponse.json(paymentResponse, { status: 200 });
   }),
-
   http.post("/api/v1/payments/success", async ({ request }) => {
     const url = new URL(request.url);
 

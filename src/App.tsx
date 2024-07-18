@@ -2,8 +2,10 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./router/Router";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import { useSSE } from "./hooks/useSSE";
 
 function App() {
+  useSSE();
   // CI/CD 테스트용 주석 코드입니다4
   return (
     <BrowserRouter>

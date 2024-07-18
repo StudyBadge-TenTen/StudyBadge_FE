@@ -14,6 +14,7 @@ import CreateStudy from "../pages/CreateStudy";
 import Profile from "../components/profile/Profile";
 import ChannelBook from "../components/channel/ChannelBook";
 import ScheduleEdit from "../components/schedule/ScheduleEdit";
+import Notification from "../components/profile/Notification";
 
 const Router = (): JSX.Element => {
   return (
@@ -28,6 +29,7 @@ const Router = (): JSX.Element => {
       <Route path="/profile" element={<ProfilePage />}>
         <Route path="/profile/myInfo" element={<Profile />} />
         <Route path="/profile/paymentList" element={<PaymentListPage />} />
+        <Route path="/profile/notification" element={<Notification />} />
       </Route>
       <Route path="/payment" element={<ProfilePage />} />
       <Route path="/paymentSuccess/*" element={<Success />} />
