@@ -10,7 +10,7 @@ export const useSSE = () => {
   const API_BASE_URL = import.meta.env.DEV ? "/" : import.meta.env.VITE_APP_TEST_BASE_URL;
   const { notifications, setNotifications } = useNotificationStore();
 
-  console.log("useSSE hook");
+  console.log("useSSE hook"); // useSSE작동 테스트
 
   useEffect(() => {
     const eventSource = new EventSourcePolyfill(API_BASE_URL + `api/subscribe`, {
