@@ -16,7 +16,7 @@ export const useSSE = () => {
     const eventSource = new EventSourcePolyfill(API_BASE_URL + `api/subscribe`, {
       headers: {
         RequestHeader: localStorage.getItem(LAST_EVENT_ID) ?? "",
-        Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer ${accessToken}`,
       },
       withCredentials: true,
     });
