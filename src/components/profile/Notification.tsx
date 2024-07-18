@@ -13,7 +13,7 @@ const Notification = (): JSX.Element => {
       {notifications.map((noti) => (
         <div
           key={noti.id}
-          className="w-full h-16 bg-Gray-1 rounded-[10px] flex justify-center items-center text-Blue-2"
+          className="w-full h-16 bg-Gray-1 rounded-[10px] flex justify-center items-center text-Blue-2 mb-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
