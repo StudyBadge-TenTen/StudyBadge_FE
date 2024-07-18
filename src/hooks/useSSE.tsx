@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/auth-store";
 import { useNotificationStore } from "../store/notification-store";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { NotificationType } from "../types/notification-type";
+import { LAST_EVENT_ID } from "../constants/local-storage";
 
 export const useSSE = () => {
   const { accessToken } = useAuthStore();
@@ -14,6 +15,7 @@ export const useSSE = () => {
   useEffect(() => {
     const eventSource = new EventSourcePolyfill(API_BASE_URL + `api/subscribe`, {
       headers: {
+        RequestHeader: localStorage.getItem(LAST_EVENT_ID) ?? "",
         Authorization: `Bearer ${accessToken}`,
       },
       withCredentials: true,
@@ -28,15 +30,14 @@ export const useSSE = () => {
           const newNotification: NotificationType = JSON.parse(e.data);
           console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
           setNotifications([...notifications, newNotification]);
+          localStorage.setItem(LAST_EVENT_ID, String(newNotification.id));
         } catch (error) {
           console.error("Failed to parse event data: ", error);
         }
       };
 
       eventSource.onerror = (err) => {
-        const newNotification: NotificationType = { id: "error", message: "Error receiving notifications" };
         console.log("Error receiving notifications", err);
-        setNotifications([...notifications, newNotification]);
         // setError();
         eventSource.close();
         // 재연결

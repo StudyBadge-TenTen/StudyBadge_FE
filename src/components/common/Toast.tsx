@@ -19,7 +19,7 @@ const Toast = () => {
       const newNoti = notifications[notifications.length - 1];
       await makeToast();
       if (newNoti) {
-        setNewMessage(() => newNoti.message);
+        setNewMessage(() => newNoti.content);
       }
       setTimeout(() => setNewToast(() => false), 5000);
     })();

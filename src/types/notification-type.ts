@@ -1,6 +1,10 @@
 interface NotificationType {
-  id: string;
-  message: string;
+  id: number;
+  content: string;
+  isRead: boolean;
+  notificationType: "일정 생성";
+  receiverId: number;
+  url: string;
 }
 
 interface NotificationStoreType {
