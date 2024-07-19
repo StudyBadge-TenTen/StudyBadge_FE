@@ -31,7 +31,7 @@ export const useSSE = () => {
           const newNotification: NotificationType = JSON.parse(e.data);
           console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
           setNotifications([...notifications, newNotification]);
-          localStorage.setItem(LAST_EVENT_ID, String(newNotification.id));
+          localStorage.setItem(LAST_EVENT_ID, e.lastEventId);
         } catch (error) {
           console.error("Failed to parse event data: ", error);
         }

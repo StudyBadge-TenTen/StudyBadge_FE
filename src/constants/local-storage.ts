@@ -1,1 +1,1 @@
-export const LAST_EVENT_ID = "LAST_EVENT_ID";
+export const LAST_EVENT_ID = "lastEventId";
