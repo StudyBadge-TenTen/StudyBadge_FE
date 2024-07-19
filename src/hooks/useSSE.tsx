@@ -18,6 +18,7 @@ export const useSSE = () => {
         RequestHeader: localStorage.getItem(LAST_EVENT_ID) ?? "",
         // Authorization: `Bearer ${accessToken}`,
       },
+      heartbeatTimeout: 60000,
       withCredentials: true,
     });
 
