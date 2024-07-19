@@ -232,3 +232,31 @@ export const studyInfoResponse = {
   leaderName: "홍길동",
   subLeaderName: "김스뱃",
 };
+
+// memberList data
+export const memberListResponse = {
+  studyMembers: [
+    {
+      memberId: 1,
+      name: "홍길동",
+      imageUrl: "",
+      badgeLevel: "GOLD",
+      role: "LEADER",
+    },
+    {
+      memberId: 2,
+      name: "김스뱃",
+      imageUrl: "",
+      badgeLevel: "NONE",
+      role: "STUDY_MEMBER",
+    },
+    {
+      memberId: 3,
+      name: "김철수",
+      imageUrl: "",
+      badgeLevel: "SILVER",
+      role: "STUDY_MEMBER",
+    },
+  ],
+  leader: true,
+};

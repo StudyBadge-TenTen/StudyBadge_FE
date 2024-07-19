@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Schedules from "./Schedules";
 import Information from "./Information";
 import { useLocation, useNavigate, useParams } from "react-router";
+import MemberList from "./MemberList";
 
 const ChannelBook = (): JSX.Element => {
   const { channelId } = useParams();
@@ -79,6 +80,7 @@ const ChannelBook = (): JSX.Element => {
         <div className="h-fit flex flex-col px-4 py-8 md:p-8">
           {tabState === "일정" && <Schedules />}
           {tabState === "정보" && <Information />}
+          {tabState === "멤버" && <MemberList />}
         </div>
       </div>
     </>

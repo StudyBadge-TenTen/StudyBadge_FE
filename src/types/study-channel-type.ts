@@ -1,3 +1,5 @@
+import { BadgeType } from "./profile-type";
+
 type StudyCategoryType = "IT" | "LANGUAGE" | "EMPLOYMENT" | "DEVELOPMENT";
 type MeetingType = "ONLINE" | "OFFLINE";
 type RecruitmentStatusType = "RECRUITING" | "RECRUIT_COMPLETED";
@@ -60,7 +62,22 @@ interface StudyListResponseType {
   studyChannels: StudyListObjectType[];
 }
 
-// store type
+type StudyRoleType = "LEADER" | "SUB_LEADER" | "STUDY_MEMBER";
+
+interface StudyMemberType {
+  memberId: number;
+  name: string;
+  imageUrl: string;
+  badgeLevel: BadgeType;
+  role: StudyRoleType;
+}
+
+interface MemberListResponseType {
+  studyMembers: StudyMemberType[];
+  leader: boolean;
+}
+
+// ----------------------------------- store type
 interface StudyStoreType {
   title: string;
   description: string;
@@ -101,6 +118,9 @@ export type {
   StudyListObjectType,
   StudyListRequestType,
   StudyListResponseType,
+  StudyRoleType,
+  StudyMemberType,
+  MemberListResponseType,
   StudyStoreType,
   StudyListStoreType,
   FilterStoreType,
