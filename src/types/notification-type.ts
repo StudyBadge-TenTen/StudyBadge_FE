@@ -2,7 +2,7 @@ interface NotificationType {
   id: number;
   content: string;
   isRead: boolean;
-  notificationType: "일정 생성";
+  notificationType: string;
   receiverId: number;
   url: string;
 }
