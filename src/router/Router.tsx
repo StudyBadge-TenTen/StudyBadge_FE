@@ -33,8 +33,9 @@ const Router = (): JSX.Element => {
       <Route path="/paymentSuccess/*" element={<Success />} />
       <Route path="/paymentFail/*" element={<Fail />} />
       <Route path="/channel/:channelId" element={<ChannelPage />}>
-        <Route path="/channel/:channelId" element={<ChannelBook />} />
-        <Route path="/channel/:channelId/schedule_edit" element={<ScheduleEdit />} />
+        <Route path="/channel/:channelId/:tab" element={<ChannelBook />} />
+        <Route path="/channel/:channelId/information/information_edit" element={<ChannelBook />} />
+        <Route path="/channel/:channelId/schedule/schedule_edit" element={<ScheduleEdit />} />
       </Route>
       <Route path="/createStudy" element={<CreateStudy />} />
     </Routes>
