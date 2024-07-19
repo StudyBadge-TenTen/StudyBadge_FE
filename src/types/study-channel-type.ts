@@ -62,16 +62,18 @@ interface StudyListResponseType {
 
 // store type
 interface StudyStoreType {
-  title: string;
+  name: string;
   description: string;
-  category: string;
-  startDate: string;
-  endDate: string;
-  maxParticipants: number;
+  category: StudyCategoryType | "";
+  recruitmentNumber: number;
+  studyStartDate: "YYYY-MM-DD" | string;
+  studyEndDate: "YYYY-MM-DD" | string;
+  minRecruitmentNumber: number;
   meetingType: MeetingType;
-  location: string;
-  link: string;
-  fee: number;
+  region: string;
+  chattingUrl: string;
+  depositDescription: string;
+  deposit: number;
   setField: (field: keyof Omit<StudyStoreType, "setField" | "resetForm">, value: any) => void;
   resetForm: () => void;
 }
