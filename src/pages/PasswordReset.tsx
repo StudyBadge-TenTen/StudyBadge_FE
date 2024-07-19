@@ -1,5 +1,5 @@
-import React from 'react';
-import { create } from 'zustand';
+import React from "react";
+import { create } from "zustand";
 
 interface PasswordResetStore {
   email: string;
@@ -19,13 +19,13 @@ interface PasswordResetStore {
 }
 
 const usePasswordResetStore = create<PasswordResetStore>((set) => ({
-  email: '',
-  newPassword: '',
-  confirmPassword: '',
-  verificationCode: '',
+  email: "",
+  newPassword: "",
+  confirmPassword: "",
+  verificationCode: "",
   showVerificationForm: false,
   showNewPasswordForm: false,
-  error: '',
+  error: "",
   setEmail: (email) => set({ email }),
   setNewPassword: (newPassword) => set({ newPassword }),
   setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
@@ -36,96 +36,96 @@ const usePasswordResetStore = create<PasswordResetStore>((set) => ({
 }));
 
 const PasswordReset: React.FC = () => {
-  const { 
-    email, 
+  const {
+    email,
     newPassword,
     confirmPassword,
-    verificationCode, 
+    verificationCode,
     showVerificationForm,
     showNewPasswordForm,
-    error, 
-    setEmail, 
+    error,
+    setEmail,
     setNewPassword,
     setConfirmPassword,
     setVerificationCode,
     setShowVerificationForm,
     setShowNewPasswordForm,
-    setError 
+    setError,
   } = usePasswordResetStore();
 
   const sendVerificationCode = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/send-verification-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/send-verification-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
       const data = await response.json();
       if (data.success) {
         setShowVerificationForm(true);
-        setError('');
+        setError("");
       } else {
-        setError(data.message || '인증 코드 전송에 실패했습니다.');
+        setError(data.message || "인증 코드 전송에 실패했습니다.");
       }
     } catch (error) {
-      setError('오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+      setError("오류가 발생했습니다. 나중에 다시 시도해 주세요.");
     }
   };
 
   const verifyCode = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/verify-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, verificationCode }),
       });
       const data = await response.json();
       if (data.success) {
         setShowNewPasswordForm(true);
-        setError('');
+        setError("");
       } else {
-        setError(data.message || '인증 코드가 올바르지 않습니다.');
+        setError(data.message || "인증 코드가 올바르지 않습니다.");
       }
     } catch (error) {
-      setError('오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+      setError("오류가 발생했습니다. 나중에 다시 시도해 주세요.");
     }
   };
 
   const resetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
+      setError("비밀번호가 일치하지 않습니다.");
       return;
     }
     try {
-      const response = await fetch('/api/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, newPassword, verificationCode }),
       });
       const data = await response.json();
       if (data.success) {
-        alert('비밀번호가 성공적으로 변경되었습니다.');
-        window.location.href = '/login';
+        alert("비밀번호가 성공적으로 변경되었습니다.");
+        window.location.href = "/login";
       } else {
-        setError(data.message || '비밀번호 재설정에 실패했습니다.');
+        setError(data.message || "비밀번호 재설정에 실패했습니다.");
       }
     } catch (error) {
-      setError('오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+      setError("오류가 발생했습니다. 나중에 다시 시도해 주세요.");
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+      <div className="w-full max-w-md bg-white rounded-[50px] shadow-card p-32">
         {!showVerificationForm && !showNewPasswordForm ? (
           <div>
-            <h2 className="text-2xl font-bold mb-4">비밀번호 초기화</h2>
-            <form onSubmit={sendVerificationCode}>
+            <h2 className="text-2xl font-bold text-Blue-2 mb-4 text-center">비밀번호 초기화</h2>
+            <form onSubmit={sendVerificationCode} className="flex flex-col">
               <div className="mb-4">
-                <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="email" className="block text-Blue-2 text-sm font-bold mb-2">
                   이메일:
                 </label>
                 <input
@@ -133,12 +133,12 @@ const PasswordReset: React.FC = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="input"
                 />
               </div>
-              <button 
+              <button
                 type="submit"
-                className="btn-blue bg-blue-500 hover:btn-blue bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="btn-blue bg-blue-500 hover:btn-blue bg-blue-700 text-white font-bold focus:outline-none focus:shadow-outline"
               >
                 인증 코드 전송
               </button>
@@ -160,7 +160,7 @@ const PasswordReset: React.FC = () => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
-              <button 
+              <button
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
@@ -196,7 +196,7 @@ const PasswordReset: React.FC = () => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
-              <button 
+              <button
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
