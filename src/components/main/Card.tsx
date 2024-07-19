@@ -30,7 +30,7 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
 
   return (
     <div
-      onClick={() => navigate(`/channel/${studyInfo.studyChannelId}`)}
+      onClick={() => navigate(`/channel/${studyInfo.studyChannelId}/schedule`)}
       className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer"
     >
       <div className="badge flex justify-between items-center mb-2">

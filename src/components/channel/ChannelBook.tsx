@@ -1,10 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Schedules from "./Schedules";
 import Information from "./Information";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 const ChannelBook = (): JSX.Element => {
+  const { channelId } = useParams();
+  const navigate = useNavigate();
+  const state = useLocation().state;
   const [tabState, setTabState] = useState("일정");
   const memberTab = ["정보", "일정", "멤버", "출석현황"];
+
+  useEffect(() => {
+    if (state && state.tab) {
+      setTabState(() => state.tab);
+    }
+  }, [channelId]);
+
+  useEffect(() => {
+    if (state) {
+      if (state.tab) {
+        if (state.edit) navigate(`/channel/${channelId}/${state.tab}/${transTabName(state.tab)}_edit`);
+        else navigate(`/channel/${channelId}/${state.tab}`);
+      }
+    } else {
+      navigate(`/channel/${channelId}/${transTabName(tabState)}`);
+    }
+  }, [tabState]);
+
+  const transTabName = (krTabName: string) => {
+    let enTabName;
+    switch (krTabName) {
+      case "정보":
+        enTabName = "information";
+        break;
+      case "일정":
+        enTabName = "schedule";
+        break;
+      case "멤버":
+        enTabName = "member";
+        break;
+      case "출석현황":
+        enTabName = "attendance";
+        break;
+      case "모집":
+        enTabName = "recruitment";
+        break;
+    }
+
+    return enTabName;
+  };
 
   return (
     <>
@@ -14,7 +58,9 @@ const ChannelBook = (): JSX.Element => {
           {memberTab.map((tab) => (
             <button
               key={`tab_${tab}`}
-              onClick={() => setTabState(() => tab)}
+              onClick={() => {
+                setTabState(() => tab);
+              }}
               className={`w-20 md:w-32 h-12 md:h-14 ${tab === tabState ? "bg-Gray-3 text-Blue-2" : "bg-Gray-1 text-Blue-2"} rounded-t-[30px] md:text-xl font-bold flex justify-center items-center hover:bg-Gray-2 transition-all`}
             >
               {tab}

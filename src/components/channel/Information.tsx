@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { StudyInfoType } from "../../types/study-channel-type";
 import { useQuery } from "@tanstack/react-query";
 import { getStudyInfo } from "../../services/channel-api";
+import { useEditModeStore } from "../../store/edit-mode-store";
 
 const Information = (): JSX.Element => {
   const { channelId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [studyDetailList, setStudyDetailList] = useState<(string | number | null)[]>();
+  const { isEditMode, setIsEditMode } = useEditModeStore();
   const infoTitles = ["정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더"];
   const { data, error, isLoading } = useQuery<StudyInfoType, Error>({
     queryKey: ["studyInfo", channelId],
     queryFn: () => getStudyInfo(Number(channelId)),
   });
+
+  useEffect(() => {
+    if (location.pathname.includes("information_edit")) {
+      setIsEditMode(true);
+    }
+  }, [location]);
 
   useEffect(() => {
     //channelId를 이용해 채널 정보 get api호출
@@ -37,11 +47,23 @@ const Information = (): JSX.Element => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-Blue-2 text-center mb-4">스터디 정보</h2>
+      <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 정보</h2>
+      {/* 리더에게만 보일 수정 버튼 */}
+      <button
+        onClick={() => navigate("information_edit", { state: { tab: "정보", edit: true } })}
+        className="btn-blue self-end mb-4"
+      >
+        정보수정
+      </button>
       <div className="flex flex-col md:flex-row justify-center items-center">
         <div className="basic-info w-80 h-[393px] border border-solid border-Gray-3 rounded-[50px] p-4 mt-4 md:mt-0 md:ml-4 flex flex-col justify-center items-center">
-          <p className="text-Blue-2 p-1 border-b border-solid border-Gray-2">
-            <b>이름:</b> 내일은 코딩왕
+          <p className="text-Blue-2 p-1 border-b border-solid border-Gray-2 flex justify-center items-center">
+            <b>이름:</b>{" "}
+            {isEditMode ? (
+              <input type="text" className="input w-2/3 ml-2" defaultValue={data?.studyChannelName}></input>
+            ) : (
+              `${data?.studyChannelName}`
+            )}
           </p>
           <p className="text-Blue-2 p-2">
             <b>카테고리:</b> 컴퓨터/IT/개발

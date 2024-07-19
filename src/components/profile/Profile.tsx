@@ -113,6 +113,7 @@ const Profile = (): JSX.Element => {
             myStudy.map((studyChannel) => (
               <div
                 key={studyChannel.studyId}
+                onClick={() => navigate(`/channel/${studyChannel.studyId}/schedule`)}
                 className="border border-solid border-Gray-3 w-full h-32 p-10 rounded-[30px] flex flex-col sm:flex-row justify-between items-center mt-10"
               >
                 <div className="flex items-center">
