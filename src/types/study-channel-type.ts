@@ -20,6 +20,12 @@ interface StudyInfoType {
   subLeaderName: string;
 }
 
+interface StudyInfoPutRequestType {
+  name: string;
+  description: string;
+  chattingUrl: string;
+}
+
 interface StudyListObjectType {
   studyChannelId: number;
   name: string;
@@ -91,6 +97,7 @@ export type {
   RecruitmentStatusType,
   OrderType,
   StudyInfoType,
+  StudyInfoPutRequestType,
   StudyListObjectType,
   StudyListRequestType,
   StudyListResponseType,

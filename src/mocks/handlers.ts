@@ -135,4 +135,10 @@ export const handlers = [
     console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}" request`);
     return HttpResponse.json(studyInfoResponse);
   }),
+  http.put("/api/study-channels/:studyChannelId", async ({ request, params }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "PUT /api/study-channels/${params.studyChannelId}" request`);
+    console.log(requestBody);
+    return HttpResponse.json({ status: 200 });
+  }),
 ];

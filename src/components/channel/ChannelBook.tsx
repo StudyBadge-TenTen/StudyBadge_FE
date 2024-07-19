@@ -11,6 +11,10 @@ const ChannelBook = (): JSX.Element => {
   const memberTab = ["정보", "일정", "멤버", "출석현황"];
 
   useEffect(() => {
+    const element = document.getElementById("root");
+    if (element) {
+      element.scrollIntoView();
+    }
     if (state && state.tab) {
       setTabState(() => state.tab);
     }
@@ -19,8 +23,8 @@ const ChannelBook = (): JSX.Element => {
   useEffect(() => {
     if (state) {
       if (state.tab) {
-        if (state.edit) navigate(`/channel/${channelId}/${state.tab}/${transTabName(state.tab)}_edit`);
-        else navigate(`/channel/${channelId}/${state.tab}`);
+        if (state.edit) navigate(`/channel/${channelId}/${transTabName(state.tab)}/${transTabName(state.tab)}_edit`);
+        else navigate(`/channel/${channelId}/${transTabName(state.tab)}`);
       }
     } else {
       navigate(`/channel/${channelId}/${transTabName(tabState)}`);

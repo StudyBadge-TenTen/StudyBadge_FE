@@ -1,4 +1,4 @@
-import { StudyInfoType } from "../types/study-channel-type";
+import { StudyInfoPutRequestType, StudyInfoType } from "../types/study-channel-type";
 import fetchCall from "./common";
 
 const getStudyInfo = async (studyChannelId: number) => {
@@ -6,4 +6,9 @@ const getStudyInfo = async (studyChannelId: number) => {
   return studyInfoResponse;
 };
 
-export { getStudyInfo };
+const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
+  const response = await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
+  return response;
+};
+
+export { getStudyInfo, putStudyInfo };
