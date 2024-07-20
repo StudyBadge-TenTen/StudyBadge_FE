@@ -44,9 +44,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
   signUp: async () => {
-    const { email, name, nickname, introduction, accountBank, account, password } = get();
+    const { email, name, nickname, introduction, accountBank, account, password, checkPassword } = get();
     try {
-      await signUp({ email, name, nickname, introduction, accountBank, account, password });
+      await signUp({ email, name, nickname, introduction, accountBank, account, password, checkPassword });
       set({
         email: "",
         name: "",

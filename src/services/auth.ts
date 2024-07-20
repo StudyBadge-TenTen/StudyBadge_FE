@@ -13,6 +13,7 @@ interface SignUpData {
   accountBank: string;
   account: string;
   password: string;
+  checkPassword: string;
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
