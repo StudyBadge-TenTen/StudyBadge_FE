@@ -26,7 +26,7 @@ export const initiateSocialLogin = (provider: "naver" | "kakao") => {
 };
 
 export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string) => {
-  const response = await axios.post<LoginResponse>(`/oauth2/authorization/${provider}`, { params: { code } });
+  const response = await axios.post<LoginResponse>(`/oauth2/authorization/${provider}`, { code });
 
   return response.data;
 };
