@@ -41,4 +41,14 @@ jobs:
 
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
-
+      - name: Create .env file
+        run: |
+            echo "VITE_APP_LOCAL_HOST=${{ secrets.VITE_APP_LOCAL_HOST }} >> .env"
+            echo "VITE_APP_PRODUCTION_URL=${{ secrets.VITE_APP_PRODUCTION_URL }} >> .env"
+            echo "VITE_APP_KAKAO_REDIRECT_URL_DEV=${{ secrets.VITE_APP_KAKAO_REDIRECT_URL_DEV }} >> .env"
+            echo "VITE_APP_KAKAO_REDIRECT_URL_PROD=${{ secrets.VITE_APP_KAKAO_REDIRECT_URL_PROD }} >> .env"
+            echo "VITE_APP_NAVER_REDIRECT_URL_DEV=${{ secrets.VITE_APP_NAVER_REDIRECT_URL_DEV }} >> .env"
+            echo "VITE_APP_NAVER_REDIRECT_URL_PROD=${{ secrets.VITE_APP_NAVER_REDIRECT_URL_PROD }} >> .env"
+            echo "VITE_APP_KAKAO_LOGIN_CLIENT_KEY=${{ secrets.VITE_APP_KAKAO_LOGIN_CLIENT_KEY }} >> .env"
+            echo "VITE_APP_NAVER_LOGIN_CLIENT_KEY=${{ secrets.VITE_APP_NAVER_LOGIN_CLIENT_KEY }} >> .env"
+            echo "VITE_APP_TOSS_TEST_CLIENT_KEY=${{ secrets.VITE_APP_TOSS_TEST_CLIENT_KEY }} >> .env"
