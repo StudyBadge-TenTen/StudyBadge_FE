@@ -2,11 +2,11 @@ import { create } from "zustand";
 import axios from "axios";
 import {
   signUp,
-  initiateSocialLogin,
   postSocialLoginCallback,
   postLogin,
   LoginResponse,
   postLogout,
+  initiateSocialLogin,
 } from "../services/auth";
 import { PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";

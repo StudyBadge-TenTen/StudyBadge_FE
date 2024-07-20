@@ -118,15 +118,9 @@ export const handlers = [
   }),
 
   http.post("/api/payments/success", async ({ request }) => {
-    const url = new URL(request.url);
-
-    const paymentKey = url.searchParams.get("paymentKey");
-    const orderId = url.searchParams.get("orderId");
-    const amount = url.searchParams.get("amount");
-
-    console.log(
-      `Captured a "POST /api/payments/toss/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}" request`,
-    );
+    const requestBody = await request.json();
+    console.log(`Captured a "POST /api/payments/success" request`);
+    console.log(requestBody);
     return HttpResponse.json(paymentSuccessResponse, { status: 200 });
   }),
 

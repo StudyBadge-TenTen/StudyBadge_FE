@@ -44,14 +44,20 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
 };
 
 export const initiateSocialLogin = (provider: "naver" | "kakao") => {
-  window.location.href = `/api/auth/${provider}`; // 백엔드에서 소셜 로그인 URL을 생성하고 리다이렉트
+  window.location.href = `/oauth2/authorization/${provider}`; // 백엔드에서 소셜 로그인 URL을 생성하고 리다이렉트
 };
 
 export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string) => {
   const response = await axios.post<LoginResponse>(`/oauth2/authorization/${provider}`, { code });
+  const accessTokenBearer = response.headers["authorization"] as string;
+  const accessToken = accessTokenBearer.split(" ")[1];
 
-  return response.data;
+  setApiToken(accessToken);
+
+  return { accessToken, refreshToken: "" };
 };
+
+// 서버 없이 구현 시
 // export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string, state?: string) => {
 //   const response = await axios.post<LoginResponse>(`/api/auth/${provider}/callback`, { code, state });
 //   return response.data;

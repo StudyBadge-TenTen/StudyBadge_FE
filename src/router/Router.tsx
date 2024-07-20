@@ -24,8 +24,8 @@ const Router = (): JSX.Element => {
       <Route path="/login" element={<Login />} />
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/PasswordReset" element={<PasswordResetPage />} />
-      <Route path="/auth/kakao/callback" element={<SocialLoginCallback />} />
-      <Route path="/auth/naver/callback" element={<SocialLoginCallback />} />
+      <Route path="/oauth2/callback/naver" element={<SocialLoginCallback />} />
+      <Route path="/oauth2/callback/kakao" element={<SocialLoginCallback />} />
       <Route path="/profile" element={<ProfilePage />}>
         <Route path="/profile/payment" element={<Profile />} />
         <Route path="/profile/myInfo" element={<Profile />} />

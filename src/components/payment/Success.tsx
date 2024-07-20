@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { postSuccessResponse } from "../../services/payment-api";
 import Modal from "../common/Modal";
 import { SuccessResponseType } from "../../types/payment-type";
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
 const Success = (): JSX.Element => {
@@ -13,9 +13,9 @@ const Success = (): JSX.Element => {
   const orderId = searchParams.get("orderId");
   const amount = searchParams.get("amount");
   const paymentKey = searchParams.get("paymentKey");
-  const { data, error, isPending } = useMutation<SuccessResponseType | undefined, Error>({
-    mutationKey: ["tossSuccess", orderId, amount, paymentKey],
-    mutationFn: () => postSuccessResponse(paymentKey ?? "", orderId ?? "", Number(amount)),
+  const { data, error, isLoading } = useQuery<SuccessResponseType | undefined, Error>({
+    queryKey: ["tossSuccess", orderId, amount, paymentKey],
+    queryFn: () => postSuccessResponse(paymentKey ?? "", orderId ?? "", Number(amount)),
   });
 
   useEffect(() => {
@@ -30,11 +30,11 @@ const Success = (): JSX.Element => {
       }
     }
     confirm();
-  }, []);
+  }, [searchParams]);
 
   return (
     <Modal>
-      {isPending ? (
+      {isLoading ? (
         <div className="w-60 h-60 flex justify-center items-center">결제응답을 기다리는 중입니다...</div>
       ) : error ? (
         <div className="">
