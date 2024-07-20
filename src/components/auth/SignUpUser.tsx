@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useAuthStore } from "../../../store/auth-store";
-import { BANK_LIST } from "../../../constants/bank-list";
-import { nameToField, nameToType, returnPlaceholder } from "../../../utils/transform-function";
+import { useAuthStore } from "../../store/auth-store";
+import { nameToField, nameToType, returnPlaceholder } from "../../utils/transform-function";
+import { BANK_LIST } from "../../constants/bank-list";
 
 const SignUp: React.FC = () => {
   const formListFirst = ["이메일", "이름", "비밀번호", "비밀번호확인"];

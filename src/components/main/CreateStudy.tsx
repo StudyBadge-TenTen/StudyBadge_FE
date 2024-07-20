@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useStudyStore } from "../store/study-store";
+import { useStudyStore } from "../../store/study-store";
 import axios from "axios";
-import { koreanRegions } from "../components/common/KoreanRegions";
+import { koreanRegions } from "../common/KoreanRegions";
 import moment from "moment";
 
 const PENALTY_SYSTEM = `

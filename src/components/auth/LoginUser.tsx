@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/auth-store";
 import NaverLogin from "./NaverLogin";
 import KakaoLogin from "./KakaoLogin";
+import { useAuthStore } from "../../store/auth-store";
 
 const LoginUser: React.FC = () => {
   const navigate = useNavigate();

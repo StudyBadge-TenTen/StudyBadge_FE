@@ -8,7 +8,7 @@ import SelectAmount from "../payment/SelectAmount";
 import Checkout from "../payment/Checkout";
 import { useLocation, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { MyStudyMockType, MyStudyType, UserInfoType } from "../../types/profile-type";
+import { MyStudyType, UserInfoType } from "../../types/profile-type";
 import { getMyStudy, getProfile } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
 
@@ -41,6 +41,12 @@ const Profile = (): JSX.Element => {
     const element = document.getElementById("root");
     if (element) {
       element.scrollIntoView();
+    }
+
+    if (location.state) {
+      if (location.state.social) {
+        setIsEditMode(true);
+      }
     }
   }, [location]);
 

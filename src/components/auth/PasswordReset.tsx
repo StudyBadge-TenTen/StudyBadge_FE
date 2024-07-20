@@ -1,39 +1,4 @@
-import React from "react";
-import { create } from "zustand";
-
-interface PasswordResetStore {
-  email: string;
-  newPassword: string;
-  confirmPassword: string;
-  verificationCode: string;
-  showVerificationForm: boolean;
-  showNewPasswordForm: boolean;
-  error: string;
-  setEmail: (email: string) => void;
-  setNewPassword: (password: string) => void;
-  setConfirmPassword: (password: string) => void;
-  setVerificationCode: (code: string) => void;
-  setShowVerificationForm: (show: boolean) => void;
-  setShowNewPasswordForm: (show: boolean) => void;
-  setError: (error: string) => void;
-}
-
-const usePasswordResetStore = create<PasswordResetStore>((set) => ({
-  email: "",
-  newPassword: "",
-  confirmPassword: "",
-  verificationCode: "",
-  showVerificationForm: false,
-  showNewPasswordForm: false,
-  error: "",
-  setEmail: (email) => set({ email }),
-  setNewPassword: (newPassword) => set({ newPassword }),
-  setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
-  setVerificationCode: (verificationCode) => set({ verificationCode }),
-  setShowVerificationForm: (showVerificationForm) => set({ showVerificationForm }),
-  setShowNewPasswordForm: (showNewPasswordForm) => set({ showNewPasswordForm }),
-  setError: (error) => set({ error }),
-}));
+import { usePasswordResetStore } from "../../store/auth-store";
 
 const PasswordReset: React.FC = () => {
   const {

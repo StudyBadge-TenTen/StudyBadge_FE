@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
-import { login, signUp, initiateSocialLogin, handleSocialLoginCallback } from "../services/auth";
+import { login, signUp, initiateSocialLogin, postSocialLoginCallback } from "../services/auth";
+import { PasswordResetStore } from "../types/auth-type";
 
 export interface AuthStore {
   email: string;
@@ -82,7 +83,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   handleSocialLoginCallback: async (provider, code, state) => {
     try {
-      const { accessToken, refreshToken } = await handleSocialLoginCallback(provider, code, state);
+      const { accessToken, refreshToken } = await postSocialLoginCallback(provider, code, state);
       set({ accessToken, refreshToken });
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
@@ -91,3 +92,22 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 }));
+
+const usePasswordResetStore = create<PasswordResetStore>((set) => ({
+  email: "",
+  newPassword: "",
+  confirmPassword: "",
+  verificationCode: "",
+  showVerificationForm: false,
+  showNewPasswordForm: false,
+  error: "",
+  setEmail: (email) => set({ email }),
+  setNewPassword: (newPassword) => set({ newPassword }),
+  setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
+  setVerificationCode: (verificationCode) => set({ verificationCode }),
+  setShowVerificationForm: (showVerificationForm) => set({ showVerificationForm }),
+  setShowNewPasswordForm: (showNewPasswordForm) => set({ showNewPasswordForm }),
+  setError: (error) => set({ error }),
+}));
+
+export { usePasswordResetStore };
