@@ -3,11 +3,13 @@ import LOGO from "../../assets/logo/STUDY-BADGE-LOGO_PNG.png";
 import ProfileBtn from "./header_contents/ProfileBtn";
 import { useKeywordStore } from "../../store/study-store";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "../../store/auth-store";
 
 const Header = (): JSX.Element => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState<string>("");
   const { keywordValue, setKeywordValue } = useKeywordStore();
+  const { accessToken, logout, reset } = useAuthStore();
 
   useEffect(() => {
     console.log("inputValue: ", inputValue);
@@ -68,8 +70,21 @@ const Header = (): JSX.Element => {
               </svg>
             </button>
           </div>
-          <button className="hidden md:inline-block btn-blue" onClick={() => navigate("/login")}>
+          <button
+            className={`hidden md:${accessToken ? "hidden" : "inline-block"} btn-blue`}
+            onClick={() => navigate("/login")}
+          >
             로그인
+          </button>
+          <button
+            className={`hidden md:${!accessToken ? "hidden" : "inline-block"} btn-blue`}
+            onClick={async () => {
+              await logout();
+              reset();
+              navigate("/");
+            }}
+          >
+            로그아웃
           </button>
         </div>
       </div>

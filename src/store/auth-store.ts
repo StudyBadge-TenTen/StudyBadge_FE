@@ -1,6 +1,13 @@
 import { create } from "zustand";
 import axios from "axios";
-import { signUp, initiateSocialLogin, postSocialLoginCallback, postLogin, LoginResponse } from "../services/auth";
+import {
+  signUp,
+  initiateSocialLogin,
+  postSocialLoginCallback,
+  postLogin,
+  LoginResponse,
+  postLogout,
+} from "../services/auth";
 import { PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";
 
@@ -22,6 +29,7 @@ export interface AuthStore {
   initiateSocialLogin: (provider: "naver" | "kakao") => void;
   handleSocialLoginCallback: (provider: "naver" | "kakao", code: string, state?: string) => Promise<void>;
   refreshAccessToken: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -75,7 +83,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       account: "",
       password: "",
       checkPassword: "",
-      accessToken: null,
+      accessToken: "",
       refreshToken: null,
     }),
 
@@ -112,6 +120,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       set({ accessToken, refreshToken: "" });
     } catch (error) {
       console.error("Error refreshing access token:", error);
+      throw error;
+    }
+  },
+
+  logout: async () => {
+    try {
+      await postLogout();
+    } catch (error) {
+      console.error("Logout failed:", error);
       throw error;
     }
   },

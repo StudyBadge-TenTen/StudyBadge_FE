@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setApiToken } from "./common";
+import { fetchCall, setApiToken } from "./common";
 
 export interface LoginResponse {
   accessToken: string;
@@ -59,4 +59,8 @@ export const postSocialLoginCallback = async (provider: "naver" | "kakao", code:
 
 export const signUp = async (userData: SignUpData): Promise<void> => {
   await axios.post("/api/members/sign-up", userData);
+};
+
+export const postLogout = async () => {
+  await fetchCall(`/api/members/logout`, "post");
 };
