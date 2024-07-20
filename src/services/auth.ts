@@ -25,8 +25,9 @@ export const initiateSocialLogin = (provider: "naver" | "kakao") => {
   window.location.href = `/api/auth/${provider}`; // 백엔드에서 소셜 로그인 URL을 생성하고 리다이렉트
 };
 
-export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string, state?: string) => {
-  const response = await axios.post<LoginResponse>(`/oauth2/authorization/${provider}`, { code, state });
+export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string) => {
+  const response = await axios.post<LoginResponse>(`/oauth2/authorization/${provider}`, { params: { code } });
+
   return response.data;
 };
 // export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string, state?: string) => {

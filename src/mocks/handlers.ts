@@ -141,4 +141,22 @@ export const handlers = [
     console.log(requestBody);
     return HttpResponse.json({ status: 200 });
   }),
+
+  // auth handlers
+  http.post(`/oauth2/authorization/kakao`, async ({ request }) => {
+    const url = new URL(request.url);
+
+    const code = url.searchParams.get("code");
+
+    console.log(`Captured a "POST /oauth2/authorization/kakao?code=${code}" request`);
+    return HttpResponse.json({ status: 200 });
+  }),
+  http.post(`/oauth2/authorization/naver`, async ({ request }) => {
+    const url = new URL(request.url);
+
+    const code = url.searchParams.get("code");
+
+    console.log(`Captured a "POST /oauth2/authorization/naver?code=${code}" request`);
+    return HttpResponse.json({ status: 200 });
+  }),
 ];

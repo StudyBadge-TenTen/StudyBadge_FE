@@ -10,16 +10,16 @@ const SocialLoginCallback: React.FC = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const code = searchParams.get("code");
-    const state = searchParams.get("state");
     const provider = location.pathname.includes("naver") ? "naver" : "kakao";
 
     if (code) {
-      handleSocialLoginCallback(provider, code, state || undefined)
+      handleSocialLoginCallback(provider, code)
         .then(() => {
           // 로그인 성공 시 정보 수정 페이지로 이동 (계좌정보 입력을 위해)
           navigate("/profile/myInfo", { state: { social: true } });
         })
         .catch((error) => {
+          alert("로그인에 실패하였습니다");
           console.error("Social login failed:", error);
           navigate("/login"); // 실패 시 로그인 페이지로 이동
         });
