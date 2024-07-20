@@ -2,10 +2,16 @@ import axios, { AxiosError } from "axios";
 
 // 공통 axios 만들기
 const API_BASE_URL = import.meta.env.DEV ? "/" : import.meta.env.VITE_APP_TEST_BASE_URL; // 추후에 PRODUCTION으로 변경해야함
-const API_TOKEN = "";
+let API_TOKEN = "";
+
+const setApiToken = (token: string) => {
+  API_TOKEN = token;
+  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${API_TOKEN}`;
+};
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -52,4 +58,4 @@ async function fetchCall<T>(url: string, method: "get" | "post" | "put" | "delet
 // const result = await fetchCall<{ message: string }>(`/posts`, "post", { itemId: id });
 // console.log(result.message);
 
-export default fetchCall;
+export { fetchCall, setApiToken };

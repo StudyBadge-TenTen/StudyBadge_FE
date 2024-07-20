@@ -7,7 +7,7 @@ import {
   RepeatCycleType,
   NewScheduleType,
 } from "../types/schedule-type";
-import fetchCall from "./common";
+import { fetchCall } from "./common";
 
 // todo: react-query로 호출 최소화하는 방법 적용하기
 const getSchedules = async ({ channelId, year, month }: ScheduleParamsType) => {

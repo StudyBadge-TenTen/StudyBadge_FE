@@ -52,19 +52,19 @@ const CreateStudy: React.FC = () => {
       alert("스터디모임이 주로 모임을 가질 지역을 선택해주세요");
       return;
     }
-    if (!study.studyStartDate) {
+    if (!study.startDate) {
       alert("스터디의 시작 날짜를 선택해주세요");
       return;
     }
-    if (!study.studyEndDate) {
+    if (!study.endDate) {
       alert("스터디의 종료 날짜를 선택해주세요");
       return;
     }
-    if (!study.studyEndDate) {
+    if (!study.endDate) {
       alert("스터디의 종료 날짜를 선택해주세요");
       return;
     }
-    if (!moment(study.studyStartDate).isBefore(study.studyEndDate)) {
+    if (!moment(study.startDate).isBefore(study.endDate)) {
       alert("스터디 종료 날짜는 반드시 시작 날짜보다 이후로 설정해야 합니다.");
       return;
     }
@@ -78,7 +78,7 @@ const CreateStudy: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("/api/studies", study);
+      const response = await axios.post("/api/study-channels", study);
       console.log("Study created:", response.data);
       study.resetForm();
 
@@ -126,10 +126,10 @@ const CreateStudy: React.FC = () => {
           required
         >
           <option value="">선택해주세요</option>
-          <option value="컴퓨터/IT/개발">컴퓨터/IT/개발</option>
-          <option value="언어/어학">언어/어학</option>
-          <option value="취업/이직">취업/이직</option>
-          <option value="자기계발">자기계발</option>
+          <option value="IT">컴퓨터/IT/개발</option>
+          <option value="LANGUAGE">언어/어학</option>
+          <option value="EMPLOYMENT">취업/이직</option>
+          <option value="SELF_SELF_DEVELOPMENT">자기계발</option>
         </select>
       </div>
 
@@ -203,8 +203,8 @@ const CreateStudy: React.FC = () => {
           <label className="block mb-2 text-Blue-2">시작 *</label>
           <input
             type="date"
-            value={study.studyStartDate}
-            onChange={(e) => study.setField("studyStartDate", e.target.value)}
+            value={study.startDate}
+            onChange={(e) => study.setField("startDate", e.target.value)}
             className="input"
             required
           />
@@ -213,8 +213,8 @@ const CreateStudy: React.FC = () => {
           <label className="block mb-2 text-Blue-2">종료 *</label>
           <input
             type="date"
-            value={study.studyEndDate}
-            onChange={(e) => study.setField("studyEndDate", e.target.value)}
+            value={study.endDate}
+            onChange={(e) => study.setField("endDate", e.target.value)}
             className="input"
             required
           />

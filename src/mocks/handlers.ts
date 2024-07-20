@@ -110,14 +110,14 @@ export const handlers = [
   }),
 
   // payment handlers
-  http.post("/api/v1/payments/toss", async ({ request }) => {
+  http.post("/api/payments/toss", async ({ request }) => {
     const requestBody = await request.json();
-    console.log(`Captured a "POST /api/v1/payments/toss" request`);
+    console.log(`Captured a "POST /api/payments/toss" request`);
     console.log(requestBody);
     return HttpResponse.json(paymentResponse, { status: 200 });
   }),
 
-  http.post("/api/v1/payments/success", async ({ request }) => {
+  http.post("/api/payments/success", async ({ request }) => {
     const url = new URL(request.url);
 
     const paymentKey = url.searchParams.get("paymentKey");
@@ -125,7 +125,7 @@ export const handlers = [
     const amount = url.searchParams.get("amount");
 
     console.log(
-      `Captured a "POST /api/v1/payments/toss/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}" request`,
+      `Captured a "POST /api/payments/toss/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}" request`,
     );
     return HttpResponse.json(paymentSuccessResponse, { status: 200 });
   }),

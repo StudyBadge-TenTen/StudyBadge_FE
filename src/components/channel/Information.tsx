@@ -150,7 +150,7 @@ const Information = (): JSX.Element => {
               ></textarea>
             ) : (
               <div className="w-full h-[230px] border border-solid border-Gray-3 rounded-[50px] p-6">
-                {`내일은 코딩왕 스터디 모임입니다. 매주 모여서 코딩을 합니다. 코딩에 관심있으신 분들 신청주세요!`}
+                {data?.studyChannelDescription}
               </div>
             )}
           </div>

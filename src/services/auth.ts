@@ -1,11 +1,12 @@
 import axios from "axios";
+import { setApiToken } from "./common";
 
-interface LoginResponse {
+export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
 }
 
-interface SignUpData {
+export interface SignUpData {
   email: string;
   name: string;
   nickname: string;
@@ -16,9 +17,30 @@ interface SignUpData {
   checkPassword: string;
 }
 
-export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const response = await axios.post<LoginResponse>("/api/members/login", { email, password });
-  return response.data;
+export const postLogin = async (email: string, password: string): Promise<LoginResponse> => {
+  try {
+    const response = await axios.post<LoginResponse>(
+      "/api/members/login",
+      { email, password },
+      { withCredentials: true }, // withCredentials 옵션 추가
+    );
+
+    const accessTokenBearer = response.headers["authorization"] as string;
+    const accessToken = accessTokenBearer.split(" ")[1];
+
+    // 쿠키는 HTTP Only로 설정되었으므로, JavaScript를 통해 접근할 수 없음.
+    // 브라우저가 자동으로 관리하도록 설정.
+
+    setApiToken(accessToken);
+
+    // refreshToken은 JavaScript를 통해 직접 접근 불가
+    // const refreshToken = response.headers["Set-Cookie"];
+
+    return { accessToken, refreshToken: "" }; // refreshToken을 빈 문자열로 반환
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
 };
 
 export const initiateSocialLogin = (provider: "naver" | "kakao") => {

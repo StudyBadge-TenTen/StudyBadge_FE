@@ -96,17 +96,17 @@ const Profile = (): JSX.Element => {
             </div>
             <button
               onClick={() => {
-                navigate("/payment");
+                navigate("/profile/payment");
               }}
               className="btn-blue mt-8 md:mt-0"
             >
               충전하기
             </button>
           </div>
-          {location.pathname === "/payment" && !confirm && (
+          {location.pathname === "/profile/payment" && !confirm && (
             <SelectAmount setConfirm={setConfirm} chargeAmount={chargeAmount} setChargeAmount={setChargeAmount} />
           )}
-          {location.pathname === "/payment" && confirm && (
+          {location.pathname === "/profile/payment" && confirm && (
             <Checkout setConfirm={setConfirm} chargeAmount={chargeAmount} />
           )}
           {/* 이용자가 소속된 스터디 채널 개수대로 렌더링 */}

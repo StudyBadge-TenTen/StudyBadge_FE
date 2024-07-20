@@ -130,7 +130,7 @@ export const studyListResponse = {
     {
       studyChannelId: 2,
       name: "B 북스터디",
-      category: "DEVELOPMENT",
+      category: "SELF_DEVELOPMENT",
       description:
         "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
       recruitmentStatus: "RECRUITING",
@@ -164,7 +164,7 @@ export const studyListResponse = {
     {
       studyChannelId: 4,
       name: "D 북스터디",
-      category: "DEVELOPMENT",
+      category: "SELF_DEVELOPMENT",
       description:
         "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
       recruitmentStatus: "RECRUITING",
@@ -198,7 +198,7 @@ export const studyListResponse = {
     {
       studyChannelId: 6,
       name: "F 북스터디",
-      category: "DEVELOPMENT",
+      category: "SELF_DEVELOPMENT",
       description:
         "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
       recruitmentStatus: "RECRUITING",

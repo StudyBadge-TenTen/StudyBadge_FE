@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
-import { login, signUp, initiateSocialLogin, postSocialLoginCallback } from "../services/auth";
+import { signUp, initiateSocialLogin, postSocialLoginCallback, postLogin, LoginResponse } from "../services/auth";
 import { PasswordResetStore } from "../types/auth-type";
+import { setApiToken } from "../services/common";
 
 export interface AuthStore {
   email: string;
@@ -20,6 +21,7 @@ export interface AuthStore {
   reset: () => void;
   initiateSocialLogin: (provider: "naver" | "kakao") => void;
   handleSocialLoginCallback: (provider: "naver" | "kakao", code: string, state?: string) => Promise<void>;
+  refreshAccessToken: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -36,7 +38,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
   login: async (email, password) => {
     try {
-      const { accessToken, refreshToken } = await login(email, password);
+      const { accessToken, refreshToken } = await postLogin(email, password);
       set({ accessToken, refreshToken });
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
@@ -88,6 +90,28 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
       console.error(`${provider} login failed:`, error);
+      throw error;
+    }
+  },
+
+  refreshAccessToken: async () => {
+    try {
+      const response = await axios.post<LoginResponse>(
+        "/api/token/re-issue",
+        { refreshToken: get().refreshToken },
+        { withCredentials: true },
+      );
+
+      const accessTokenBearer = response.headers["authorization"] as string;
+      const accessToken = accessTokenBearer.split(" ")[1];
+
+      // 토큰을 설정합니다.
+      setApiToken(accessToken);
+
+      // 새로운 accessToken과 refreshToken을 상태에 저장합니다.
+      set({ accessToken, refreshToken: "" });
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
       throw error;
     }
   },

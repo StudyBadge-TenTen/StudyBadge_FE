@@ -51,7 +51,7 @@ const Success = (): JSX.Element => {
             </p>
             <p>{`결제 승인 일시:`}</p>
             <p>{`${moment(data.approvedAt).format("YYYY-MM-DD")} ${moment(data.approvedAt).format("hh:mm:ss")}`}</p>
-            <button className="btn-blue w-1/2 mt-10" onClick={() => navigate("/profile")}>
+            <button className="btn-blue w-1/2 mt-10" onClick={() => navigate("/profile/myInfo")}>
               확인
             </button>
           </div>

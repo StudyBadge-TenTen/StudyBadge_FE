@@ -66,8 +66,8 @@ interface StudyStoreType {
   description: string;
   category: StudyCategoryType | "";
   recruitmentNumber: number;
-  studyStartDate: "YYYY-MM-DD" | string;
-  studyEndDate: "YYYY-MM-DD" | string;
+  startDate: "YYYY-MM-DD" | string;
+  endDate: "YYYY-MM-DD" | string;
   minRecruitmentNumber: number;
   meetingType: MeetingType;
   region: string;
