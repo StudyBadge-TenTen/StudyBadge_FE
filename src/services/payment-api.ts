@@ -7,6 +7,7 @@ const postPayment = async (paymentBody: PaymentBodyType) => {
 };
 
 const postSuccessResponse = async (paymentKey: string, orderId: string, amount: number) => {
+  if (!paymentKey || !orderId || !amount) return;
   const successResponse = await fetchCall<SuccessResponseType>(
     `/api/payments/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}`,
     "post",

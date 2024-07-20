@@ -13,7 +13,7 @@ const Success = (): JSX.Element => {
   const orderId = searchParams.get("orderId");
   const amount = searchParams.get("amount");
   const paymentKey = searchParams.get("paymentKey");
-  const { data, error, isPending } = useMutation<SuccessResponseType, Error>({
+  const { data, error, isPending } = useMutation<SuccessResponseType | undefined, Error>({
     mutationKey: ["tossSuccess", orderId, amount, paymentKey],
     mutationFn: () => postSuccessResponse(paymentKey ?? "", orderId ?? "", Number(amount)),
   });
