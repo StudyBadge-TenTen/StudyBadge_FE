@@ -16,10 +16,24 @@ textarea {
 }
 .custom-scroll::-webkit-scrollbar-thumb {
   height: 30%;
-  background: #1c4587;
+  background: #dce1e7;
 
   border-radius: 10px;
 }
 .custom-scroll::-webkit-scrollbar-track {
   background: inherit;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.keyframes-grow {
+  animation: grow 0.5s;
+  transform-origin: 0% 100%;
 }

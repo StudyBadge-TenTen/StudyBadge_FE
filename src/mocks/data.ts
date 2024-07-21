@@ -219,6 +219,7 @@ export const studyInfoResponse = {
   deposit: 20000,
   leaderName: "홍길동",
   subLeaderName: "김스뱃",
+  isLeader: true,
 };
 
 // memberList data
@@ -247,4 +248,65 @@ export const memberListResponse = {
     },
   ],
   leader: true,
+};
+
+export const attendanceResponse = [
+  {
+    memberId: 1,
+    studyMemberId: 1,
+    name: "홍길동",
+    imageUrl: "imageUrl",
+    attendanceCount: 10,
+    attendanceRatio: 100,
+  },
+  {
+    memberId: 1,
+    studyMemberId: 2,
+    name: "김스뱃",
+    imageUrl: "imageUrl",
+    attendanceCount: 5,
+    attendanceRatio: 50,
+  },
+  {
+    memberId: 1,
+    studyMemberId: 3,
+    name: "김철수",
+    imageUrl: "imageUrl",
+    attendanceCount: 8,
+    attendanceRatio: 80,
+  },
+];
+
+export const recruitmentResponse = {
+  studyChannelId: 1,
+  recruitmentStatus: "RECRUITING",
+  participants: [
+    {
+      memberId: 7,
+      imageUrl: "imageUrl",
+      name: "이스뱃",
+      banCnt: 0,
+      badgeLevel: "NONE",
+      participationId: 1,
+      participationStatus: "APPROVE_WAITING",
+    },
+    {
+      memberId: 8,
+      imageUrl: "imageUrl",
+      name: "박스뱃",
+      banCnt: 3,
+      badgeLevel: "GOLD",
+      participationId: 2,
+      participationStatus: "APPROVE_WAITING",
+    },
+    {
+      memberId: 9,
+      imageUrl: "imageUrl",
+      name: "강스뱃",
+      banCnt: 1,
+      badgeLevel: "BRONZE",
+      participationId: 3,
+      participationStatus: "APPROVE_WAITING",
+    },
+  ],
 };

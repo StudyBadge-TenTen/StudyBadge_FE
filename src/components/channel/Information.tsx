@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { StudyInfoType } from "../../types/study-channel-type";
+import { newSubLeaderStateType, StudyInfoType } from "../../types/study-channel-type";
 import { useQuery } from "@tanstack/react-query";
-import { getStudyInfo, putStudyInfo } from "../../services/channel-api";
+import { getStudyInfo, postSubLeader, putStudyInfo } from "../../services/channel-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
+import Modal from "../common/Modal";
+import MemberList from "./MemberList";
 
 const Information = (): JSX.Element => {
   const { channelId } = useParams();
@@ -21,6 +23,11 @@ const Information = (): JSX.Element => {
     description: "",
     chattingUrl: "",
   });
+  const [newSubLeader, setNewSubLeader] = useState<newSubLeaderStateType>({
+    name: data?.subLeaderName ?? "",
+    id: undefined,
+  });
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     return setIsEditMode(false);
@@ -87,27 +94,33 @@ const Information = (): JSX.Element => {
   return (
     <>
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 정보</h2>
-      {/* 리더에게만 보일 수정 버튼 */}
       <div className="flex justify-end">
-        <button
-          onClick={() => {
-            if (isEditMode) {
-              // 수정 데이터 put으로 서버에 전송
-              putStudyInfo(Number(channelId), newStudyInfo);
-              setIsEditMode(false);
-              // navigate(`/channel/${channelId}/information`);
-            } else {
-              navigate("information_edit", { state: { tab: "정보", edit: true } });
-            }
-          }}
-          className="btn-blue mb-4"
-        >
-          {isEditMode ? "저장" : "정보수정"}
-        </button>
+        {/* 리더에게만 보일 수정 버튼 */}
+        {data?.isLeader && (
+          <button
+            onClick={() => {
+              if (isEditMode) {
+                // 수정 데이터 put으로 서버에 전송
+                putStudyInfo(Number(channelId), newStudyInfo);
+                if (newSubLeader.id) {
+                  postSubLeader(Number(channelId), { studyMemberId: newSubLeader.id });
+                }
+                setIsEditMode(false);
+                // navigate(`/channel/${channelId}/information`);
+              } else {
+                navigate("information_edit", { state: { tab: "정보", edit: true } });
+              }
+            }}
+            className="btn-blue mb-4"
+          >
+            {isEditMode ? "저장" : "정보수정"}
+          </button>
+        )}
         {isEditMode && (
           <button
             onClick={() => {
               setIsEditMode(false);
+              setNewSubLeader(() => ({ id: undefined, name: "" }));
               navigate(`/channel/${channelId}/information`);
             }}
             className="btn-blue self-end ml-2 mb-4"
@@ -168,7 +181,7 @@ const Information = (): JSX.Element => {
           <div className="w-3/5 h-full p-4 py-8 flex flex-col justify-between items-start">
             {isLoading || !data
               ? infoTitles.map((title) => (
-                  <div key={`skeleton_${title}`} className="w-full h-4 bg-Gray-1 rounded-[50px]"></div>
+                  <div key={`skeleton_${title}`} className="w-full h-4 bg-Gray-1 rounded-[50px] animate-pulse"></div>
                 ))
               : data &&
                 studyDetailList &&
@@ -190,10 +203,33 @@ const Information = (): JSX.Element => {
                       {index === 3
                         ? detail?.toLocaleString()
                         : detail !== null
-                          ? detail
+                          ? index === 6 && newSubLeader.id
+                            ? newSubLeader.name
+                            : detail
                           : "해당 스터디 멤버에게만 공개"}
                       {isEditMode && data?.subLeaderName === detail && (
-                        <button className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4">변경</button>
+                        <>
+                          <button
+                            onClick={() => setModal(() => true)}
+                            className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4"
+                          >
+                            변경
+                          </button>
+                          {modal && (
+                            <Modal>
+                              <MemberList setNewSubLeader={setNewSubLeader} setModal={setModal} />
+                              <button
+                                onClick={() => {
+                                  setNewSubLeader(() => ({ name: "", id: undefined }));
+                                  setModal(() => false);
+                                }}
+                                className="cancel-btn btn-blue"
+                              >
+                                취소
+                              </button>
+                            </Modal>
+                          )}
+                        </>
                       )}
                     </span>
                   ),

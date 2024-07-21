@@ -1,8 +1,9 @@
 import {
+  AttendanceResponseType,
   MemberListResponseType,
+  RecruitmentInfoType,
   StudyInfoPutRequestType,
   StudyInfoType,
-  StudyStoreType,
 } from "../types/study-channel-type";
 import { fetchCall } from "./common";
 
@@ -12,8 +13,11 @@ const getStudyInfo = async (studyChannelId: number) => {
 };
 
 const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
-  const response = await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
-  return response;
+  try {
+    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getMemberList = async (studyChannelId: number) => {
@@ -21,9 +25,59 @@ const getMemberList = async (studyChannelId: number) => {
   return memberList;
 };
 
-const postStudyChannel = async (requestBody: StudyStoreType) => {
-  const response = await fetchCall<{ studyChannelId: number }>(`/api/study-channels`, "post", requestBody);
-  return response;
+const postSubLeader = async (studyChannelId: number, requestBody: { studyMemberId: number }) => {
+  try {
+    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}/members/assign-role`, "post", requestBody);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-export { getStudyInfo, putStudyInfo, getMemberList, postStudyChannel };
+const getAttendance = async (studyChannelId: number) => {
+  const attendance = await fetchCall<AttendanceResponseType[]>(
+    `/api/study-channels/${studyChannelId}/attendances`,
+    "get",
+  );
+  return attendance;
+};
+
+const getRecruitment = async (studyChannelId: number) => {
+  const recruitList = await fetchCall<RecruitmentInfoType>(
+    `/api/study-channels/${studyChannelId}/participation-status`,
+    "get",
+  );
+  return recruitList;
+};
+
+const postApprove = async (studyChannelId: number, participationId: number) => {
+  try {
+    await fetchCall<ResponseType>(
+      `/api/study-channels/${studyChannelId}/participation/${participationId}/approve`,
+      "post",
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const postReject = async (studyChannelId: number, participationId: number) => {
+  try {
+    await fetchCall<ResponseType>(
+      `/api/study-channels/${studyChannelId}/participation/${participationId}/reject`,
+      "post",
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  getStudyInfo,
+  putStudyInfo,
+  getMemberList,
+  postSubLeader,
+  getAttendance,
+  getRecruitment,
+  postReject,
+  postApprove,
+};
