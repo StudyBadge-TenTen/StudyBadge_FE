@@ -14,6 +14,7 @@ const Schedules = (): JSX.Element => {
   const [marks, setMarks] = useState<string[]>([]);
   const [scheduleState, setScheduleState] = useState<ScheduleCalcResponseType>();
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | false>();
+  const [isLoading, setIsLoading] = useState(false);
   const today = new Date();
   const todayString = moment(today).format("YYYY-MM-DD");
   // const attendList = ["홍길동", "김철수", "김영희"];
@@ -36,11 +37,18 @@ const Schedules = (): JSX.Element => {
   // 선택하는 날짜가 바뀔 때마다 날짜에 해당되는 일정정보를 set하기 위해
   useEffect(() => {
     if (scheduleState) {
-      getScheduleInfo(selectedDate, scheduleState.scheduleList, scheduleState.scheduleMarks).then((response) => {
-        if (response.result) {
-          setScheduleInfo(() => response.scheduleInfo);
-        } else setScheduleInfo(() => false);
-      });
+      setIsLoading(() => true);
+      try {
+        getScheduleInfo(selectedDate, scheduleState.scheduleList, scheduleState.scheduleMarks).then((response) => {
+          if (response.result) {
+            setScheduleInfo(() => response.scheduleInfo);
+          } else setScheduleInfo(() => false);
+        });
+      } catch (error) {
+        console.log("error: 일정을 불러오는데 실패하였습니다.", error);
+      } finally {
+        setIsLoading(() => false);
+      }
     }
   }, [selectedDate]);
 
@@ -51,6 +59,13 @@ const Schedules = (): JSX.Element => {
         <Calendar marks={marks} />
         <div className="schedule w-96 h-[393px] border border-solid border-Gray-3 rounded-[50px] mt-4 md:mt-0 md:ml-4">
           <div className="m-6 h-[345px] overflow-y-scroll custom-scroll">
+            {isLoading && (
+              <>
+                <div className="h-[136px] bg-Gray-1 rounded-[30px]"></div>
+                <div className="h-[32px] flex items-center border border-solid border-Gray-2 rounded-[50px] p-2 my-2"></div>
+                <div className="text-center text-Gray-3">is Loading...</div>
+              </>
+            )}
             {/* 일정이 등록되어 있는 경우 렌더링 될 요소 */}
             {scheduleInfo ? (
               <>

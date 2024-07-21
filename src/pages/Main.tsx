@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router";
 import CREATE_STUDY_SVG from "../assets/image/CREATE_STUDY_SVG.svg";
 import Carousel from "../components/common/Carousel";
 import StudyList from "../components/main/StudyList";
+import { Link } from "react-router-dom";
 
 const Main = (): JSX.Element => {
-  const navigate = useNavigate();
-
   // 함수 작성 금지
 
   return (
@@ -17,9 +15,9 @@ const Main = (): JSX.Element => {
           <p className="mb-8 text-center sm:text-start break-keep">
             지금 바로 새로운 스터디 그룹을 생성하고, 멤버들을 모아보세요!
           </p>
-          <button className="btn-blue w-fit" onClick={() => navigate("/createStudy")}>
+          <Link to={"/createStudy"} className="btn-blue w-fit">
             스터디 생성하기
-          </button>
+          </Link>
         </div>
         <div className="w-full sm:w-1/2 h-full bg-Gray-2 flex justify-center items-center mt-4 sm:mt-0 sm:ml-4">
           <img src={CREATE_STUDY_SVG} alt="스터디 일러스트" />

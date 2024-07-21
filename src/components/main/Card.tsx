@@ -21,7 +21,7 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
       case "EMPLOYMENT":
         categoryKr = "취업/이직";
         break;
-      case "DEVELOPMENT":
+      case "SELF_DEVELOPMENT":
         categoryKr = "자기계발";
         break;
     }
@@ -30,7 +30,7 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
 
   return (
     <div
-      onClick={() => navigate(`/channel/${studyInfo.studyChannelId}`)}
+      onClick={() => navigate(`/channel/${studyInfo.studyChannelId}/schedule`)}
       className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer"
     >
       <div className="badge flex justify-between items-center mb-2">
@@ -64,7 +64,7 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
           </svg>
           {studyInfo.viewCount}
         </div>
-        <div>리더 : {studyInfo.leader.name}</div>
+        <div>리더 : {studyInfo.memberName}</div>
       </div>
     </div>
   );

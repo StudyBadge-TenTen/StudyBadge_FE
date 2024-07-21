@@ -38,7 +38,7 @@ const StudyList = (): JSX.Element => {
   // 필터와 키워드 상태가 바뀔 때마다
   useEffect(() => {
     const { type, category, status, order, page } = filter;
-    const newLocation = `/${type}/${status}/${category}/${keywordValue}/${order}/${page}`;
+    const newLocation = `/${type ?? "ALL"}/${status ?? "ALL"}/${category ?? "ALL"}/${keywordValue ?? "NONE"}/${order ?? "ALL"}/${page}`;
 
     if (data) {
       setStudyList(data.studyChannels);
@@ -121,11 +121,13 @@ const StudyList = (): JSX.Element => {
       <div className="study-cards-container w-full flex justify-center items-center flex-wrap">
         {/* 받은 채널 리스트의 길이만큼 map을 이용해 Card 생성 or 스켈레톤 렌더링 */}
         {isLoading && skeletonList.map((card) => <CardSkeleton key={card} />)}
-        {data && studyList.length === 0 ? (
-          <div>조건에 해당하는 스터디채널이 없습니다.</div>
-        ) : (
-          studyList.map((studyChannel) => <Card studyInfo={studyChannel} key={studyChannel.studyChannelId} />)
-        )}
+        {data &&
+          Array.isArray(studyList) &&
+          (studyList.length === 0 ? (
+            <div>조건에 해당하는 스터디채널이 없습니다.</div>
+          ) : (
+            studyList.map((studyChannel) => <Card studyInfo={studyChannel} key={studyChannel.studyChannelId} />)
+          ))}
       </div>
       <Pagination filter={filter} setFilter={setFilter} dataListLength={totalDataLength} />
     </div>

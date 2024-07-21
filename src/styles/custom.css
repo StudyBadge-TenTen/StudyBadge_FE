@@ -1,6 +1,13 @@
 /* 프로젝트 전체에 적용할 스타일 코드입니다. */
 
+#root {
+  overflow-x: hidden;
+}
+
 input {
+  outline-color: #1c4587;
+}
+textarea {
   outline-color: #1c4587;
 }
 

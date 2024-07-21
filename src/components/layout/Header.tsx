@@ -5,6 +5,7 @@ import { useKeywordStore } from "../../store/study-store";
 import { useEffect, useState } from "react";
 import Toast from "../common/Toast";
 import { useNotificationStore } from "../../store/notification-store";
+import { useAuthStore } from "../../store/auth-store";
 
 const Header = (): JSX.Element => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Header = (): JSX.Element => {
   const { keywordValue, setKeywordValue } = useKeywordStore();
   const { notifications } = useNotificationStore();
   const [newIcon, setNewIcon] = useState(false);
+  const { accessToken, logout, reset } = useAuthStore();
 
   useEffect(() => {
     console.log("inputValue: ", inputValue);
@@ -86,8 +88,21 @@ const Header = (): JSX.Element => {
             </button>
             <Toast />
           </div>
-          <button className="hidden md:inline-block btn-blue" onClick={() => navigate("/login")}>
+          <button
+            className={`hidden md:${accessToken ? "hidden" : "inline-block"} btn-blue`}
+            onClick={() => navigate("/login")}
+          >
             로그인
+          </button>
+          <button
+            className={`hidden md:${!accessToken ? "hidden" : "inline-block"} btn-blue`}
+            onClick={async () => {
+              await logout();
+              reset();
+              navigate("/");
+            }}
+          >
+            로그아웃
           </button>
         </div>
       </div>

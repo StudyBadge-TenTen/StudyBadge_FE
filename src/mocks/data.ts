@@ -122,15 +122,13 @@ export const studyListResponse = {
       endDate: "2024.09.01",
       deposit: 10000,
       viewCount: 45,
-      leader: {
-        id: 15125,
-        name: "홍길동",
-      },
+      memberId: 15125,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 2,
       name: "B 북스터디",
-      category: "DEVELOPMENT",
+      category: "SELF_DEVELOPMENT",
       description:
         "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
       recruitmentStatus: "RECRUITING",
@@ -139,10 +137,8 @@ export const studyListResponse = {
       endDate: "2024.11.01",
       deposit: 20000,
       viewCount: 80,
-      leader: {
-        id: 15126,
-        name: "크레용",
-      },
+      memberId: 15126,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 3,
@@ -156,15 +152,13 @@ export const studyListResponse = {
       endDate: "2024.09.01",
       deposit: 10000,
       viewCount: 45,
-      leader: {
-        id: 15127,
-        name: "김철수",
-      },
+      memberId: 15127,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 4,
       name: "D 북스터디",
-      category: "DEVELOPMENT",
+      category: "SELF_DEVELOPMENT",
       description:
         "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
       recruitmentStatus: "RECRUITING",
@@ -173,10 +167,8 @@ export const studyListResponse = {
       endDate: "2024.11.01",
       deposit: 20000,
       viewCount: 80,
-      leader: {
-        id: 15128,
-        name: "김영희",
-      },
+      memberId: 15128,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 5,
@@ -190,15 +182,13 @@ export const studyListResponse = {
       endDate: "2024.09.01",
       deposit: 10000,
       viewCount: 45,
-      leader: {
-        id: 15129,
-        name: "김스뱃",
-      },
+      memberId: 15129,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 6,
       name: "F 북스터디",
-      category: "DEVELOPMENT",
+      category: "SELF_DEVELOPMENT",
       description:
         "B 북스터디는 OO책의 12단원 중 각자 1단원씩 맡아 다른 스터디원들에게 설명하는 발표형식 스터디입니다.",
       recruitmentStatus: "RECRUITING",
@@ -207,10 +197,54 @@ export const studyListResponse = {
       endDate: "2024.11.01",
       deposit: 20000,
       viewCount: 80,
-      leader: {
-        id: 15130,
-        name: "한스뱃",
-      },
+      memberId: 15130,
+      memberName: "홍길동",
     },
   ],
+};
+
+// studyInfo data
+export const studyInfoResponse = {
+  studyChannelId: 1,
+  studyChannelName: "내일은 코딩왕",
+  studyChannelDescription:
+    "내일은 코딩왕 스터디 모임입니다. 매주 모여서 코딩을 합니다. 코딩에 관심있으신 분들 신청주세요!",
+  chattingUrl: "http://study-chattingurl",
+  capacity: 10,
+  category: "IT",
+  meetingType: "OFFLINE",
+  region: "서울시 성동구",
+  startDate: "2023-06-01",
+  endDate: "2023-08-31",
+  deposit: 20000,
+  leaderName: "홍길동",
+  subLeaderName: "김스뱃",
+};
+
+// memberList data
+export const memberListResponse = {
+  studyMembers: [
+    {
+      memberId: 1,
+      name: "홍길동",
+      imageUrl: "",
+      badgeLevel: "GOLD",
+      role: "LEADER",
+    },
+    {
+      memberId: 2,
+      name: "김스뱃",
+      imageUrl: "",
+      badgeLevel: "NONE",
+      role: "STUDY_MEMBER",
+    },
+    {
+      memberId: 3,
+      name: "김철수",
+      imageUrl: "",
+      badgeLevel: "SILVER",
+      role: "STUDY_MEMBER",
+    },
+  ],
+  leader: true,
 };

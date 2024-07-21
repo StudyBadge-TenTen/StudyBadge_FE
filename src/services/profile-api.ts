@@ -1,5 +1,5 @@
 import { MyStudyType, ProfilePutType, UserInfoType } from "../types/profile-type";
-import fetchCall from "./common";
+import { fetchCall } from "./common";
 
 const getProfile = async () => {
   const userInfo = await fetchCall<UserInfoType>(`/api/members/my-info`, "get");

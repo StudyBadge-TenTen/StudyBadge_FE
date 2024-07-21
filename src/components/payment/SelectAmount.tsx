@@ -31,7 +31,7 @@ const SelectAmount = ({ setConfirm, chargeAmount, setChargeAmount }: SelectAmoun
         <button className="btn-blue mt-8" onClick={() => setConfirm(() => true)}>
           결제하기
         </button>
-        <button className="mt-8 self-center text-Red-2" onClick={() => navigate("/profile")}>
+        <button className="mt-8 self-center text-Red-2" onClick={() => navigate("/profile/myInfo")}>
           취소
         </button>
       </Modal>

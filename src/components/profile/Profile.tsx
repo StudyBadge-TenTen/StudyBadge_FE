@@ -8,7 +8,7 @@ import SelectAmount from "../payment/SelectAmount";
 import Checkout from "../payment/Checkout";
 import { useLocation, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { MyStudyMockType, MyStudyType, UserInfoType } from "../../types/profile-type";
+import { MyStudyType, UserInfoType } from "../../types/profile-type";
 import { getMyStudy, getProfile } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
 
@@ -41,6 +41,12 @@ const Profile = (): JSX.Element => {
     const element = document.getElementById("root");
     if (element) {
       element.scrollIntoView();
+    }
+
+    if (location.state) {
+      if (location.state.social) {
+        setIsEditMode(true);
+      }
     }
   }, [location]);
 
@@ -90,17 +96,17 @@ const Profile = (): JSX.Element => {
             </div>
             <button
               onClick={() => {
-                navigate("/payment");
+                navigate("/profile/payment");
               }}
               className="btn-blue mt-8 md:mt-0"
             >
               충전하기
             </button>
           </div>
-          {location.pathname === "/payment" && !confirm && (
+          {location.pathname === "/profile/payment" && !confirm && (
             <SelectAmount setConfirm={setConfirm} chargeAmount={chargeAmount} setChargeAmount={setChargeAmount} />
           )}
-          {location.pathname === "/payment" && confirm && (
+          {location.pathname === "/profile/payment" && confirm && (
             <Checkout setConfirm={setConfirm} chargeAmount={chargeAmount} />
           )}
           {/* 이용자가 소속된 스터디 채널 개수대로 렌더링 */}
@@ -113,6 +119,7 @@ const Profile = (): JSX.Element => {
             myStudy.map((studyChannel) => (
               <div
                 key={studyChannel.studyId}
+                onClick={() => navigate(`/channel/${studyChannel.studyId}/schedule`)}
                 className="border border-solid border-Gray-3 w-full h-32 p-10 rounded-[30px] flex flex-col sm:flex-row justify-between items-center mt-10"
               >
                 <div className="flex items-center">
