@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import {
+  attendanceResponse,
   memberListResponse,
   myStudyList,
   paymentResponse,
@@ -140,6 +141,16 @@ export const handlers = [
   http.get("/api/study-channels/:studyChannelId/members", async ({ params }) => {
     console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/members" request`);
     return HttpResponse.json(memberListResponse);
+  }),
+  http.post("/api/study-channels/:studyChannelId/members/assign-role", async ({ request, params }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/members/assign-role" request`);
+    console.log(requestBody);
+    return HttpResponse.json({ status: 200 });
+  }),
+  http.get("/api/study-channels/:studyChannelId/attendances", async ({ params }) => {
+    console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/attendances" request`);
+    return HttpResponse.json(attendanceResponse);
   }),
 
   // auth handlers

@@ -87,23 +87,25 @@ const Information = (): JSX.Element => {
   return (
     <>
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 정보</h2>
-      {/* 리더에게만 보일 수정 버튼 */}
       <div className="flex justify-end">
-        <button
-          onClick={() => {
-            if (isEditMode) {
-              // 수정 데이터 put으로 서버에 전송
-              putStudyInfo(Number(channelId), newStudyInfo);
-              setIsEditMode(false);
-              // navigate(`/channel/${channelId}/information`);
-            } else {
-              navigate("information_edit", { state: { tab: "정보", edit: true } });
-            }
-          }}
-          className="btn-blue mb-4"
-        >
-          {isEditMode ? "저장" : "정보수정"}
-        </button>
+        {/* 리더에게만 보일 수정 버튼 */}
+        {data?.isLeader && (
+          <button
+            onClick={() => {
+              if (isEditMode) {
+                // 수정 데이터 put으로 서버에 전송
+                putStudyInfo(Number(channelId), newStudyInfo);
+                setIsEditMode(false);
+                // navigate(`/channel/${channelId}/information`);
+              } else {
+                navigate("information_edit", { state: { tab: "정보", edit: true } });
+              }
+            }}
+            className="btn-blue mb-4"
+          >
+            {isEditMode ? "저장" : "정보수정"}
+          </button>
+        )}
         {isEditMode && (
           <button
             onClick={() => {
@@ -168,7 +170,7 @@ const Information = (): JSX.Element => {
           <div className="w-3/5 h-full p-4 py-8 flex flex-col justify-between items-start">
             {isLoading || !data
               ? infoTitles.map((title) => (
-                  <div key={`skeleton_${title}`} className="w-full h-4 bg-Gray-1 rounded-[50px]"></div>
+                  <div key={`skeleton_${title}`} className="w-full h-4 bg-Gray-1 rounded-[50px] animate-pulse"></div>
                 ))
               : data &&
                 studyDetailList &&

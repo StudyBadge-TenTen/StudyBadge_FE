@@ -1,4 +1,9 @@
-import { MemberListResponseType, StudyInfoPutRequestType, StudyInfoType } from "../types/study-channel-type";
+import {
+  AttendanceResponseType,
+  MemberListResponseType,
+  StudyInfoPutRequestType,
+  StudyInfoType,
+} from "../types/study-channel-type";
 import { fetchCall } from "./common";
 
 const getStudyInfo = async (studyChannelId: number) => {
@@ -7,8 +12,11 @@ const getStudyInfo = async (studyChannelId: number) => {
 };
 
 const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
-  const response = await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
-  return response;
+  try {
+    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getMemberList = async (studyChannelId: number) => {
@@ -16,4 +24,20 @@ const getMemberList = async (studyChannelId: number) => {
   return memberList;
 };
 
-export { getStudyInfo, putStudyInfo, getMemberList };
+const postSubLeader = async (studyChannelId: number, requestBody: { studyMemberId: number }) => {
+  try {
+    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}/members/assign-role`, "post", requestBody);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getAttendance = async (studyChannelId: number) => {
+  const attendance = await fetchCall<AttendanceResponseType[]>(
+    `/api/study-channels/${studyChannelId}/attendances`,
+    "get",
+  );
+  return attendance;
+};
+
+export { getStudyInfo, putStudyInfo, getMemberList, postSubLeader, getAttendance };

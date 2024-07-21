@@ -16,7 +16,7 @@ textarea {
 }
 .custom-scroll::-webkit-scrollbar-thumb {
   height: 30%;
-  background: #1c4587;
+  background: #dce1e7;
 
   border-radius: 10px;
 }

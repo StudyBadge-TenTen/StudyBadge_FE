@@ -3,6 +3,10 @@ import Schedules from "./Schedules";
 import Information from "./Information";
 import { useLocation, useNavigate, useParams } from "react-router";
 import MemberList from "./MemberList";
+import Attendance from "./Attendance";
+import { useQuery } from "@tanstack/react-query";
+import { StudyInfoType } from "../../types/study-channel-type";
+import { getStudyInfo } from "../../services/channel-api";
 
 const ChannelBook = (): JSX.Element => {
   const { channelId } = useParams();
@@ -10,6 +14,10 @@ const ChannelBook = (): JSX.Element => {
   const state = useLocation().state;
   const [tabState, setTabState] = useState("일정");
   const memberTab = ["정보", "일정", "멤버", "출석현황"];
+  const { data } = useQuery<StudyInfoType>({
+    queryKey: ["studyInfo", channelId],
+    queryFn: () => getStudyInfo(Number(channelId)),
+  });
 
   useEffect(() => {
     const element = document.getElementById("root");
@@ -72,7 +80,10 @@ const ChannelBook = (): JSX.Element => {
             </button>
           ))}
           <button
-            className={`${"hidden"} w-20 md:w-32 h-12 md:h-14 bg-Gray-1 rounded-t-[30px] md:text-xl text-Blue-2 font-bold flex justify-center items-center hover:bg-Gray-2`}
+            onClick={() => {
+              setTabState(() => "모집");
+            }}
+            className={`${data?.isLeader ? "" : "hidden"} w-20 md:w-32 h-12 md:h-14 ${tabState === "모집" ? "bg-Gray-3 text-Blue-2" : "bg-Gray-1 text-Blue-2"} rounded-t-[30px] md:text-xl font-bold flex justify-center items-center hover:bg-Gray-2`}
           >
             모집
           </button>
@@ -81,6 +92,7 @@ const ChannelBook = (): JSX.Element => {
           {tabState === "일정" && <Schedules />}
           {tabState === "정보" && <Information />}
           {tabState === "멤버" && <MemberList />}
+          {tabState === "출석현황" && <Attendance />}
         </div>
       </div>
     </>

@@ -5,7 +5,7 @@ type MeetingType = "ONLINE" | "OFFLINE";
 type RecruitmentStatusType = "RECRUITING" | "RECRUIT_COMPLETED";
 type OrderType = "RECENT" | "VIEW_COUNT";
 
-// 스터디 채널 정보 상세 타입 (변동가능)
+// 스터디 채널 정보 상세 타입
 interface StudyInfoType {
   studyChannelId: number;
   studyChannelName: string;
@@ -20,6 +20,7 @@ interface StudyInfoType {
   deposit: number;
   leaderName: string;
   subLeaderName: string;
+  isLeader: boolean;
 }
 
 interface StudyInfoPutRequestType {
@@ -75,6 +76,15 @@ interface MemberListResponseType {
   leader: boolean;
 }
 
+interface AttendanceResponseType {
+  memberId: number;
+  studyMemberId: number;
+  name: string;
+  imageUrl: string;
+  attendanceCount: number;
+  attendanceRatio: number;
+}
+
 // ----------------------------------- store type
 interface StudyStoreType {
   name: string;
@@ -121,6 +131,7 @@ export type {
   StudyRoleType,
   StudyMemberType,
   MemberListResponseType,
+  AttendanceResponseType,
   StudyStoreType,
   StudyListStoreType,
   FilterStoreType,

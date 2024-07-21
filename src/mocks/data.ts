@@ -219,6 +219,7 @@ export const studyInfoResponse = {
   deposit: 20000,
   leaderName: "홍길동",
   subLeaderName: "김스뱃",
+  isLeader: true,
 };
 
 // memberList data
@@ -248,3 +249,30 @@ export const memberListResponse = {
   ],
   leader: true,
 };
+
+export const attendanceResponse = [
+  {
+    memberId: 1,
+    studyMemberId: 1,
+    name: "홍길동",
+    imageUrl: "imageUrl",
+    attendanceCount: 10,
+    attendanceRatio: 100,
+  },
+  {
+    memberId: 1,
+    studyMemberId: 2,
+    name: "김스뱃",
+    imageUrl: "imageUrl",
+    attendanceCount: 5,
+    attendanceRatio: 50,
+  },
+  {
+    memberId: 1,
+    studyMemberId: 3,
+    name: "김철수",
+    imageUrl: "imageUrl",
+    attendanceCount: 8,
+    attendanceRatio: 80,
+  },
+];
