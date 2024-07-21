@@ -7,6 +7,7 @@ import Attendance from "./Attendance";
 import { useQuery } from "@tanstack/react-query";
 import { StudyInfoType } from "../../types/study-channel-type";
 import { getStudyInfo } from "../../services/channel-api";
+import Recruitment from "./Recruitment";
 
 const ChannelBook = (): JSX.Element => {
   const { channelId } = useParams();
@@ -93,6 +94,7 @@ const ChannelBook = (): JSX.Element => {
           {tabState === "정보" && <Information />}
           {tabState === "멤버" && <MemberList />}
           {tabState === "출석현황" && <Attendance />}
+          {tabState === "모집" && <Recruitment />}
         </div>
       </div>
     </>

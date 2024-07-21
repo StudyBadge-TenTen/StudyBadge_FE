@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { StudyInfoType } from "../../types/study-channel-type";
+import { newSubLeaderStateType, StudyInfoType } from "../../types/study-channel-type";
 import { useQuery } from "@tanstack/react-query";
-import { getStudyInfo, putStudyInfo } from "../../services/channel-api";
+import { getStudyInfo, postSubLeader, putStudyInfo } from "../../services/channel-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
+import Modal from "../common/Modal";
+import MemberList from "./MemberList";
 
 const Information = (): JSX.Element => {
   const { channelId } = useParams();
@@ -21,6 +23,11 @@ const Information = (): JSX.Element => {
     description: "",
     chattingUrl: "",
   });
+  const [newSubLeader, setNewSubLeader] = useState<newSubLeaderStateType>({
+    name: data?.subLeaderName ?? "",
+    id: undefined,
+  });
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     return setIsEditMode(false);
@@ -95,6 +102,9 @@ const Information = (): JSX.Element => {
               if (isEditMode) {
                 // 수정 데이터 put으로 서버에 전송
                 putStudyInfo(Number(channelId), newStudyInfo);
+                if (newSubLeader.id) {
+                  postSubLeader(Number(channelId), { studyMemberId: newSubLeader.id });
+                }
                 setIsEditMode(false);
                 // navigate(`/channel/${channelId}/information`);
               } else {
@@ -110,6 +120,7 @@ const Information = (): JSX.Element => {
           <button
             onClick={() => {
               setIsEditMode(false);
+              setNewSubLeader(() => ({ id: undefined, name: "" }));
               navigate(`/channel/${channelId}/information`);
             }}
             className="btn-blue self-end ml-2 mb-4"
@@ -192,10 +203,33 @@ const Information = (): JSX.Element => {
                       {index === 3
                         ? detail?.toLocaleString()
                         : detail !== null
-                          ? detail
+                          ? index === 6 && newSubLeader.id
+                            ? newSubLeader.name
+                            : detail
                           : "해당 스터디 멤버에게만 공개"}
                       {isEditMode && data?.subLeaderName === detail && (
-                        <button className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4">변경</button>
+                        <>
+                          <button
+                            onClick={() => setModal(() => true)}
+                            className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4"
+                          >
+                            변경
+                          </button>
+                          {modal && (
+                            <Modal>
+                              <MemberList setNewSubLeader={setNewSubLeader} setModal={setModal} />
+                              <button
+                                onClick={() => {
+                                  setNewSubLeader(() => ({ name: "", id: undefined }));
+                                  setModal(() => false);
+                                }}
+                                className="cancel-btn btn-blue"
+                              >
+                                취소
+                              </button>
+                            </Modal>
+                          )}
+                        </>
                       )}
                     </span>
                   ),
