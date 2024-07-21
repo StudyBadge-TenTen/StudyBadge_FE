@@ -140,6 +140,7 @@ export const handlers = [
   http.get("/api/study-channels/:studyChannelId/members", async ({ params }) => {
     console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/members" request`);
     return HttpResponse.json(memberListResponse);
+  }),
 
   // auth handlers
   http.post(`/oauth2/authorization/kakao`, async ({ request }) => {
