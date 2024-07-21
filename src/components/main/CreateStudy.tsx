@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStudyStore } from "../../store/study-store";
-import axios from "axios";
 import { koreanRegions } from "../common/KoreanRegions";
 import moment from "moment";
+import { postStudyChannel } from "../../services/channel-api";
 
 const PENALTY_SYSTEM = `
 스터디 채널에 모인 총 예치금은 출석률에 따라 차등 분배됩니다.
@@ -78,11 +78,11 @@ const CreateStudy: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("/api/study-channels", study);
-      console.log("Study created:", response.data);
+      const response = await postStudyChannel(study);
+      console.log("Study created:", response.studyChannelId);
       study.resetForm();
 
-      navigate(`/channel/${response.data.studyChannelId}/schedule`);
+      navigate(`/channel/${response.studyChannelId}/schedule`);
     } catch (error) {
       console.error("Failed to create study:", error);
     }

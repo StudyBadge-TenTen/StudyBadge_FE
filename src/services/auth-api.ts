@@ -20,7 +20,7 @@ export interface SignUpData {
 export const postLogin = async (email: string, password: string): Promise<LoginResponse> => {
   try {
     const response = await axios.post<LoginResponse>(
-      "/api/members/login",
+      `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/members/login`,
       { email, password },
       { withCredentials: true }, // withCredentials 옵션 추가
     );
@@ -48,7 +48,10 @@ export const initiateSocialLogin = (provider: "naver" | "kakao") => {
 };
 
 export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string) => {
-  const response = await axios.post<LoginResponse>(`/oauth2/authorization/${provider}`, { code });
+  const response = await axios.post<LoginResponse>(
+    `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/oauth2/authorization/${provider}`,
+    { code },
+  );
   const accessTokenBearer = response.headers["authorization"] as string;
   const accessToken = accessTokenBearer.split(" ")[1];
 
@@ -64,7 +67,10 @@ export const postSocialLoginCallback = async (provider: "naver" | "kakao", code:
 // };
 
 export const signUp = async (userData: SignUpData): Promise<void> => {
-  await axios.post("/api/members/sign-up", userData);
+  await axios.post(
+    `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/members/sign-up`,
+    userData,
+  );
 };
 
 export const postLogout = async () => {

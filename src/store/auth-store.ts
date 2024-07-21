@@ -105,7 +105,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   refreshAccessToken: async () => {
     try {
       const response = await axios.post<LoginResponse>(
-        "/api/token/re-issue",
+        `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/token/re-issue`,
         { refreshToken: get().refreshToken },
         { withCredentials: true },
       );

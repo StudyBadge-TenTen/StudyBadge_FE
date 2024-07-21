@@ -1,4 +1,9 @@
-import { MemberListResponseType, StudyInfoPutRequestType, StudyInfoType } from "../types/study-channel-type";
+import {
+  MemberListResponseType,
+  StudyInfoPutRequestType,
+  StudyInfoType,
+  StudyStoreType,
+} from "../types/study-channel-type";
 import { fetchCall } from "./common";
 
 const getStudyInfo = async (studyChannelId: number) => {
@@ -16,4 +21,9 @@ const getMemberList = async (studyChannelId: number) => {
   return memberList;
 };
 
-export { getStudyInfo, putStudyInfo, getMemberList };
+const postStudyChannel = async (requestBody: StudyStoreType) => {
+  const response = await fetchCall<{ studyChannelId: number }>(`/api/study-channels`, "post", requestBody);
+  return response;
+};
+
+export { getStudyInfo, putStudyInfo, getMemberList, postStudyChannel };
