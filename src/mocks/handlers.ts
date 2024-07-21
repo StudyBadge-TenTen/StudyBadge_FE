@@ -118,7 +118,6 @@ export const handlers = [
     console.log(requestBody);
     return HttpResponse.json(paymentResponse, { status: 200 });
   }),
-
   http.post("/api/payments/success", async ({ request }) => {
     const requestBody = await request.json();
     console.log(`Captured a "POST /api/payments/success" request`);
