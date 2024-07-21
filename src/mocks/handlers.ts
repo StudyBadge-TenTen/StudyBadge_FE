@@ -6,6 +6,7 @@ import {
   paymentResponse,
   paymentSuccessResponse,
   placeInfo,
+  recruitmentResponse,
   scheduleList,
   studyInfoResponse,
   studyListResponse,
@@ -152,6 +153,32 @@ export const handlers = [
     console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/attendances" request`);
     return HttpResponse.json(attendanceResponse);
   }),
+  http.get("/api/study-channels/:studyChannelId/participation-status", async ({ params }) => {
+    console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/participation-status" request`);
+    return HttpResponse.json(recruitmentResponse);
+  }),
+  http.post(
+    "/api/study-channels/:studyChannelId/participation/:participationId/approve",
+    async ({ request, params }) => {
+      const requestBody = await request.json();
+      console.log(
+        `Captured a "GET /api/study-channels/${params.studyChannelId}/participation/${params.participationId}/approve" request`,
+      );
+      console.log(requestBody);
+      return HttpResponse.json({ status: 200 });
+    },
+  ),
+  http.post(
+    "/api/study-channels/:studyChannelId/participation/:participationId/reject",
+    async ({ request, params }) => {
+      const requestBody = await request.json();
+      console.log(
+        `Captured a "GET /api/study-channels/${params.studyChannelId}/participation/${params.participationId}/reject" request`,
+      );
+      console.log(requestBody);
+      return HttpResponse.json({ status: 200 });
+    },
+  ),
 
   // auth handlers
   http.post(`/oauth2/authorization/kakao`, async ({ request }) => {

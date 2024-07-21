@@ -4,6 +4,7 @@ type StudyCategoryType = "IT" | "LANGUAGE" | "EMPLOYMENT" | "SELF_DEVELOPMENT";
 type MeetingType = "ONLINE" | "OFFLINE";
 type RecruitmentStatusType = "RECRUITING" | "RECRUIT_COMPLETED";
 type OrderType = "RECENT" | "VIEW_COUNT";
+type ApproveType = "APPROVE_WAITING" | string;
 
 // 스터디 채널 정보 상세 타입
 interface StudyInfoType {
@@ -85,6 +86,29 @@ interface AttendanceResponseType {
   attendanceRatio: number;
 }
 
+interface RecruitmentInfoType {
+  studyChannelId: number;
+  recruitmentStatus: RecruitmentStatusType;
+  participants: [
+    {
+      memberId: number;
+      imageUrl: string;
+      name: string;
+      banCnt: number;
+      badgeLevel: BadgeType;
+      participationId: number;
+      participationStatus: ApproveType;
+    },
+  ];
+}
+
+interface newSubLeaderStateType {
+  name: string;
+  id: undefined | number;
+}
+
+type SetNewSubLeaderType = React.Dispatch<React.SetStateAction<newSubLeaderStateType>>;
+
 // ----------------------------------- store type
 interface StudyStoreType {
   name: string;
@@ -132,6 +156,10 @@ export type {
   StudyMemberType,
   MemberListResponseType,
   AttendanceResponseType,
+  RecruitmentInfoType,
+  newSubLeaderStateType,
+  SetNewSubLeaderType,
+  // ---------------- store type
   StudyStoreType,
   StudyListStoreType,
   FilterStoreType,
