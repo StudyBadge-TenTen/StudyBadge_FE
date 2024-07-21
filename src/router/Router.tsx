@@ -11,6 +11,7 @@ import Fail from "../components/payment/Fail";
 import Profile from "../components/profile/Profile";
 import ChannelBook from "../components/channel/ChannelBook";
 import ScheduleEdit from "../components/schedule/ScheduleEdit";
+import Notification from "../components/profile/Notification";
 import CreateStudyPage from "../pages/CreateStudyPage";
 import SocialLoginCallback from "../components/auth/SocialLoginCallback";
 import PasswordResetPage from "../pages/PasswordResetPage";
@@ -30,6 +31,7 @@ const Router = (): JSX.Element => {
         <Route path="/profile/payment" element={<Profile />} />
         <Route path="/profile/myInfo" element={<Profile />} />
         <Route path="/profile/paymentList" element={<PaymentListPage />} />
+        <Route path="/profile/notification" element={<Notification />} />
       </Route>
       <Route path="/payment" element={<ProfilePage />} />
       <Route path="/paymentSuccess/*" element={<Success />} />

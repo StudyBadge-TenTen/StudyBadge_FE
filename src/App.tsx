@@ -2,10 +2,12 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./router/Router";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import { useSSE } from "./hooks/useSSE";
 import { useAuthStore } from "./store/auth-store";
 import { useEffect } from "react";
 
 function App() {
+  useSSE();
   const { refreshAccessToken } = useAuthStore();
 
   useEffect(() => {
