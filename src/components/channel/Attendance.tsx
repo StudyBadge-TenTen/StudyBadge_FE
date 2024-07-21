@@ -49,7 +49,7 @@ const Attendance = (): JSX.Element => {
                 <span className="inline-block mr-8">{member.attendanceRatio}%</span>
                 <div className="w-full h-8 bg-Gray-1 rounded-[30px] relative z-10">
                   <div
-                    className={`${member.attendanceRatio === 100 ? "w-full" : `w-[${String(member.attendanceRatio)}%]`} h-8 bg-Blue-2 rounded-[30px] absolute top-0 left-0 z-20`}
+                    className={`${member.attendanceRatio === 100 ? "w-full" : `w-[${member.attendanceRatio}%]`} h-8 bg-Blue-2 rounded-[30px] absolute top-0 left-0 z-20 keyframes-grow`}
                   ></div>
                 </div>
               </div>
