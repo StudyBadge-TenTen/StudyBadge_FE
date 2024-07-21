@@ -16,7 +16,7 @@ export const useSSE = () => {
     const eventSource = new EventSourcePolyfill(API_BASE_URL + `api/subscribe`, {
       headers: {
         "Last-Event-ID": localStorage.getItem(LAST_EVENT_ID) ?? "",
-        // Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       heartbeatTimeout: 30000, // 30초가 더 안전한 것 같아 30초로 수정해뒀습니다
       withCredentials: true,

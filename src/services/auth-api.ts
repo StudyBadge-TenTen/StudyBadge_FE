@@ -1,21 +1,6 @@
 import axios from "axios";
 import { fetchCall, setApiToken } from "./common";
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-export interface SignUpData {
-  email: string;
-  name: string;
-  nickname: string;
-  introduction: string;
-  accountBank: string;
-  account: string;
-  password: string;
-  checkPassword: string;
-}
+import { LoginResponse, SignUpData } from "../types/auth-type";
 
 export const postLogin = async (email: string, password: string): Promise<LoginResponse> => {
   try {
@@ -27,6 +12,7 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
 
     const accessTokenBearer = response.headers["authorization"] as string;
     const accessToken = accessTokenBearer.split(" ")[1];
+    console.log("Access token received:", accessToken); // 디버깅을 위해 추가
 
     // 쿠키는 HTTP Only로 설정되었으므로, JavaScript를 통해 접근할 수 없음.
     // 브라우저가 자동으로 관리하도록 설정.

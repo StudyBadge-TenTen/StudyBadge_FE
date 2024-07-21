@@ -1,38 +1,10 @@
 import { create } from "zustand";
 import axios from "axios";
-import {
-  signUp,
-  postSocialLoginCallback,
-  postLogin,
-  LoginResponse,
-  postLogout,
-  initiateSocialLogin,
-} from "../services/auth-api";
-import { PasswordResetStore } from "../types/auth-type";
+import { signUp, postSocialLoginCallback, postLogin, postLogout, initiateSocialLogin } from "../services/auth-api";
+import { AuthStoreType, LoginResponse, PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";
 
-export interface AuthStore {
-  email: string;
-  name: string;
-  nickname: string;
-  introduction: string;
-  accountBank: string;
-  account: string;
-  password: string;
-  checkPassword: string;
-  accessToken: string | null;
-  refreshToken: string | null;
-  setField: (field: keyof Omit<AuthStore, "setField" | "resetForm" | "login" | "signUp">, value: string) => void;
-  login: (email: string, password: string) => Promise<void>;
-  signUp: () => Promise<void>;
-  reset: () => void;
-  initiateSocialLogin: (provider: "naver" | "kakao") => void;
-  handleSocialLoginCallback: (provider: "naver" | "kakao", code: string, state?: string) => Promise<void>;
-  refreshAccessToken: () => Promise<void>;
-  logout: () => Promise<void>;
-}
-
-export const useAuthStore = create<AuthStore>((set, get) => ({
+export const useAuthStore = create<AuthStoreType>((set, get) => ({
   email: "",
   name: "",
   nickname: "",

@@ -1,4 +1,4 @@
-import { AuthStore } from "../store/auth-store";
+import { AuthStoreType } from "../types/auth-type";
 
 const nameToType = (formName: string) => {
   let name;
@@ -48,7 +48,7 @@ const returnPlaceholder = (formName: string) => {
 };
 
 const nameToField = (formName: string) => {
-  let fieldName: keyof Omit<AuthStore, "setField" | "resetForm" | "login" | "signUp"> = "introduction";
+  let fieldName: keyof Omit<AuthStoreType, "setField" | "resetForm" | "login" | "signUp"> = "introduction";
   switch (formName) {
     case "이메일":
       fieldName = "email";

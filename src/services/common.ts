@@ -9,6 +9,7 @@ let API_TOKEN = "";
 const setApiToken = (token: string) => {
   API_TOKEN = token;
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${API_TOKEN}`;
+  console.log("Token set:", API_TOKEN); // 디버깅을 위해 추가
 };
 
 const axiosInstance = axios.create({
@@ -24,6 +25,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // 요청 헤더에 인증 토큰 추가
     config.headers.Authorization = `Bearer ${API_TOKEN}`;
+    console.log("Request headers:", config.headers); // 디버깅을 위해 추가
     return config;
   },
   (error) => {
@@ -36,11 +38,13 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => {
     // 응답 데이터를 처리하고 반환
+    console.log("Response headers:", response.headers); // 디버깅을 위해 추가
     return response.data;
   },
   (error) => {
     // 응답 에러 처리
     const axiosError = error as AxiosError;
+    console.error("Response error:", axiosError.response?.data); // 디버깅을 위해 추가
     // 여기서 에러 처리 로직 구현
     return Promise.reject(axiosError);
   },

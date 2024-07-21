@@ -1,5 +1,4 @@
 interface SelectAmountPropsType {
-  // setIsPaying: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   chargeAmount: number;
   setChargeAmount: React.Dispatch<React.SetStateAction<number>>;
@@ -10,14 +9,6 @@ interface PaymentBodyType {
   amount: number;
   orderName: string;
 }
-
-// interface PaymentBodyType {
-//   payType: string;
-//   amount: number;
-//   orderName: string;
-//   successUrl: string;
-//   failUrl: string;
-// }
 
 interface PaymentResponseType {
   payType: string;
@@ -32,16 +23,6 @@ interface PaymentResponseType {
   cancelYN: true;
   cancelReason: string;
 }
-
-// interface PaymentResponseType {
-//   amount: number;
-//   orderId: string;
-//   orderName: string;
-//   customerName: string;
-//   successUrl: string;
-//   failUrl: string;
-//   customerEmail: string;
-// }
 
 interface SuccessResponseType {
   paymentKey: string;
