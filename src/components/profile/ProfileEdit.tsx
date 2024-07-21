@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { putProfile } from "../../services/profile-api";
 import { ProfileInfoType, ProfilePutType } from "../../types/profile-type";
 import { BANK_LIST } from "../../constants/bank-list";
+import axios from "axios";
+import { useAuthStore } from "../../store/auth-store";
 
 const ProfileEdit = (): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
@@ -18,6 +20,7 @@ const ProfileEdit = (): JSX.Element => {
   const nicknameRef = useRef<HTMLInputElement>(null);
   const accountRef = useRef<HTMLInputElement>(null);
   const accountBankRef = useRef<HTMLSelectElement>(null);
+  const { accessToken } = useAuthStore();
 
   // input 값의 change를 감지해 상태로 저장
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -116,12 +119,27 @@ const ProfileEdit = (): JSX.Element => {
       }
     }
 
-    const profileObj = {
-      memberUpdateRequest: profileInfo,
-      file: imageFile,
-    };
-    const newUserInfo = await putProfile(profileObj);
-    console.log(newUserInfo); // 이 데이터로 user info set하면 됨
+    const formData = new FormData();
+    formData.append("memberUpdateRequest", JSON.stringify(profileInfo));
+
+    if (imageFile) {
+      // FormData에 데이터 추가
+      formData.append("file", imageFile);
+    }
+    try {
+      // 서버로 FormData 전송
+      const response = await axios.put("/api/members/my-info/update", formData, {
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      // 서버 응답 출력
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
