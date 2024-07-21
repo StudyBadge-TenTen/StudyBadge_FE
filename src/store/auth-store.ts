@@ -7,7 +7,7 @@ import {
   LoginResponse,
   postLogout,
   initiateSocialLogin,
-} from "../services/auth";
+} from "../services/auth-api";
 import { PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";
 

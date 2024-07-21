@@ -1,4 +1,4 @@
-type StudyCategoryType = "IT" | "LANGUAGE" | "EMPLOYMENT" | "DEVELOPMENT";
+type StudyCategoryType = "IT" | "LANGUAGE" | "EMPLOYMENT" | "SELF_DEVELOPMENT";
 type MeetingType = "ONLINE" | "OFFLINE";
 type RecruitmentStatusType = "RECRUITING" | "RECRUIT_COMPLETED";
 type OrderType = "RECENT" | "VIEW_COUNT";
@@ -37,10 +37,8 @@ interface StudyListObjectType {
   endDate: "YYYY-MM-DD" | string;
   deposit: number;
   viewCount: number;
-  leader: {
-    id: number;
-    name: string;
-  };
+  memberId: number;
+  memberName: string;
 }
 
 interface StudyListRequestType {

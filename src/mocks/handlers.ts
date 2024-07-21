@@ -19,9 +19,10 @@ export const handlers = [
     const type = url.searchParams.get("type");
     const category = url.searchParams.get("category");
     const status = url.searchParams.get("status");
+    const keyword = url.searchParams.get("keyword");
 
     console.log(
-      `Captured a "GET /api/study-channels?page=${page}&order=${order}&type=${type}&category=${category}&status=${status}`,
+      `Captured a "GET /api/study-channels?page=${page ?? 1}&order=${order ?? "RECENT"}${type ? `&type=${type}` : ""}${category ? `&category=${category}` : ""}${status ? `&status=${status}` : ""}${keyword ? `&keyword=${keyword}` : ""}" request`,
     );
     return HttpResponse.json(studyListResponse);
   }),

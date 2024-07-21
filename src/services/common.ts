@@ -2,8 +2,8 @@ import axios, { AxiosError } from "axios";
 
 // 공통 axios 만들기
 const API_BASE_URL = import.meta.env.DEV
-  ? import.meta.env.VITE_APP_BASE_URL_LOCAL
-  : import.meta.env.VITE_APP_PRODUCTION_BASE_URL; // 추후에 PRODUCTION으로 변경해야함
+  ? "/" // 서버 테스트 시 import.meta.env.VITE_APP_BASE_URL_LOCAL 로 변경
+  : import.meta.env.VITE_APP_PRODUCTION_BASE_URL; // 서버 도메인 정해지면 환경변수에 등록
 let API_TOKEN = "";
 
 const setApiToken = (token: string) => {

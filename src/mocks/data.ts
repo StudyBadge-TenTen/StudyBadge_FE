@@ -122,10 +122,8 @@ export const studyListResponse = {
       endDate: "2024.09.01",
       deposit: 10000,
       viewCount: 45,
-      leader: {
-        id: 15125,
-        name: "홍길동",
-      },
+      memberId: 15125,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 2,
@@ -139,10 +137,8 @@ export const studyListResponse = {
       endDate: "2024.11.01",
       deposit: 20000,
       viewCount: 80,
-      leader: {
-        id: 15126,
-        name: "크레용",
-      },
+      memberId: 15126,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 3,
@@ -156,10 +152,8 @@ export const studyListResponse = {
       endDate: "2024.09.01",
       deposit: 10000,
       viewCount: 45,
-      leader: {
-        id: 15127,
-        name: "김철수",
-      },
+      memberId: 15127,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 4,
@@ -173,10 +167,8 @@ export const studyListResponse = {
       endDate: "2024.11.01",
       deposit: 20000,
       viewCount: 80,
-      leader: {
-        id: 15128,
-        name: "김영희",
-      },
+      memberId: 15128,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 5,
@@ -190,10 +182,8 @@ export const studyListResponse = {
       endDate: "2024.09.01",
       deposit: 10000,
       viewCount: 45,
-      leader: {
-        id: 15129,
-        name: "김스뱃",
-      },
+      memberId: 15129,
+      memberName: "홍길동",
     },
     {
       studyChannelId: 6,
@@ -207,10 +197,8 @@ export const studyListResponse = {
       endDate: "2024.11.01",
       deposit: 20000,
       viewCount: 80,
-      leader: {
-        id: 15130,
-        name: "한스뱃",
-      },
+      memberId: 15130,
+      memberName: "홍길동",
     },
   ],
 };

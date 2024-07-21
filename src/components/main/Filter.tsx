@@ -8,37 +8,37 @@ const Filter = (): JSX.Element => {
 
     switch (target.id) {
       case "offlineFilter":
-        filter.type === "OFFLINE" ? setFilter({ ...filter, type: "" }) : setFilter({ ...filter, type: "OFFLINE" });
+        filter.type === "OFFLINE" ? setFilter({ ...filter, type: null }) : setFilter({ ...filter, type: "OFFLINE" });
         break;
       case "onlineFilter":
-        filter.type === "ONLINE" ? setFilter({ ...filter, type: "" }) : setFilter({ ...filter, type: "ONLINE" });
+        filter.type === "ONLINE" ? setFilter({ ...filter, type: null }) : setFilter({ ...filter, type: "ONLINE" });
         break;
       case "recruitingFilter":
         filter.status === "RECRUITING"
-          ? setFilter({ ...filter, status: "" })
+          ? setFilter({ ...filter, status: null })
           : setFilter({ ...filter, status: "RECRUITING" });
         break;
       case "recruitedFilter":
         filter.status === "RECRUIT_COMPLETED"
-          ? setFilter({ ...filter, status: "" })
+          ? setFilter({ ...filter, status: null })
           : setFilter({ ...filter, status: "RECRUIT_COMPLETED" });
         break;
       case "computerCategory":
-        filter.category === "IT" ? setFilter({ ...filter, category: "" }) : setFilter({ ...filter, category: "IT" });
+        filter.category === "IT" ? setFilter({ ...filter, category: null }) : setFilter({ ...filter, category: "IT" });
         break;
       case "languageCategory":
         filter.category === "LANGUAGE"
-          ? setFilter({ ...filter, category: "" })
+          ? setFilter({ ...filter, category: null })
           : setFilter({ ...filter, category: "LANGUAGE" });
         break;
       case "employmentCategory":
         filter.category === "EMPLOYMENT"
-          ? setFilter({ ...filter, category: "" })
+          ? setFilter({ ...filter, category: null })
           : setFilter({ ...filter, category: "EMPLOYMENT" });
         break;
       case "selfDevelopCategory":
         filter.category === "SELF_DEVELOPMENT"
-          ? setFilter({ ...filter, category: "" })
+          ? setFilter({ ...filter, category: null })
           : setFilter({ ...filter, category: "SELF_DEVELOPMENT" });
         break;
     }

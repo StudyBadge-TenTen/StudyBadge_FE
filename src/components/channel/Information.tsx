@@ -117,6 +117,7 @@ const Information = (): JSX.Element => {
         )}
       </div>
       <div className="flex flex-col md:flex-row justify-center items-center">
+        {/* 채널 이름/카테고리/소개 */}
         <div className="basic-info w-80 h-[393px] border border-solid border-Gray-3 rounded-[50px] p-4 mt-4 md:mt-0 md:ml-4 flex flex-col justify-center items-center">
           <p className="text-Blue-2 p-1 border-b border-solid border-Gray-2 flex justify-center items-center">
             <b>이름:</b>{" "}
@@ -155,6 +156,7 @@ const Information = (): JSX.Element => {
             )}
           </div>
         </div>
+        {/* 채널 상세 정보 */}
         <div className="detail-info w-80 h-[393px] border border-solid border-Gray-3 rounded-[50px] mt-4 md:mt-0 md:ml-4 flex">
           <div className="w-2/5 h-full font-bold text-Blue-2 border-r border-solid border-Gray-2 p-4 py-8 flex flex-col justify-between items-center">
             {infoTitles.map((infoTitle) => (
@@ -164,11 +166,12 @@ const Information = (): JSX.Element => {
             {data?.meetingType === "OFFLINE" && <span>지역</span>}
           </div>
           <div className="w-3/5 h-full p-4 py-8 flex flex-col justify-between items-start">
-            {isLoading
+            {isLoading || !data
               ? infoTitles.map((title) => (
                   <div key={`skeleton_${title}`} className="w-full h-4 bg-Gray-1 rounded-[50px]"></div>
                 ))
-              : studyDetailList &&
+              : data &&
+                studyDetailList &&
                 studyDetailList.map((detail, index) =>
                   data?.chattingUrl === detail && isEditMode ? (
                     <input

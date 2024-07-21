@@ -76,7 +76,7 @@ const ChannelBook = (): JSX.Element => {
             모집
           </button>
         </div>
-        <div className="h-fit flex flex-col px-4 py-8 md:p-8">
+        <div className="w-[400px] md:w-[768px] lg:w-[854px] h-fit flex flex-col px-4 py-8 md:p-8">
           {tabState === "일정" && <Schedules />}
           {tabState === "정보" && <Information />}
         </div>
