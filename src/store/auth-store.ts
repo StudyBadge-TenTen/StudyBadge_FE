@@ -78,7 +78,8 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
     try {
       const response = await axios.post<LoginResponse>(
         `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/token/re-issue`,
-        { refreshToken: get().refreshToken },
+        // { refreshToken: get().refreshToken },
+        {}, // 토큰 재발급시 refresh token을 쿠키로 받는다면 위 코드가 필요없다고 함
         { withCredentials: true },
       );
 
@@ -89,7 +90,8 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       setApiToken(accessToken);
 
       // 새로운 accessToken과 refreshToken을 상태에 저장합니다.
-      set({ accessToken, refreshToken: "" });
+      set({ accessToken });
+      // set({ accessToken, refreshToken: "" });
     } catch (error) {
       console.error("Error refreshing access token:", error);
       throw error;
