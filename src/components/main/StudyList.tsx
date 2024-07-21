@@ -38,7 +38,7 @@ const StudyList = (): JSX.Element => {
   // 필터와 키워드 상태가 바뀔 때마다
   useEffect(() => {
     const { type, category, status, order, page } = filter;
-    const newLocation = `/${type}/${status}/${category}/${keywordValue}/${order}/${page}`;
+    const newLocation = `/${type ?? "ALL"}/${status ?? "ALL"}/${category ?? "ALL"}/${keywordValue ?? "NONE"}/${order ?? "ALL"}/${page}`;
 
     if (data) {
       setStudyList(data.studyChannels);

@@ -2,9 +2,24 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./router/Router";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import { useAuthStore } from "./store/auth-store";
+import { useEffect } from "react";
 
 function App() {
-  // CI/CD 테스트용 주석 코드입니다4
+  const { refreshAccessToken } = useAuthStore();
+
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        await refreshAccessToken();
+      } catch (error) {
+        console.error("Failed to refresh access token on load:", error);
+      }
+    };
+
+    initAuth();
+  }, [refreshAccessToken]);
+
   return (
     <BrowserRouter>
       <Header />

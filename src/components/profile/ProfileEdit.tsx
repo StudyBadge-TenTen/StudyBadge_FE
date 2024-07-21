@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { putProfile } from "../../services/profile-api";
 import { ProfileInfoType, ProfilePutType } from "../../types/profile-type";
+import { BANK_LIST } from "../../constants/bank-list";
 
 const ProfileEdit = (): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
@@ -19,7 +20,7 @@ const ProfileEdit = (): JSX.Element => {
   const accountBankRef = useRef<HTMLSelectElement>(null);
 
   // input 값의 change를 감지해 상태로 저장
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (e.target.id === "editNickname") {
       setProfileInfo((origin) => ({
         ...origin,
@@ -30,6 +31,12 @@ const ProfileEdit = (): JSX.Element => {
       setProfileInfo((origin) => ({
         ...origin,
         introduction: e.target.value,
+      }));
+    }
+    if (e.target.id === "bankDropdown") {
+      setProfileInfo((origin) => ({
+        ...origin,
+        accountBank: e.target.value,
       }));
     }
     if (e.target.id === "editAccount") {
@@ -91,6 +98,15 @@ const ProfileEdit = (): JSX.Element => {
       }
     }
 
+    if (accountBankRef.current) {
+      if (!accountBankRef.current.value) {
+        alert("금융기관을 선택해주십시오.");
+        accountBankRef.current.classList.add("outline-Red-2");
+        accountBankRef.current.focus();
+        return;
+      }
+    }
+
     if (nicknameRef.current) {
       if (!nicknameRef.current.value) {
         alert("닉네임 입력은 필수입니다.");
@@ -148,7 +164,7 @@ const ProfileEdit = (): JSX.Element => {
             type="text"
             className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2 mb-8"
             value={profileInfo.nickname}
-            onChange={handleInputChange}
+            onChange={handleChange}
             ref={nicknameRef}
             required
           ></input>
@@ -162,7 +178,7 @@ const ProfileEdit = (): JSX.Element => {
             rows={5}
             cols={30}
             value={profileInfo.introduction}
-            onChange={handleInputChange}
+            onChange={handleChange}
           ></textarea>
           <label htmlFor="editAccount" className="mb-2 text-Blue-2">
             계좌번호
@@ -176,20 +192,24 @@ const ProfileEdit = (): JSX.Element => {
             type="text"
             className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2"
             value={profileInfo.account}
-            onChange={handleInputChange}
+            onChange={handleChange}
             ref={accountRef}
             required
           ></input>
-          {/* 은행 선택 드롭다운 - 추후 은행 리스트 길이만큼 map으로 option생성 */}
           <select
             name="bank"
             id="bankDropdown"
             className="w-fit p-1 border border-solid border-Gray-2 rounded-[10px] mt-2 mb-8"
             value={profileInfo.accountBank}
             ref={accountBankRef}
+            onChange={handleChange}
           >
             <option value="">-- 금융기관을 선택해주세요 --</option>
-            <option value="국민">KB국민</option>
+            {BANK_LIST.map((bank) => (
+              <option key={bank} value={bank}>
+                {bank}
+              </option>
+            ))}
           </select>
           <button onClick={() => handleSaveClick(profileInfo, imageFile)} className="btn-blue w-fit self-center mt-10">
             저장하기

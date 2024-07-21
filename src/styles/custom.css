@@ -7,6 +7,9 @@
 input {
   outline-color: #1c4587;
 }
+textarea {
+  outline-color: #1c4587;
+}
 
 .custom-scroll::-webkit-scrollbar {
   width: 8px;

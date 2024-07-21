@@ -20,9 +20,10 @@ export const handlers = [
     const type = url.searchParams.get("type");
     const category = url.searchParams.get("category");
     const status = url.searchParams.get("status");
+    const keyword = url.searchParams.get("keyword");
 
     console.log(
-      `Captured a "GET /api/study-channels?page=${page}&order=${order}&type=${type}&category=${category}&status=${status}`,
+      `Captured a "GET /api/study-channels?page=${page ?? 1}&order=${order ?? "RECENT"}${type ? `&type=${type}` : ""}${category ? `&category=${category}` : ""}${status ? `&status=${status}` : ""}${keyword ? `&keyword=${keyword}` : ""}" request`,
     );
     return HttpResponse.json(studyListResponse);
   }),
@@ -111,23 +112,17 @@ export const handlers = [
   }),
 
   // payment handlers
-  http.post("/api/v1/payments/toss", async ({ request }) => {
+  http.post("/api/payments/toss", async ({ request }) => {
     const requestBody = await request.json();
-    console.log(`Captured a "POST /api/v1/payments/toss" request`);
+    console.log(`Captured a "POST /api/payments/toss" request`);
     console.log(requestBody);
     return HttpResponse.json(paymentResponse, { status: 200 });
   }),
 
-  http.post("/api/v1/payments/success", async ({ request }) => {
-    const url = new URL(request.url);
-
-    const paymentKey = url.searchParams.get("paymentKey");
-    const orderId = url.searchParams.get("orderId");
-    const amount = url.searchParams.get("amount");
-
-    console.log(
-      `Captured a "POST /api/v1/payments/toss/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}" request`,
-    );
+  http.post("/api/payments/success", async ({ request }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "POST /api/payments/success" request`);
+    console.log(requestBody);
     return HttpResponse.json(paymentSuccessResponse, { status: 200 });
   }),
 
@@ -145,5 +140,22 @@ export const handlers = [
   http.get("/api/study-channels/:studyChannelId/members", async ({ params }) => {
     console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/members" request`);
     return HttpResponse.json(memberListResponse);
+
+  // auth handlers
+  http.post(`/oauth2/authorization/kakao`, async ({ request }) => {
+    const url = new URL(request.url);
+
+    const code = url.searchParams.get("code");
+
+    console.log(`Captured a "POST /oauth2/authorization/kakao?code=${code}" request`);
+    return HttpResponse.json({ status: 200 });
+  }),
+  http.post(`/oauth2/authorization/naver`, async ({ request }) => {
+    const url = new URL(request.url);
+
+    const code = url.searchParams.get("code");
+
+    console.log(`Captured a "POST /oauth2/authorization/naver?code=${code}" request`);
+    return HttpResponse.json({ status: 200 });
   }),
 ];

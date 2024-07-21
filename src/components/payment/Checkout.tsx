@@ -108,7 +108,7 @@ const Checkout = ({
             id="cancelBtn"
             className="button btn-blue mr-8"
             onClick={() => {
-              navigate("/profile");
+              navigate("/profile/payment");
               setConfirm(() => false);
             }}
           >

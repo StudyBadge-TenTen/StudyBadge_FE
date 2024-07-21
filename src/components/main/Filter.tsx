@@ -37,9 +37,9 @@ const Filter = (): JSX.Element => {
           : setFilter({ ...filter, category: "EMPLOYMENT" });
         break;
       case "selfDevelopCategory":
-        filter.category === "DEVELOPMENT"
+        filter.category === "SELF_DEVELOPMENT"
           ? setFilter({ ...filter, category: null })
-          : setFilter({ ...filter, category: "DEVELOPMENT" });
+          : setFilter({ ...filter, category: "SELF_DEVELOPMENT" });
         break;
     }
   };
@@ -112,7 +112,7 @@ const Filter = (): JSX.Element => {
           </button>
           <button
             id="selfDevelopCategory"
-            className={`btn-blue sm:rounded-l-none text-xs md:text-sm break-keep ml-1 mt-2 sm:mt-0 ${filter.category === "DEVELOPMENT" && "bg-Blue-1"}`}
+            className={`btn-blue sm:rounded-l-none text-xs md:text-sm break-keep ml-1 mt-2 sm:mt-0 ${filter.category === "SELF_DEVELOPMENT" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
           >
             자기계발

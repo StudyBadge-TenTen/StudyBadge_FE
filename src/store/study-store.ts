@@ -9,29 +9,33 @@ import {
 } from "../types/study-channel-type";
 
 const useStudyStore = create<StudyStoreType>((set) => ({
-  title: "",
+  name: "",
   description: "",
   category: "",
+  recruitmentNumber: 3,
   startDate: "",
   endDate: "",
-  maxParticipants: 3,
+  minRecruitmentNumber: 3,
   meetingType: "OFFLINE",
-  location: "",
-  link: "",
-  fee: 0,
+  region: "",
+  chattingUrl: "",
+  depositDescription: "",
+  deposit: 10000,
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
   resetForm: () =>
     set({
-      title: "",
+      name: "",
       description: "",
       category: "",
+      recruitmentNumber: 3,
       startDate: "",
       endDate: "",
-      maxParticipants: 3,
+      minRecruitmentNumber: 3,
       meetingType: "OFFLINE",
-      location: "",
-      link: "",
-      fee: 0,
+      region: "",
+      chattingUrl: "",
+      depositDescription: "",
+      deposit: 10000,
     }),
 }));
 

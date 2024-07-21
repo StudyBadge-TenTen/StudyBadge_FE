@@ -1,6 +1,6 @@
 import { BadgeType } from "./profile-type";
 
-type StudyCategoryType = "IT" | "LANGUAGE" | "EMPLOYMENT" | "DEVELOPMENT";
+type StudyCategoryType = "IT" | "LANGUAGE" | "EMPLOYMENT" | "SELF_DEVELOPMENT";
 type MeetingType = "ONLINE" | "OFFLINE";
 type RecruitmentStatusType = "RECRUITING" | "RECRUIT_COMPLETED";
 type OrderType = "RECENT" | "VIEW_COUNT";
@@ -39,10 +39,8 @@ interface StudyListObjectType {
   endDate: "YYYY-MM-DD" | string;
   deposit: number;
   viewCount: number;
-  leader: {
-    id: number;
-    name: string;
-  };
+  memberId: number;
+  memberName: string;
 }
 
 interface StudyListRequestType {
@@ -79,16 +77,18 @@ interface MemberListResponseType {
 
 // ----------------------------------- store type
 interface StudyStoreType {
-  title: string;
+  name: string;
   description: string;
-  category: string;
-  startDate: string;
-  endDate: string;
-  maxParticipants: number;
+  category: StudyCategoryType | "";
+  recruitmentNumber: number;
+  startDate: "YYYY-MM-DD" | string;
+  endDate: "YYYY-MM-DD" | string;
+  minRecruitmentNumber: number;
   meetingType: MeetingType;
-  location: string;
-  link: string;
-  fee: number;
+  region: string;
+  chattingUrl: string;
+  depositDescription: string;
+  deposit: number;
   setField: (field: keyof Omit<StudyStoreType, "setField" | "resetForm">, value: any) => void;
   resetForm: () => void;
 }

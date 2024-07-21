@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/auth-store";
 import NaverLogin from "./NaverLogin";
 import KakaoLogin from "./KakaoLogin";
+import { useAuthStore } from "../../store/auth-store";
 
 const LoginUser: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const LoginUser: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-24 mb-20 w-4/5">
       <h1 className="text-3xl text-Blue-2 font-bold mb-12">LOGIN</h1>
-      <form className="w-full flex flex-col justify-center items-center" onSubmit={submitLogin}>
+      <form className="w-full flex flex-col justify-center items-center mb-10" onSubmit={submitLogin}>
         <div className="sm:w-96 flex justify-between items-center my-2">
           <label className="w-16 text-Blue-2">이메일</label>
           <input
@@ -62,7 +62,7 @@ const LoginUser: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="w-full max-w-80 btn-blue text-white py-2 rounded mt-4 hover:bg-blue-600 transition-all"
+          className="w-[183px] md:w-[300px] btn-blue text-white py-2 mt-6 hover:bg-blue-600 transition-all"
         >
           LOGIN
         </button>

@@ -21,7 +21,7 @@ interface PaymentBodyType {
 
 interface PaymentResponseType {
   payType: string;
-  amount: 0;
+  amount: number;
   orderName: string;
   orderId: string;
   customerEmail: string;
@@ -48,7 +48,6 @@ interface SuccessResponseType {
   orderId: string;
   orderName: string;
   method: string;
-  totalAmount: 0;
   requestedAt: Date;
   approvedAt: Date;
 }
