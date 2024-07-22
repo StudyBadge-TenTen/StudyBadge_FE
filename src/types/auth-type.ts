@@ -1,6 +1,6 @@
 interface LoginResponse {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
 }
 
 interface SignUpData {

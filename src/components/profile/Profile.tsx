@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MyStudyType, UserInfoType } from "../../types/profile-type";
 import { getMyStudy, getProfile } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
+import { useAuthStore } from "../../store/auth-store";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
@@ -23,8 +24,11 @@ const Profile = (): JSX.Element => {
     queryKey: ["UserInfo"],
     queryFn: () => getProfile(),
   });
+  const { accessToken } = useAuthStore();
 
   useEffect(() => {
+    console.log(accessToken); // accessToken 확인용 디버깅 코드
+
     (async () => {
       try {
         const myStudyList = await getMyStudy();
@@ -34,7 +38,7 @@ const Profile = (): JSX.Element => {
       }
     })();
 
-    return setIsEditMode(false);
+    return () => setIsEditMode(false); // 클린업 함수로 변경
   }, []);
 
   useEffect(() => {

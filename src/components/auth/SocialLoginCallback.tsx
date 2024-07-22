@@ -22,7 +22,7 @@ const SocialLoginCallback: React.FC = () => {
       console.log(error);
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, setField, location]);
 
   // axios로 소셜 로그인 요청하고 토큰 받는 방법일 때
   // useEffect(() => {

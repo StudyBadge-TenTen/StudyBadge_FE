@@ -84,7 +84,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       );
 
       const accessTokenBearer = response.headers["authorization"] as string;
-      const accessToken = accessTokenBearer.split(" ")[1];
+      const accessToken = accessTokenBearer.replace("Bearer ", "");
 
       // 토큰을 설정합니다.
       setApiToken(accessToken);
