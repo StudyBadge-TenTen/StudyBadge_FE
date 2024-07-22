@@ -30,7 +30,7 @@ interface AuthStoreType {
   signUp: () => Promise<void>;
   reset: () => void;
   initiateSocialLogin: (provider: "naver" | "kakao") => void;
-  handleSocialLoginCallback: (provider: "naver" | "kakao", code: string, state?: string) => Promise<void>;
+  handleSocialLoginCallback: (provider: "naver" | "kakao") => Promise<void>;
   refreshAccessToken: () => Promise<void>;
   logout: () => Promise<void>;
 }

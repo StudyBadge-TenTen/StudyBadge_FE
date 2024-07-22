@@ -13,7 +13,7 @@ const SocialLoginCallback: React.FC = () => {
     const provider = location.pathname.includes("naver") ? "naver" : "kakao";
 
     if (code) {
-      handleSocialLoginCallback(provider, code)
+      handleSocialLoginCallback(provider)
         .then(() => {
           // 로그인 성공 시 정보 수정 페이지로 이동 (계좌정보 입력을 위해)
           navigate("/profile/myInfo", { state: { social: true } });
