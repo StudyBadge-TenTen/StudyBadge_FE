@@ -6,19 +6,32 @@ type RecruitmentStatusType = "RECRUITING" | "RECRUIT_COMPLETED";
 type OrderType = "RECENT" | "VIEW_COUNT";
 type ApproveType = "APPROVE_WAITING" | string;
 
+interface BasicStudyInfoType {
+  name: string;
+  description: string;
+  startDate: "YYYY-MM-DD" | string;
+  endDate: "YYYY-MM-DD" | string;
+  category: StudyCategoryType | "";
+  meetingType: MeetingType;
+  deposit: number;
+}
+
+interface postStudyRequestType extends BasicStudyInfoType {
+  recruitmentNumber: number;
+  minRecruitmentNumber: number;
+  region: string;
+  chattingUrl: string;
+  depositDescription: string;
+}
+
 // 스터디 채널 정보 상세 타입
-interface StudyInfoType {
+interface StudyInfoType extends BasicStudyInfoType {
   studyChannelId: number;
   studyChannelName: string;
   studyChannelDescription: string;
   chattingUrl: string | null;
   capacity: number;
-  category: StudyCategoryType;
-  meetingType: MeetingType;
   region: null | string; // ONLINE 일 경우 null, 오프라인일 경우 "서울시 ~~구" 반환
-  startDate: "YYYY-MM-DD" | string;
-  endDate: "YYYY-MM-DD" | string;
-  deposit: number;
   leaderName: string;
   subLeaderName: string;
   isLeader: boolean;
@@ -30,16 +43,9 @@ interface StudyInfoPutRequestType {
   chattingUrl: string;
 }
 
-interface StudyListObjectType {
+interface StudyListObjectType extends BasicStudyInfoType {
   studyChannelId: number;
-  name: string;
-  category: StudyCategoryType;
-  description: string;
   recruitmentStatus: RecruitmentStatusType;
-  meetingType: MeetingType;
-  startDate: "YYYY-MM-DD" | string;
-  endDate: "YYYY-MM-DD" | string;
-  deposit: number;
   viewCount: number;
   memberId: number;
   memberName: string;
@@ -147,6 +153,8 @@ export type {
   MeetingType,
   RecruitmentStatusType,
   OrderType,
+  BasicStudyInfoType,
+  postStudyRequestType,
   StudyInfoType,
   StudyInfoPutRequestType,
   StudyListObjectType,
