@@ -9,7 +9,7 @@ const KakaoLogin: React.FC = () => {
   //   ? import.meta.env.VITE_APP_KAKAO_REDIRECT_URL_DEV
   //   : import.meta.env.VITE_APP_KAKAO_REDIRECT_URL_PROD;
 
-  const URL = import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_HOST : import.meta.env.VITE_APP_PRODUCTION_URL;
+  const URL = import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_URL;
 
   const handleKakaoLogin = () => {
     // 서버 없을 시

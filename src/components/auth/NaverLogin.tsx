@@ -7,7 +7,7 @@ const NaverLogin: React.FC = () => {
   // const REDIRECT_URL = import.meta.env.DEV
   //   ? import.meta.env.VITE_APP_NAVER_REDIRECT_URL_DEV
   //   : import.meta.env.VITE_APP_NAVER_REDIRECT_URL_PROD;
-  const URL = import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_HOST : import.meta.env.VITE_APP_PRODUCTION_URL;
+  const URL = import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_URL;
 
   const handleNaverLogin = () => {
     // 서버 없이 작업 시

@@ -63,9 +63,9 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
     initiateSocialLogin(provider);
   },
 
-  handleSocialLoginCallback: async (provider, code) => {
+  handleSocialLoginCallback: async (provider) => {
     try {
-      const { accessToken, refreshToken } = await postSocialLoginCallback(provider, code);
+      const { accessToken, refreshToken } = await postSocialLoginCallback(provider);
       set({ accessToken, refreshToken });
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
