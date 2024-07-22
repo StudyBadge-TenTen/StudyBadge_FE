@@ -34,16 +34,21 @@ export const initiateSocialLogin = (provider: "naver" | "kakao") => {
 };
 
 export const postSocialLoginCallback = async (provider: "naver" | "kakao") => {
-  const response = await axios.post<LoginResponse>(
+  const response = await fetchCall<Response>(
     `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/oauth2/authorization/${provider}`,
-    { withCredentials: true },
+    "post",
   );
-  const accessTokenBearer = response.headers["authorization"] as string;
-  const accessToken = accessTokenBearer.split(" ")[1];
+  const accessTokenBearer = response.headers.get("authorization") as string;
+  let accessToken;
 
-  setApiToken(accessToken);
+  if (accessTokenBearer) {
+    accessToken = accessTokenBearer.replace("Bearer ", "");
+    setApiToken(accessToken);
+  } else {
+    throw new Error("Authorization header is missing");
+  }
 
-  return { accessToken, refreshToken: "" };
+  return { accessToken };
 };
 
 // 서버 없이 구현 시
