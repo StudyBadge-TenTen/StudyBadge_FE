@@ -33,7 +33,7 @@ const ProfileTab = (): JSX.Element => {
         }}
         className={`w-full px-4 py-2 rounded-[30px] ${profileState === "paymentList" && "bg-Gray-1"} cursor-pointer`}
       >
-        결제내역
+        포인트내역
       </span>
       <span
         onClick={() => {
