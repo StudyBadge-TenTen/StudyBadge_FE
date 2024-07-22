@@ -1,32 +1,44 @@
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/auth-store";
 
 const SocialLoginCallback: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { handleSocialLoginCallback } = useAuthStore();
+  const { setField } = useAuthStore();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const code = searchParams.get("code");
-    const provider = location.pathname.includes("naver") ? "naver" : "kakao";
+    const accessToken = searchParams.get("accessToken");
 
-    if (code) {
-      handleSocialLoginCallback(provider, code)
-        .then(() => {
-          // 로그인 성공 시 정보 수정 페이지로 이동 (계좌정보 입력을 위해)
-          navigate("/profile/myInfo", { state: { social: true } });
-        })
-        .catch((error) => {
-          alert("로그인에 실패하였습니다");
-          console.error("Social login failed:", error);
-          navigate("/login"); // 실패 시 로그인 페이지로 이동
-        });
-    } else {
+    try {
+      if (accessToken) {
+        setField("accessToken", accessToken);
+        navigate("/profile/myInfo", { state: { social: true } });
+      } else {
+        alert("로그인에 실패하였습니다");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
       navigate("/login");
     }
-  }, [location, navigate, handleSocialLoginCallback]);
+  }, [navigate, setField, location]);
+
+  // axios로 소셜 로그인 요청하고 토큰 받는 방법일 때
+  // useEffect(() => {
+  //   const provider = location.pathname.includes("naver") ? "naver" : "kakao";
+
+  //   handleSocialLoginCallback(provider)
+  //     .then(() => {
+  //       // 로그인 성공 시 정보 수정 페이지로 이동 (계좌정보 입력을 위해)
+  //       navigate("/profile/myInfo", { state: { social: true } });
+  //     })
+  //     .catch((error) => {
+  //       alert("로그인에 실패하였습니다");
+  //       console.error("Social login failed:", error);
+  //       navigate("/login"); // 실패 시 로그인 페이지로 이동
+  //     });
+  // }, [location, navigate, handleSocialLoginCallback]);
 
   return <div>소셜 로그인 처리 중...</div>;
 };

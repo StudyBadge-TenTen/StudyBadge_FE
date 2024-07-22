@@ -29,22 +29,28 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
   }
 };
 
-export const initiateSocialLogin = (provider: "naver" | "kakao") => {
-  window.location.href = `/oauth2/authorization/${provider}`; // 백엔드에서 소셜 로그인 URL을 생성하고 리다이렉트
-};
+// export const initiateSocialLogin = (provider: "naver" | "kakao") => {
+//   window.location.href = `/oauth2/authorization/${provider}`; // 백엔드에서 소셜 로그인 URL을 생성하고 리다이렉트
+// };
 
-export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string) => {
-  const response = await axios.post<LoginResponse>(
-    `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/oauth2/authorization/${provider}`,
-    { code },
-  );
-  const accessTokenBearer = response.headers["authorization"] as string;
-  const accessToken = accessTokenBearer.split(" ")[1];
+// axios로 oauth 소셜로그인 구현 시
+// export const postSocialLoginCallback = async (provider: "naver" | "kakao") => {
+//   const response = await fetchCall<Response>(
+//     `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/oauth2/authorization/${provider}`,
+//     "post",
+//   );
+//   const accessTokenBearer = response.headers.get("authorization") as string;
+//   let accessToken;
 
-  setApiToken(accessToken);
+//   if (accessTokenBearer) {
+//     accessToken = accessTokenBearer.replace("Bearer ", "");
+//     setApiToken(accessToken);
+//   } else {
+//     throw new Error("Authorization header is missing");
+//   }
 
-  return { accessToken, refreshToken: "" };
-};
+//   return { accessToken };
+// };
 
 // 서버 없이 구현 시
 // export const postSocialLoginCallback = async (provider: "naver" | "kakao", code: string, state?: string) => {

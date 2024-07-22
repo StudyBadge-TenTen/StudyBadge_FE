@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { signUp, postSocialLoginCallback, postLogin, postLogout, initiateSocialLogin } from "../services/auth-api";
+import { signUp, postLogin, postLogout } from "../services/auth-api";
 import { AuthStoreType, LoginResponse, PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";
 
@@ -59,20 +59,20 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       refreshToken: null,
     }),
 
-  initiateSocialLogin: (provider) => {
-    initiateSocialLogin(provider);
-  },
+  // initiateSocialLogin: (provider) => {
+  //   initiateSocialLogin(provider);
+  // },
 
-  handleSocialLoginCallback: async (provider, code) => {
-    try {
-      const { accessToken, refreshToken } = await postSocialLoginCallback(provider, code);
-      set({ accessToken, refreshToken });
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    } catch (error) {
-      console.error(`${provider} login failed:`, error);
-      throw error;
-    }
-  },
+  // handleSocialLoginCallback: async (provider) => {
+  //   try {
+  //     const { accessToken } = await postSocialLoginCallback(provider);
+  //     set({ accessToken });
+  //     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+  //   } catch (error) {
+  //     console.error(`${provider} login failed:`, error);
+  //     throw error;
+  //   }
+  // },
 
   refreshAccessToken: async () => {
     try {
@@ -84,7 +84,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       );
 
       const accessTokenBearer = response.headers["authorization"] as string;
-      const accessToken = accessTokenBearer.split(" ")[1];
+      const accessToken = accessTokenBearer.replace("Bearer ", "");
 
       // 토큰을 설정합니다.
       setApiToken(accessToken);

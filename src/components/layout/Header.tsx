@@ -89,13 +89,13 @@ const Header = (): JSX.Element => {
             <Toast />
           </div>
           <button
-            className={`hidden md:${accessToken ? "hidden" : "inline-block"} btn-blue`}
+            className={`hidden ${accessToken ? "md:hidden" : "md:inline-block"} btn-blue`}
             onClick={() => navigate("/login")}
           >
             로그인
           </button>
           <button
-            className={`hidden md:${!accessToken ? "hidden" : "inline-block"} btn-blue`}
+            className={`hidden ${!accessToken ? "md:hidden" : "md:inline-block"} btn-blue`}
             onClick={async () => {
               await logout();
               reset();
