@@ -7,7 +7,9 @@ import { LAST_EVENT_ID } from "../constants/local-storage";
 
 export const useSSE = () => {
   const { accessToken } = useAuthStore();
-  const API_BASE_URL = import.meta.env.DEV ? "/" : import.meta.env.VITE_APP_TEST_BASE_URL;
+  const API_BASE_URL = import.meta.env.DEV
+    ? import.meta.env.VITE_APP_LOCAL_BASE_URL
+    : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
   const { setNewNotification } = useNotificationStore();
 
   console.log("useSSE hook"); // useSSE 작동 테스트
