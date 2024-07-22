@@ -129,6 +129,7 @@ const ProfileEdit = (): JSX.Element => {
     try {
       // 서버로 FormData 전송
       const response = await axios.put("/api/members/my-info/update", formData, {
+        withCredentials: true,
         headers: {
           Authorization: accessToken,
           "Content-Type": "multipart/form-data",
