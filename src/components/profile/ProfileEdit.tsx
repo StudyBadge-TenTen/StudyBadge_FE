@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { putProfile } from "../../services/profile-api";
+// import { putProfile } from "../../services/profile-api";
 import { ProfileInfoType, ProfilePutType } from "../../types/profile-type";
 import { BANK_LIST } from "../../constants/bank-list";
 import axios from "axios";

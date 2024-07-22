@@ -84,14 +84,16 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       );
 
       const accessTokenBearer = response.headers["authorization"] as string;
-      const accessToken = accessTokenBearer.replace("Bearer ", "");
 
-      // 토큰을 설정합니다.
-      setApiToken(accessToken);
+      if (accessTokenBearer) {
+        const accessToken = accessTokenBearer.replace("Bearer ", "");
 
-      // 새로운 accessToken과 refreshToken을 상태에 저장합니다.
-      set({ accessToken });
-      // set({ accessToken, refreshToken: "" });
+        // 토큰을 설정합니다.
+        setApiToken(accessToken);
+
+        // 새로운 accessToken을 저장, refreshToken은 쿠키에 있고 App컴포넌트에 새로고침 시 받아오는 코드 있음
+        set({ accessToken });
+      }
     } catch (error) {
       console.error("Error refreshing access token:", error);
       throw error;

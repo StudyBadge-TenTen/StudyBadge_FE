@@ -86,8 +86,8 @@ const Profile = (): JSX.Element => {
             <div className="w-full min-h-52 border border-solid border-Gray-3 rounded-t-[30px] p-6 flex flex-col items-center md:flex-row">
               <div className="profile-image w-full md:w-2/3 flex flex-col justify-center md:border-r border-solid border-Gray-2">
                 <div className="flex items-center">
-                  {data?.imgUrl ? (
-                    <img src={data?.imgUrl} alt="프로필 이미지" className="object-cover w-32 h-32 rounded-full mr-8" />
+                  {data.imgUrl ? (
+                    <img src={data.imgUrl} alt="프로필 이미지" className="object-cover w-32 h-32 rounded-full mr-8" />
                   ) : (
                     <div className="no-profile-image w-32 h-32 bg-Gray-2 rounded-full flex justify-center items-center mr-8">
                       <svg
@@ -102,7 +102,7 @@ const Profile = (): JSX.Element => {
                       </svg>
                     </div>
                   )}
-                  <span className="text-2xl">{data?.nickname}</span>
+                  <span className="text-2xl">{data.nickname}</span>
                 </div>
                 <div className="flex justify-end">
                   <button className="btn-blue px-3 py-2 text-xs md:mr-8" onClick={() => setIsEditMode(true)}>
@@ -111,15 +111,15 @@ const Profile = (): JSX.Element => {
                 </div>
               </div>
               <div className="badge w-1/3 flex justify-center items-center mt-8 md:mt-0">
-                {data?.badgeLevel === "NONE" && <img src={NONE_BADGE} className="w-28" />}
-                {data?.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="w-28" />}
-                {data?.badgeLevel === "SILVER" && <img src={SILVER_BADGE} className="w-28" />}
-                {data?.badgeLevel === "GOLD" && <img src={GOLD_BADGE} className="w-28" />}
+                {data.badgeLevel === "NONE" && <img src={NONE_BADGE} className="w-28" />}
+                {data.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="w-28" />}
+                {data.badgeLevel === "SILVER" && <img src={SILVER_BADGE} className="w-28" />}
+                {data.badgeLevel === "GOLD" && <img src={GOLD_BADGE} className="w-28" />}
               </div>
             </div>
             <div className="w-full h-fit bg-Gray-1 border-x border-b border-solid border-Gray-3 rounded-b-[30px] flex flex-col md:flex-row justify-between items-center px-10 py-8 md:py-4">
               <div className="text-xl">
-                충전금액 : <span className="ml-4 font-bold">{data?.point.toLocaleString()}원</span>
+                충전금액 : <span className="ml-4 font-bold">{data.point.toLocaleString()}원</span>
               </div>
               <button
                 onClick={() => {
