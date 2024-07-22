@@ -8,12 +8,12 @@ export default defineConfig({
   test: {
     environment: "jsdom",
   },
-  // server: {
-  //   proxy: {
-  //     "/api": {
-  //       target: "http://localhost:8080", // 안될 경우 'http://127.0.0.1:8000', 이런식으로 IP 명시
-  //       changeOrigin: true,
-  //     },
-  //   },
-  // },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080", // 안될 경우 'http://127.0.0.1:8000', 이런식으로 IP 명시
+        changeOrigin: true,
+      },
+    },
+  },
 });
