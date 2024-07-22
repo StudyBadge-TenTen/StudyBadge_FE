@@ -129,7 +129,7 @@ const StudyList = (): JSX.Element => {
             studyList.map((studyChannel) => <Card studyInfo={studyChannel} key={studyChannel.studyChannelId} />)
           ))}
       </div>
-      <Pagination filter={filter} setFilter={setFilter} dataListLength={totalDataLength} />
+      <Pagination type="CHANNEL" filter={filter} setFilter={setFilter} dataListLength={totalDataLength} />
     </div>
   );
 };

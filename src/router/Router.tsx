@@ -15,6 +15,7 @@ import Notification from "../components/profile/Notification";
 import CreateStudyPage from "../pages/CreateStudyPage";
 import SocialLoginCallback from "../components/auth/SocialLoginCallback";
 import PasswordResetPage from "../pages/PasswordResetPage";
+import PointListPage from "../pages/PointListPage";
 
 const Router = (): JSX.Element => {
   return (
@@ -26,11 +27,11 @@ const Router = (): JSX.Element => {
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/PasswordReset" element={<PasswordResetPage />} />
       <Route path="/oauth2/callback" element={<SocialLoginCallback />} />
-      {/* <Route path="/oauth2/callback/kakao" element={<SocialLoginCallback />} /> */}
       <Route path="/profile" element={<ProfilePage />}>
         <Route path="/profile/payment" element={<Profile />} />
         <Route path="/profile/myInfo" element={<Profile />} />
         <Route path="/profile/paymentList" element={<PaymentListPage />} />
+        <Route path="/profile/pointList" element={<PointListPage />} />
         <Route path="/profile/notification" element={<Notification />} />
       </Route>
       <Route path="/payment" element={<ProfilePage />} />
