@@ -310,3 +310,32 @@ export const recruitmentResponse = {
     },
   ],
 };
+
+// notification data
+export const notificationList = [
+  {
+    notificationId: 3,
+    receiverId: 1,
+    notificationType: "출석 변동",
+    content: "스터디 채널 내일은 코딩왕의 2024년 9월 10이의 출석 체크가 변경되었습니다.",
+    url: "http://localhost:5173/channel/1/schedule",
+    isRead: false,
+  },
+  {
+    notificationId: 2,
+    receiverId: 1,
+    notificationType: "일정 변경",
+    content: "스터디 채널 내일은 코딩왕의 2024년 9월 5이의 일정이 변경되었습니다.",
+    url: "http://localhost:5173/channel/1/schedule",
+    isRead: true,
+  },
+  {
+    notificationId: 1,
+    receiverId: 1,
+    notificationType: "일정 생성",
+    content: "스터디 채널 내일은 코딩왕의 2024년 9월 1이의 단일 일정이 생성되었습니다.",
+    url: "http://localhost:5173/channel/1/schedule",
+    // 이건 백엔드 api :/api/study-channels/%d/schedules/date?year=%d&month=%d
+    isRead: true,
+  },
+];
