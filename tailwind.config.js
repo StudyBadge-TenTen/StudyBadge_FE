@@ -30,6 +30,9 @@ export default {
         1: "#ff6666",
         2: "#bf230b",
       },
+      Green: {
+        1: "#32a852",
+      },
     },
     extend: {
       boxShadow: {

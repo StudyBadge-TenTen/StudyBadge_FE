@@ -11,7 +11,7 @@ const Header = (): JSX.Element => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState<string>("");
   const { keywordValue, setKeywordValue } = useKeywordStore();
-  const { notifications } = useNotificationStore();
+  const { newNotification } = useNotificationStore();
   const [newIcon, setNewIcon] = useState(false);
   const { accessToken, logout, reset } = useAuthStore();
 
@@ -22,7 +22,7 @@ const Header = (): JSX.Element => {
 
   useEffect(() => {
     setNewIcon(() => true);
-  }, [notifications]);
+  }, [newNotification]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(() => e.target.value);
@@ -85,8 +85,8 @@ const Header = (): JSX.Element => {
               <div
                 className={`new-icon ${!newIcon && "hidden"} w-2 h-2 rounded-full bg-Red-2 absolute top-0 right-0`}
               ></div>
+              <Toast setNewIcon={setNewIcon} />
             </button>
-            <Toast />
           </div>
           <button
             className={`hidden ${accessToken ? "md:hidden" : "md:inline-block"} btn-blue`}

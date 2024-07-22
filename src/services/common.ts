@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-async function fetchCall<T>(url: string, method: "get" | "post" | "put" | "delete", data?: any): Promise<T> {
+async function fetchCall<T>(url: string, method: "get" | "post" | "put" | "delete" | "patch", data?: any): Promise<T> {
   const config = {
     method,
     url,

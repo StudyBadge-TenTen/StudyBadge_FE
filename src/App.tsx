@@ -20,7 +20,7 @@ function App() {
     };
 
     initAuth();
-  }, [useSSE, refreshAccessToken]);
+  }, [refreshAccessToken]);
 
   return (
     <BrowserRouter>

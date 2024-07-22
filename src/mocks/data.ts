@@ -47,7 +47,7 @@ export const placeInfo = {
   placeAddress: "서울시 OO구 OO동 OO로 1길",
 };
 
-// userInfo data
+// userInfo(profile) data
 export const userInfo = {
   email: "studybadge@email.com",
   name: "홍길동",
@@ -74,6 +74,44 @@ export const myStudyList = [
     studyId: 3,
     studyName: "내일은 코딩왕",
     role: "MEMBER",
+  },
+];
+export const paymentsList = [
+  {
+    paymentKey: "hd2849wefhsdjgf82hso",
+    createdAt: "2024-07-22T08:42:22.490Z",
+    amount: 15000,
+  },
+  {
+    paymentKey: "kwet84hsdkghiwwtfd4",
+    createdAt: "2024-06-01T07:08:08.440Z",
+    amount: 25000,
+  },
+];
+export const pointList = [
+  {
+    historyType: "EARNED",
+    transferType: "STUDY_REWARD",
+    amount: 11500,
+    createdAt: "2024-08-05T08:42:22.490Z",
+  },
+  {
+    historyType: "EARNED",
+    transferType: "PAYMENT_CHARGE",
+    amount: 15000,
+    createdAt: "2024-07-22T08:42:22.490Z",
+  },
+  {
+    historyType: "SPENT",
+    transferType: "STUDY_DEPOSIT",
+    amount: 20000,
+    createdAt: "2024-06-08T07:08:08.440Z",
+  },
+  {
+    historyType: "EARNED",
+    transferType: "PAYMENT_CHARGE",
+    amount: 25000,
+    createdAt: "2024-06-01T07:08:08.440Z",
   },
 ];
 
@@ -249,7 +287,6 @@ export const memberListResponse = {
   ],
   leader: true,
 };
-
 export const attendanceResponse = [
   {
     memberId: 1,
@@ -276,7 +313,6 @@ export const attendanceResponse = [
     attendanceRatio: 80,
   },
 ];
-
 export const recruitmentResponse = {
   studyChannelId: 1,
   recruitmentStatus: "RECRUITING",
@@ -310,3 +346,32 @@ export const recruitmentResponse = {
     },
   ],
 };
+
+// notification data
+export const notificationList = [
+  {
+    notificationId: 3,
+    receiverId: 1,
+    notificationType: "출석 변동",
+    content: "스터디 채널 내일은 코딩왕의 2024년 9월 10이의 출석 체크가 변경되었습니다.",
+    url: "http://localhost:5173/channel/1/schedule",
+    isRead: false,
+  },
+  {
+    notificationId: 2,
+    receiverId: 1,
+    notificationType: "일정 변경",
+    content: "스터디 채널 내일은 코딩왕의 2024년 9월 5이의 일정이 변경되었습니다.",
+    url: "http://localhost:5173/channel/1/schedule",
+    isRead: true,
+  },
+  {
+    notificationId: 1,
+    receiverId: 1,
+    notificationType: "일정 생성",
+    content: "스터디 채널 내일은 코딩왕의 2024년 9월 1이의 단일 일정이 생성되었습니다.",
+    url: "http://localhost:5173/channel/1/schedule",
+    // 이건 백엔드 api :/api/study-channels/%d/schedules/date?year=%d&month=%d
+    isRead: true,
+  },
+];

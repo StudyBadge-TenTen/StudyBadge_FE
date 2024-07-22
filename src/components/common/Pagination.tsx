@@ -2,11 +2,19 @@ import { useEffect, useState } from "react";
 import { DATA_LENGTH_PER_PAGE, PAGE_COUNT } from "../../constants/page";
 import { PaginationPropsType } from "../../types/pagination-type";
 
-const Pagination = ({ filter, setFilter, dataListLength }: PaginationPropsType): JSX.Element => {
+const Pagination = ({
+  type,
+  filter,
+  setFilter,
+  dataListLength,
+  pageState,
+  setPage,
+  historyList,
+}: PaginationPropsType): JSX.Element => {
   const [curPageGroup, setCurPageGroup] = useState(1);
   const [pageList, setPageList] = useState<number[]>([]);
-  const totalPage = Math.ceil(dataListLength / DATA_LENGTH_PER_PAGE);
-  const lastPageGroup = Math.ceil(totalPage / DATA_LENGTH_PER_PAGE);
+  const totalPage = type === "CHANNEL" ? Math.ceil(dataListLength / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
+  const lastPageGroup = type === "CHANNEL" ? Math.ceil(totalPage / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
 
   useEffect(() => {
     let newPageList = [];
@@ -29,15 +37,31 @@ const Pagination = ({ filter, setFilter, dataListLength }: PaginationPropsType):
         setCurPageGroup((origin) => origin - 1);
       }
     } else if (target.classList.contains("next-btn")) {
-      if (curPageGroup === lastPageGroup) return;
-      else {
-        setCurPageGroup((origin) => origin + 1);
+      if (type === "CHANNEL") {
+        if (curPageGroup === lastPageGroup) return;
+        else {
+          setCurPageGroup((origin) => origin + 1);
+        }
+      }
+      if (type === "HISTORY") {
+        if (!historyList || historyList.length === 0) return;
+        else {
+          setCurPageGroup((origin) => origin + 1);
+        }
       }
     } else if (target.classList.contains("page-btn")) {
-      setFilter({
-        ...filter,
-        page: Number(target.innerText),
-      });
+      if (type === "CHANNEL") {
+        if (filter && setFilter) {
+          setFilter({
+            ...filter,
+            page: Number(target.innerText),
+          });
+        }
+      }
+      if (type === "HISTORY" && setPage) {
+        if (!historyList || historyList.length === 0) return;
+        else setPage(() => Number(target.innerText));
+      }
     }
   };
 
@@ -50,14 +74,14 @@ const Pagination = ({ filter, setFilter, dataListLength }: PaginationPropsType):
       {pageList.map((page) => (
         <button
           key={`page_${page}`}
-          className={`page-btn btn-blue rounded-none mt-10 ${page === filter.page && "bg-Blue-1"}`}
+          className={`page-btn btn-blue rounded-none mt-10 ${type === "CHANNEL" ? filter && page === filter.page && "bg-Blue-1" : pageState === page && "bg-Blue-1"}`}
           onClick={(e) => handlePageClick(e)}
         >
           {page}
         </button>
       ))}
       <button
-        className={`next-btn btn-blue rounded-l-none ml-1 ${curPageGroup === lastPageGroup && "cursor-default bg-Gray-2 hover:bg-Gray-2"}`}
+        className={`next-btn btn-blue rounded-l-none ml-1 ${type === "CHANNEL" ? curPageGroup === lastPageGroup && "cursor-default bg-Gray-2 hover:bg-Gray-2" : (!historyList || historyList.length === 0) && "cursor-default bg-Gray-2 hover:bg-Gray-2"}`}
         onClick={(e) => handlePageClick(e)}
       >{`>`}</button>
     </div>

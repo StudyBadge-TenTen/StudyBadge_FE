@@ -1,43 +1,47 @@
 import { useEffect, useState } from "react";
 import { useNotificationStore } from "../../store/notification-store";
+import { useNavigate } from "react-router";
 
-const Toast = () => {
+const Toast = ({ setNewIcon }: { setNewIcon: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const navigate = useNavigate();
   const [newToast, setNewToast] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const { notifications, setNotifications } = useNotificationStore();
-
-  const [count, setCount] = useState(1);
-
-  // useEffect(() => {
-  //   setInterval(intervalFn, 8000);
-  // }, []);
+  const { newNotification, notificationList, setNewNotification, setNotificationList } = useNotificationStore();
 
   useEffect(() => {
-    setCount((origin) => origin + 1);
+    if (newNotification) {
+      setNotificationList([newNotification, ...notificationList]);
+    }
 
     (async () => {
-      const newNoti = notifications[notifications.length - 1];
       await makeToast();
-      if (newNoti) {
-        setNewMessage(() => newNoti.content);
+      if (newNotification) {
+        setNewMessage(() => newNotification.content);
       }
-      setTimeout(() => setNewToast(() => false), 5000);
+      setTimeout(() => {
+        // 5초 후에 초기화
+        setNewToast(() => false);
+        setNewNotification(null);
+      }, 5000);
     })();
-  }, [notifications]);
-
-  // const intervalFn = () => {
-  //   setNotifications([...notifications, { id: `${count}`, message: "스터디 일정이 변경되었습니다." }]);
-  //   console.log("새로운 알림");
-  // };
+  }, [newNotification]);
 
   const makeToast = async () => {
     setNewToast(() => true);
   };
 
+  const handleClick = () => {
+    if (newNotification) {
+      setNewIcon(() => false);
+      navigate(`/profile/notification`);
+    }
+  };
+
   return (
     <>
       <div
-        className={`w-52 h-14 bg-Gray-1 text-Blue-2 text-xs rounded-[10px] p-2 flex justify-center items-center absolute z-50 right-[5%] shadow-card transition-all ${newToast ? "top-28 opacity-100" : "top-20 opacity-0"}`}
+        onClick={() => handleClick()}
+        className={`w-52 h-14 bg-Gray-1 text-Blue-2 text-xs rounded-[10px] p-2 flex justify-center items-center absolute z-50 left-[5%] shadow-card transition-all ${newToast ? "top-20 opacity-100" : "top-14 opacity-0 pointer-events-none"}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

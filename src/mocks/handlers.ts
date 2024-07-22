@@ -4,8 +4,10 @@ import {
   memberListResponse,
   myStudyList,
   paymentResponse,
+  paymentsList,
   paymentSuccessResponse,
   placeInfo,
+  pointList,
   recruitmentResponse,
   scheduleList,
   studyInfoResponse,
@@ -111,6 +113,20 @@ export const handlers = [
   http.get("/api/members/my-study", async () => {
     console.log(`Captured a "GET /api/members/my-study" request`);
     return HttpResponse.json(myStudyList);
+  }),
+  http.get("/api/payments/history", async ({ request }) => {
+    const url = new URL(request.url);
+    const page = url.searchParams.get("page");
+    const size = url.searchParams.get("size");
+    console.log(`Captured a "GET /api/payments/history?page=${page}&size=${size}" request`);
+    return HttpResponse.json(paymentsList);
+  }),
+  http.get("/api/points/history", async ({ request }) => {
+    const url = new URL(request.url);
+    const page = url.searchParams.get("page");
+    const size = url.searchParams.get("size");
+    console.log(`Captured a "GET /api/points/history?page=${page}&size=${size}" request`);
+    return HttpResponse.json(pointList);
   }),
 
   // payment handlers
