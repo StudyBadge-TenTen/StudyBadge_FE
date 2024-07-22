@@ -36,6 +36,16 @@ const Header = (): JSX.Element => {
     studyList?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleBellBtnClick = (accessToken: string | null) => {
+    if (accessToken) {
+      setNewIcon(() => false);
+      navigate("/profile/notification");
+    } else {
+      alert("로그인 후 이용하실 수 있습니다.");
+      navigate("/login");
+    }
+  };
+
   return (
     // section 클래스에 css position sticky를 넣어서 스크롤을 내려도 검색바가 보이도록 했는데 별로면 말씀해주세요!
     <section className="header h-32 flex justify-center items-center bg-white sticky top-0 shadow-md z-30">
@@ -67,10 +77,7 @@ const Header = (): JSX.Element => {
             <ProfileBtn />
             <button
               className="bell-btn hidden md:inline-block mr-4 relative"
-              onClick={() => {
-                setNewIcon(() => false);
-                navigate("/profile/notification");
-              }}
+              onClick={() => handleBellBtnClick(accessToken)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
