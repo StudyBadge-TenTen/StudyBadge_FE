@@ -57,6 +57,12 @@ interface PointHistoryType {
   createdAt: Date;
 }
 
+interface ParticipationType {
+  studyChannelId: number;
+  studyChannelName: string;
+  participationStatus: "APPROVE_WAITING" | string;
+}
+
 export type {
   BadgeType,
   ProfileInfoType,
@@ -66,4 +72,5 @@ export type {
   MyStudyType,
   PaymentHistoryType,
   PointHistoryType,
+  ParticipationType,
 };

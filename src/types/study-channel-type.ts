@@ -95,17 +95,15 @@ interface AttendanceResponseType {
 interface RecruitmentInfoType {
   studyChannelId: number;
   recruitmentStatus: RecruitmentStatusType;
-  participants: [
-    {
-      memberId: number;
-      imageUrl: string;
-      name: string;
-      banCnt: number;
-      badgeLevel: BadgeType;
-      participationId: number;
-      participationStatus: ApproveType;
-    },
-  ];
+  participants: {
+    memberId: number;
+    imageUrl: string;
+    name: string;
+    banCnt: number;
+    badgeLevel: BadgeType;
+    participationId: number;
+    participationStatus: ApproveType;
+  }[];
 }
 
 interface newSubLeaderStateType {

@@ -17,6 +17,7 @@ import SocialLoginCallback from "../components/auth/SocialLoginCallback";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import PointListPage from "../pages/PointListPage";
 import Participation from "@/components/profile/Participation";
+import ParticipationPage from "@/pages/ParticipationPage";
 
 const Router = (): JSX.Element => {
   return (
@@ -34,7 +35,7 @@ const Router = (): JSX.Element => {
         <Route path="/profile/paymentList" element={<PaymentListPage />} />
         <Route path="/profile/pointList" element={<PointListPage />} />
         <Route path="/profile/notification" element={<Notification />} />
-        <Route path="/profile/participation" element={<Participation />} />
+        <Route path="/profile/participation" element={<ParticipationPage />} />
       </Route>
       <Route path="/payment" element={<ProfilePage />} />
       <Route path="/paymentSuccess/*" element={<Success />} />

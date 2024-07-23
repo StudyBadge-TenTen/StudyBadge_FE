@@ -69,7 +69,7 @@ const Recruitment = (): JSX.Element => {
               ))}
             {!isLoading &&
               data &&
-              (data.participants ? (
+              (data.participants.length !== 0 ? (
                 data.participants.map((participant) => (
                   <div
                     key={participant.participationId}
