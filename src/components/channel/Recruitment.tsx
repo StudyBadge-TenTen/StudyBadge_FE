@@ -67,7 +67,8 @@ const Recruitment = (): JSX.Element => {
                   className="w-full h-40 border border-solid border-Gray-3 bg-white rounded-[30px] mb-2 animate-pulse"
                 ></div>
               ))}
-            {data &&
+            {!isLoading &&
+              data &&
               (data.participants ? (
                 data.participants.map((participant) => (
                   <div

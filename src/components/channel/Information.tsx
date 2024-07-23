@@ -52,9 +52,11 @@ const Information = (): JSX.Element => {
         detailList.push(data.region);
       }
       setStudyDetailList(() => detailList);
+      console.log("Updated studyDetailList:", detailList);
+    } else {
+      console.log("No data:", error);
     }
-    console.log(error);
-  }, [channelId]);
+  }, [channelId, data]);
 
   useEffect(() => {
     if (location.pathname.includes("information_edit")) {
@@ -67,7 +69,7 @@ const Information = (): JSX.Element => {
         }));
       }
     }
-  }, [location]);
+  }, [location, data]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.target.id === "studyNameEdit") {
@@ -180,7 +182,8 @@ const Information = (): JSX.Element => {
               ? infoTitles.map((title) => (
                   <div key={`skeleton_${title}`} className="w-full h-4 bg-Gray-1 rounded-[50px] animate-pulse"></div>
                 ))
-              : data &&
+              : !isLoading &&
+                data &&
                 studyDetailList &&
                 studyDetailList.map((detail, index) =>
                   data?.chattingUrl === detail && isEditMode ? (

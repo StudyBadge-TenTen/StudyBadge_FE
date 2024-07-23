@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-// import { useAuthStore } from "../../../store/auth-store";
-import { useState } from "react";
+import { useAuthStore } from "../../../store/auth-store";
+// import { useState } from "react";
 
 // todo: 유저 전역 상태값 가져와 로그인 상태 판별
 // 로그인 상태에 따라 버튼 클릭 시 경로가 달라져야 함
@@ -9,26 +9,26 @@ import { useState } from "react";
 const ProfileBtn = (): JSX.Element => {
   // 실제 코드
   const navigate = useNavigate();
-  // const { accessToken } = useAuthStore();
-  // const handleClick = () => {
-  //   console.log("click profile btn");
-  //   if (accessToken) {
-  //     navigate("/profile/myInfo");
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // };
-
-  // 프론트 dev 목데이터용 코드
-  const [fakeAccessToken, _] = useState(true);
+  const { accessToken } = useAuthStore();
   const handleClick = () => {
     console.log("click profile btn");
-    if (fakeAccessToken) {
+    if (accessToken) {
       navigate("/profile/myInfo");
     } else {
       navigate("/login");
     }
   };
+
+  // 프론트 dev 목데이터용 코드
+  // const [fakeAccessToken, _] = useState(true);
+  // const handleClick = () => {
+  //   console.log("click profile btn");
+  //   if (fakeAccessToken) {
+  //     navigate("/profile/myInfo");
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
 
   return (
     <button className="profile-btn mr-8 md:mr-4" onClick={() => handleClick()}>

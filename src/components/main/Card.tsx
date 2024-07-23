@@ -1,13 +1,8 @@
-import { useEffect } from "react";
 import { StudyCategoryType, StudyListObjectType } from "../../types/study-channel-type";
 import { useNavigate } from "react-router";
 
 const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(studyInfo);
-  }, [studyInfo]);
 
   const renderCategory = (category: StudyCategoryType) => {
     let categoryKr;

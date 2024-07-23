@@ -87,7 +87,8 @@ const MemberList = ({
                 <div className="w-2/3 h-4 bg-Gray-2 rounded-[50px]"></div>
               </div>
             ))
-          : data &&
+          : !isLoading &&
+            data &&
             data.studyMembers.map((member) => (
               <div
                 key={member.memberId}

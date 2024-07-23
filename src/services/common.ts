@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { getCookie } from "../utils/get-cookie";
+import { postLogout } from "./auth-api";
 
 // 공통 axios 만들기
 const API_BASE_URL = import.meta.env.DEV
@@ -69,6 +70,11 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
         // 필요에 따라 로그아웃 처리 등 추가 작업 수행
+        try {
+          await postLogout();
+        } catch (error) {
+          console.error("Logout error:", refreshError);
+        }
       }
       return Promise.reject(axiosError);
     }

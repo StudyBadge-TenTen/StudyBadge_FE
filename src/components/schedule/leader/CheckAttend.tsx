@@ -35,7 +35,7 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
     );
   }
 
-  if (data) {
+  if (!isLoading && data) {
     const handleCheckClick = (memberId: number) => {
       const newPostAttendList = attendList.map((attendObj) => {
         if (attendObj.studyMemberId === memberId) {

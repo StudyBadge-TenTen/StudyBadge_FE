@@ -50,7 +50,7 @@ const StudyList = (): JSX.Element => {
     }
 
     navigate(newLocation);
-  }, [filter, keywordValue]);
+  }, [data, filter, keywordValue]);
 
   // 스터디 리스트 체크용 코드
   useEffect(() => {
@@ -121,7 +121,8 @@ const StudyList = (): JSX.Element => {
       <div className="study-cards-container w-full flex justify-center items-center flex-wrap">
         {/* 받은 채널 리스트의 길이만큼 map을 이용해 Card 생성 or 스켈레톤 렌더링 */}
         {isLoading && skeletonList.map((card) => <CardSkeleton key={card} />)}
-        {data &&
+        {!isLoading &&
+          data &&
           Array.isArray(studyList) &&
           (studyList.length === 0 ? (
             <div>조건에 해당하는 스터디채널이 없습니다.</div>

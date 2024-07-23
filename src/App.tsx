@@ -10,6 +10,10 @@ function App() {
   const { refreshAccessToken } = useAuthStore();
 
   useEffect(() => {
+    console.log(location.origin);
+  }, []);
+
+  useEffect(() => {
     const initAuth = async () => {
       try {
         await refreshAccessToken();

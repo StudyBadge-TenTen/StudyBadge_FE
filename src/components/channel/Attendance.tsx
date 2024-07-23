@@ -33,7 +33,8 @@ const Attendance = (): JSX.Element => {
               <div className="w-full h-8 bg-Gray-1 rounded-[30px] relative"></div>
             </div>
           ))}
-        {data &&
+        {!isLoading &&
+          data &&
           Array.isArray(data) &&
           data.map((member) => (
             <div key={member.studyMemberId} className="w-full h-fit px-2 py-4 flex justify-center items-center">

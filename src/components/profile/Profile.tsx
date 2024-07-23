@@ -78,7 +78,7 @@ const Profile = (): JSX.Element => {
           <div className="w-full h-fit bg-Gray-1 border-x border-b border-solid border-Gray-3 rounded-b-[30px] flex flex-col md:flex-row justify-between items-center px-10 py-8 md:py-4"></div>
         </>
       )}
-      {data && isEditMode ? (
+      {!isLoading && data && isEditMode ? (
         <ProfileEdit />
       ) : (
         data && (
