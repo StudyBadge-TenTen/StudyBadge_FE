@@ -26,8 +26,8 @@ interface UserInfoType {
   account: string;
   introduction: string;
   imgUrl: string;
-  point: 0;
-  banCnt: 0;
+  point: number;
+  banCnt: number;
 }
 
 interface MyStudyMockType {
