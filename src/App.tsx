@@ -15,7 +15,7 @@ function App() {
       const accessToken = localStorage.getItem("accessToken");
       accessToken && setField("accessToken", accessToken);
     }
-  });
+  }, []);
 
   useEffect(() => {
     const initAuth = async () => {
