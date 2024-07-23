@@ -1,21 +1,26 @@
-import axios from "axios";
+import { fetchCall } from "./common";
 
-export interface Locate {
-  id: string;
-  name: string;
-  address: string;
+interface LocatePointType {
   lat: number;
   lng: number;
 }
 
-export const fetchLocates = async (lat: number, lng: number): Promise<Locate[]> => {
-  try {
-    const response = await axios.get<Locate[]>(
-      `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/study-channels/{studyChannelId}/places?lat=${lat}&lng=${lng}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Failed to fetch locates:", error);
-    throw error;
-  }
+export interface LocateType extends LocatePointType {
+  id?: string;
+  placeName: string;
+  placeAddress: string;
+}
+
+export const fetchLocate = async (studyChannelId: number, placeId: number) => {
+  const locateInfo = await fetchCall<LocateType>(`/api/study-channels/${studyChannelId}/places/${placeId}`, "get");
+  return locateInfo;
+};
+
+export const postLocate = async (studyChannelId: number, placeRequestBody: LocateType) => {
+  const placeId = await fetchCall<{ placeId: number }>(
+    `/api/study-channels/${studyChannelId}/places`,
+    "post",
+    placeRequestBody,
+  );
+  return placeId;
 };
