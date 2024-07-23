@@ -38,7 +38,6 @@ export const scheduleList = [
     repeated: true,
   },
 ];
-
 export const placeInfo = {
   id: 1,
   lat: 45.12,
@@ -46,6 +45,33 @@ export const placeInfo = {
   placeName: "스터디 카페 25시",
   placeAddress: "서울시 OO구 OO동 OO로 1길",
 };
+export const placeId = { placeId: 1 };
+export const attendList = [
+  {
+    memberId: 1,
+    studyMemberId: 1,
+    name: "홍길동",
+    imageUrl: "imageUrl",
+    attendanceStatus: "ATTENDANCE",
+    attendance: true,
+  },
+  {
+    memberId: 1,
+    studyMemberId: 2,
+    name: "김스뱃",
+    imageUrl: "imageUrl",
+    attendanceStatus: "NO_ATTENDANCE",
+    attendance: false,
+  },
+  {
+    memberId: 1,
+    studyMemberId: 3,
+    name: "김철수",
+    imageUrl: "imageUrl",
+    attendanceStatus: "ATTENDANCE",
+    attendance: true,
+  },
+];
 
 // userInfo(profile) data
 export const userInfo = {

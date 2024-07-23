@@ -1,11 +1,13 @@
 import { http, HttpResponse } from "msw";
 import {
   attendanceResponse,
+  attendList,
   memberListResponse,
   myStudyList,
   paymentResponse,
   paymentsList,
   paymentSuccessResponse,
+  placeId,
   placeInfo,
   pointList,
   recruitmentResponse,
@@ -80,7 +82,6 @@ export const handlers = [
     console.log(requestBody);
     return HttpResponse.json({}, { status: 201 });
   }),
-
   http.delete(`/api/study-channels/:studyChannelId/schedules`, async ({ request, params }) => {
     const requestBody = await request.json();
     console.log(`Captured a "DELETE /api/study-channels/${params.studyChannelId}/schedules" request`);
@@ -97,6 +98,34 @@ export const handlers = [
     );
     console.log(requestBody);
     return HttpResponse.json({}, { status: 201 });
+  }),
+  http.get(`/api/study-channels/:studyChannelId/places/:placeId`, async ({ params }) => {
+    console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/places/${params.placeId}" request`);
+    return HttpResponse.json(placeInfo, { status: 200 });
+  }),
+  http.post(`/api/study-channels/:studyChannelId/places`, async ({ request, params }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "POST /api/study-channels/${params.studyChannelId}/places" request`);
+    console.log(requestBody);
+    return HttpResponse.json(placeId, { status: 200 });
+  }),
+  http.get(`/api/study-channels/:channelId/single-schedules/:scheduleId/members`, async ({ request, params }) => {
+    const url = new URL(request.url);
+    const date = url.searchParams.get("date");
+
+    console.log(
+      `Captured a "GET /api/study-channels/${params.studyChannelId}/single-schedules/${params.scheduleId}/members?date=${date}" request`,
+    );
+    return HttpResponse.json(attendList, { status: 200 });
+  }),
+  http.get(`/api/study-channels/:channelId/repeat-schedules/:scheduleId/members`, async ({ request, params }) => {
+    const url = new URL(request.url);
+    const date = url.searchParams.get("date");
+
+    console.log(
+      `Captured a "GET /api/study-channels/${params.studyChannelId}/repeat-schedules/${params.scheduleId}/members?date=${date}" request`,
+    );
+    return HttpResponse.json(attendList, { status: 200 });
   }),
 
   // profile handlers
