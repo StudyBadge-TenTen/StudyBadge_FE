@@ -7,22 +7,24 @@ import { useAuthStore } from "./store/auth-store";
 import { useEffect } from "react";
 
 function App() {
-  const { refreshAccessToken } = useAuthStore();
+  const { refreshToken, refreshAccessToken } = useAuthStore();
 
   useEffect(() => {
     console.log(location.origin);
   }, []);
 
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        await refreshAccessToken();
-      } catch (error) {
-        console.error("Failed to refresh access token on load:", error);
-      }
-    };
+    if (refreshToken) {
+      const initAuth = async () => {
+        try {
+          await refreshAccessToken();
+        } catch (error) {
+          console.error("Failed to refresh access token on load:", error);
+        }
+      };
 
-    initAuth();
+      initAuth();
+    }
   }, [refreshAccessToken]);
 
   useSSE();
