@@ -4,15 +4,22 @@
     "source.fixAll.eslint": "always"
   },
   "cSpell.words": [
+    "appkey",
+    "autoload",
     "BRANDPAY",
+    "dapi",
     "editmode",
+    "infowindow",
+    "jibun",
     "Kakao",
     "KEYIN",
+    "latlng",
     "Naver",
     "Noti",
     "tailwindcss",
     "tanstack",
     "tosspayments",
+    "tsbuildinfo",
     "zustand"
   ]
 }
