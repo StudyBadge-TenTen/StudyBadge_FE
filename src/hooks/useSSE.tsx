@@ -16,12 +16,15 @@ export const useSSE = () => {
 
   useEffect(() => {
     if (import.meta.env.DEV) {
-      const accessToken = localStorage.getItem("accessToken");
-      accessToken && setField("accessToken", accessToken);
+      const storedAccessToken = localStorage.getItem("accessToken");
+      if (storedAccessToken) {
+        setField("accessToken", storedAccessToken);
+      }
     }
-  }, []);
+  }, [setField]);
 
   useEffect(() => {
+    // accessToken이 없을 경우 sse연결을 하지 않는 코드입니다
     if (!accessToken) {
       console.log("저장된 accessToken이 없습니다");
       return;
@@ -48,13 +51,14 @@ export const useSSE = () => {
 
     const onMessage = (ev: MessageEvent) => {
       console.log("Event received: ", ev.data); // 디버깅 로그 추가
-      // 추가해야할 코드 : 더미 데이터일 경우 return
-      if (ev.data.isDummy) {
-        console.log("연결 더미데이터 수신");
-        return;
-      }
       try {
-        const newNotification: NotificationType = JSON.parse(ev.data);
+        const parsedData = JSON.parse(ev.data);
+        // 추가해야할 코드 : 더미 데이터일 경우 return
+        if (parsedData.isDummy) {
+          console.log("연결 더미데이터 수신");
+          return;
+        }
+        const newNotification: NotificationType = parsedData;
         console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
         setNewNotification(newNotification); // 토스트에 넣을 새로운 알림
         localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
