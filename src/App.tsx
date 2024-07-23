@@ -7,15 +7,7 @@ import { useAuthStore } from "./store/auth-store";
 import { useEffect } from "react";
 
 function App() {
-  useSSE();
-  const { refreshAccessToken, setField } = useAuthStore();
-
-  useEffect(() => {
-    if (import.meta.env.DEV) {
-      const accessToken = localStorage.getItem("accessToken");
-      accessToken && setField("accessToken", accessToken);
-    }
-  }, []);
+  const { refreshAccessToken } = useAuthStore();
 
   useEffect(() => {
     const initAuth = async () => {
@@ -28,6 +20,8 @@ function App() {
 
     initAuth();
   }, [refreshAccessToken]);
+
+  useSSE();
 
   return (
     <BrowserRouter>

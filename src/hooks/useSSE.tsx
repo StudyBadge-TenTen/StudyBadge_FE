@@ -6,7 +6,7 @@ import { NotificationType } from "../types/notification-type";
 import { LAST_EVENT_ID } from "../constants/local-storage";
 
 export const useSSE = () => {
-  const { accessToken } = useAuthStore();
+  const { accessToken, setField } = useAuthStore();
   const API_BASE_URL = import.meta.env.DEV
     ? import.meta.env.VITE_APP_LOCAL_BASE_URL
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
@@ -15,7 +15,17 @@ export const useSSE = () => {
   console.log("useSSE hook"); // useSSE 작동 테스트
 
   useEffect(() => {
-    if (!accessToken) return;
+    if (import.meta.env.DEV) {
+      const accessToken = localStorage.getItem("accessToken");
+      accessToken && setField("accessToken", accessToken);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!accessToken) {
+      console.log("저장된 accessToken이 없습니다");
+      return;
+    }
 
     // 에러 시 재연결을 시도하면 새로운 EventSourcePolyfill객체가 생성되도록하기 위해 이렇게 작성했습니다.
     let eventSource: EventSourcePolyfill | null = null;
@@ -39,6 +49,10 @@ export const useSSE = () => {
     const onMessage = (ev: MessageEvent) => {
       console.log("Event received: ", ev.data); // 디버깅 로그 추가
       // 추가해야할 코드 : 더미 데이터일 경우 return
+      if (ev.data.isDummy) {
+        console.log("연결 더미데이터 수신");
+        return;
+      }
       try {
         const newNotification: NotificationType = JSON.parse(ev.data);
         console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
