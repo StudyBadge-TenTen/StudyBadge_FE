@@ -16,6 +16,7 @@ import CreateStudyPage from "../pages/CreateStudyPage";
 import SocialLoginCallback from "../components/auth/SocialLoginCallback";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import PointListPage from "../pages/PointListPage";
+import Participation from "@/components/profile/Participation";
 
 const Router = (): JSX.Element => {
   return (
@@ -33,6 +34,7 @@ const Router = (): JSX.Element => {
         <Route path="/profile/paymentList" element={<PaymentListPage />} />
         <Route path="/profile/pointList" element={<PointListPage />} />
         <Route path="/profile/notification" element={<Notification />} />
+        <Route path="/profile/participation" element={<Participation />} />
       </Route>
       <Route path="/payment" element={<ProfilePage />} />
       <Route path="/paymentSuccess/*" element={<Success />} />

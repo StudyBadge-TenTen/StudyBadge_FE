@@ -107,11 +107,9 @@ const SignUp: React.FC = () => {
         ))}
       </select>
       {formListSecond.map((formName) => (
-        <>
+        <React.Fragment key={formName}>
           {formName === "계좌번호" && (
-            <div key={"계좌번호안내문구"} className="w-full max-w-96 text-xs text-Gray-4 mb-2">
-              계좌번호는 환급금 송금을 위한 항목입니다.
-            </div>
+            <div className="w-full max-w-96 text-xs text-Gray-4 mb-2">계좌번호는 환급금 송금을 위한 항목입니다.</div>
           )}
           <div
             key={formName}
@@ -131,7 +129,7 @@ const SignUp: React.FC = () => {
               onChange={(e) => handleChange(e, formName)}
             />
           </div>
-        </>
+        </React.Fragment>
       ))}
       <button type="submit" className="btn-blue hover:bg-blue-700 text-white mt-10">
         회원가입

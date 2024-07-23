@@ -12,6 +12,7 @@ import { MyStudyType, UserInfoType } from "../../types/profile-type";
 import { getMyStudy, getProfile } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import { useAuthStore } from "../../store/auth-store";
+// import { motion } from "framer-motion";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
@@ -147,13 +148,24 @@ const Profile = (): JSX.Element => {
                 <div
                   key={studyChannel.studyId}
                   onClick={() => navigate(`/channel/${studyChannel.studyId}/schedule`)}
-                  className="border border-solid border-Gray-3 w-full h-32 p-10 rounded-[30px] flex flex-col sm:flex-row justify-between items-center mt-10"
+                  className="border border-solid border-Gray-3 w-full h-fit p-10 rounded-[30px] flex flex-col sm:flex-row justify-center lg:justify-between items-center mt-10 flex-wrap"
                 >
                   <div className="flex items-center">
-                    <h3 className="font-bold text-2xl text-Blue-2">{studyChannel.studyName}</h3>
+                    <h3 className="font-bold text-xl md:text-2xl text-Blue-2">{studyChannel.studyName}</h3>
                     {studyChannel.role === "LEADER" && <span className="ml-8 font-bold text-Red-2">리더</span>}
                   </div>
-                  <div>출석률 프로그레스바</div>
+                  <div className="w-full md:w-[70%] flex justify-center items-center flex-wrap">
+                    <span className="inline-block w-fit text-Blue-2 text-sm md:text-base mr-4">출석률</span>
+                    <div className="w-[75%] h-4 bg-Gray-1 relative z-10">
+                      {/* <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: member.attendanceRatio * 0.01 }}
+                      transition={{ duration: 0.5, originX: 0, originY: 1 }}
+                      style={{ transformOrigin: "0% 100%" }}
+                      className={`w-full h-4 bg-Blue-2 absolute top-0 left-0 z-20`}
+                    ></motion.div> */}
+                    </div>
+                  </div>
                 </div>
               ))
             )}
