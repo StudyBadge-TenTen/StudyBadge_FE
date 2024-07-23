@@ -13,6 +13,9 @@ const SocialLoginCallback: React.FC = () => {
     try {
       if (accessToken) {
         setField("accessToken", accessToken);
+        if (import.meta.env.DEV) {
+          localStorage.setItem("accessToken", accessToken);
+        }
         navigate("/profile/myInfo", { state: { social: true } });
       } else {
         alert("로그인에 실패하였습니다");

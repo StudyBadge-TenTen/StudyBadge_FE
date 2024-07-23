@@ -8,7 +8,14 @@ import { useEffect } from "react";
 
 function App() {
   useSSE();
-  const { refreshAccessToken } = useAuthStore();
+  const { refreshAccessToken, setField } = useAuthStore();
+
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      const accessToken = localStorage.getItem("accessToken");
+      accessToken && setField("accessToken", accessToken);
+    }
+  });
 
   useEffect(() => {
     const initAuth = async () => {

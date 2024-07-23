@@ -20,6 +20,9 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
     try {
       const { accessToken, refreshToken } = await postLogin(email, password);
       set({ accessToken, refreshToken });
+      if (import.meta.env.DEV) {
+        localStorage.setItem("accessToken", accessToken);
+      }
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
       console.error("Login failed:", error);
