@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { getCookie } from "../utils/get-cookie";
 
 // 공통 axios 만들기
 const API_BASE_URL = import.meta.env.DEV
@@ -30,6 +31,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     // 요청 에러 처리
+    console.error("Request error:", error); // 디버깅을 위해 추가
     return Promise.reject(error);
   },
 );
@@ -41,12 +43,35 @@ axiosInstance.interceptors.response.use(
     console.log("Response headers:", response.headers); // 디버깅을 위해 추가
     return response.data;
   },
-  (error) => {
+  async (error) => {
     // 응답 에러 처리
     const axiosError = error as AxiosError;
+    const originalRequest = error.config;
     console.error("Response error:", axiosError.response?.data); // 디버깅을 위해 추가
+
     // 여기서 에러 처리 로직 구현
-    return Promise.reject(axiosError);
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        // refreshToken을 쿠키에서 가져와 accessToken 갱신 로직 추가
+        const refreshToken = getCookie("refreshToken");
+        if (refreshToken) {
+          const response = await axios.post(`${API_BASE_URL}/auth/refresh-token`, { token: refreshToken });
+          const newAccessToken = response.data.accessToken;
+
+          // 새로운 토큰 저장 및 요청 헤더에 추가
+          setApiToken(newAccessToken);
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+
+          // 원래 요청을 다시 시도
+          return axiosInstance(originalRequest);
+        }
+      } catch (refreshError) {
+        console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
+        // 필요에 따라 로그아웃 처리 등 추가 작업 수행
+      }
+      return Promise.reject(axiosError);
+    }
   },
 );
 

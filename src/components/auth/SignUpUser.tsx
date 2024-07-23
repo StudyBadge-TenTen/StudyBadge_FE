@@ -109,7 +109,9 @@ const SignUp: React.FC = () => {
       {formListSecond.map((formName) => (
         <>
           {formName === "계좌번호" && (
-            <div className="w-full max-w-96 text-xs text-Gray-4 mb-2">계좌번호는 환급금 송금을 위한 항목입니다.</div>
+            <div key={"계좌번호안내문구"} className="w-full max-w-96 text-xs text-Gray-4 mb-2">
+              계좌번호는 환급금 송금을 위한 항목입니다.
+            </div>
           )}
           <div
             key={formName}
