@@ -207,6 +207,30 @@ interface ConfirmModalPropsType {
   repeatState: RepeatCycleType | "NONE";
 }
 
+interface AttendMemberType {
+  memberId: number;
+  studyMemberId: number;
+  name: string;
+  imageUrl: string;
+  attendanceStatus: string;
+  attendance: boolean;
+}
+
+interface PostAttendObjectType {
+  studyMemberId: number;
+  isAttendance: boolean;
+}
+
+interface AttendScheduleInfoType {
+  scheduleType: "SINGLE" | "REPEAT";
+  scheduleId: number;
+  attendanceCheckDate: string;
+}
+
+interface postAttendRequestType extends AttendScheduleInfoType {
+  attendanceMembers: PostAttendObjectType[];
+}
+
 // -------- 임시) 장소 관련 ----------
 interface PlaceParamsType {
   studyChannelId: number;
@@ -246,6 +270,10 @@ export type {
   ModalInfoType,
   SetModalInfoType,
   ConfirmModalPropsType,
+  AttendMemberType,
+  PostAttendObjectType,
+  AttendScheduleInfoType,
+  postAttendRequestType,
   //
   PlaceParamsType,
   PlaceType,

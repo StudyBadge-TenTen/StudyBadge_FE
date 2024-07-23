@@ -37,7 +37,9 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
         <div className="badge-basic bg-Red-1 text-white">
           {studyInfo.meetingType === "ONLINE" ? "온라인" : "오프라인"}
         </div>
-        <div className="badge-basic bg-Blue-2 text-white">{renderCategory(studyInfo.category)}</div>
+        <div className="badge-basic bg-Blue-2 text-white">
+          {renderCategory(studyInfo.category as StudyCategoryType)}
+        </div>
       </div>
       <div className="study-period text-xs">
         스터디 기간 | {studyInfo.startDate} ~ {studyInfo.endDate}

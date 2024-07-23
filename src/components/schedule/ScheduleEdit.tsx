@@ -6,9 +6,11 @@ import { useNewScheduleStore, useSelectedDateStore } from "../../store/schedule-
 import { situationCalculator } from "../../utils/schedule-function";
 import ConfirmModal from "./leader/ConfirmModal";
 import Setters from "./leader/Setters";
+import { useGetStudyInfo } from "../../hooks/useQuery";
 
 const ScheduleEdit = (): JSX.Element => {
   const { channelId } = useParams();
+  const { data } = useGetStudyInfo(Number(channelId));
   const navigate = useNavigate();
   const {
     state: { originInfo },
@@ -58,6 +60,10 @@ const ScheduleEdit = (): JSX.Element => {
 
     return window.removeEventListener("click", (e) => handleSelectorReset(e));
   }, []);
+
+  useEffect(() => {
+    console.log(placeId); // placeId 디버깅 로그
+  }, [placeId]);
 
   useEffect(() => {
     if (repeatState === "NONE") {
@@ -251,9 +257,18 @@ const ScheduleEdit = (): JSX.Element => {
               repeatEndDate={repeatEndDate}
               setRepeatEndDate={setRepeatEndDate}
             />
-            {/* 오프라인 채널일 경우 장소 선택 버튼 - 클릭하면 맵 페이지로 이동 */}
-            {/* 돌아오면서 placeId를 navigate의 state로 전달해주는 방향이면 좋을 듯*/}
-            <AddPlaceBtn />
+            {data &&
+              data.meetingType === "OFFLINE" &&
+              (originInfo ? (
+                <AddPlaceBtn
+                  setPlaceId={setPlaceId}
+                  originPlaceId={originInfo.placeId}
+                  studyChannelId={Number(channelId)}
+                />
+              ) : (
+                <AddPlaceBtn setPlaceId={setPlaceId} studyChannelId={Number(channelId)} />
+              ))}
+            {placeId && <div className="text-center mt-2 text-Gray-3">현재 선택된 장소가 있습니다.</div>}
           </div>
           <div className="flex justify-between items-center px-8 mt-8">
             <button type="button" onClick={() => navigate(`/channel/${channelId}`)} className="btn-blue w-24">

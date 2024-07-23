@@ -80,7 +80,8 @@ const getScheduleInfo = async (
   if (scheduleObject) {
     if (scheduleObject.placeId) {
       const params = { studyChannelId: scheduleObject.studyChannelId, placeId: scheduleObject.placeId };
-      const { placeAddress } = await getPlace(params);
+      const placeInfo = await getPlace(params);
+      const placeAddress = placeInfo?.placeAddress ?? "";
       scheduleInfo = {
         ...scheduleObject,
         placeAddress: placeAddress,

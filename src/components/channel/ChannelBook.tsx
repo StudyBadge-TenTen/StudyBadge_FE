@@ -90,7 +90,7 @@ const ChannelBook = (): JSX.Element => {
           </button>
         </div>
         <div className="w-[400px] md:w-[768px] lg:w-[854px] h-fit flex flex-col px-4 py-8 md:p-8">
-          {tabState === "일정" && <Schedules />}
+          {tabState === "일정" && <Schedules isLeader={data?.isLeader} />}
           {tabState === "정보" && <Information />}
           {tabState === "멤버" && <MemberList />}
           {tabState === "출석현황" && <Attendance />}

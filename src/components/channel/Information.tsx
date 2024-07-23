@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { newSubLeaderStateType, StudyInfoType } from "../../types/study-channel-type";
-import { useQuery } from "@tanstack/react-query";
-import { getStudyInfo, postSubLeader, putStudyInfo } from "../../services/channel-api";
+import { newSubLeaderStateType } from "../../types/study-channel-type";
+import { postSubLeader, putStudyInfo } from "../../services/channel-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import Modal from "../common/Modal";
 import MemberList from "./MemberList";
+import { useGetStudyInfo } from "../../hooks/useQuery";
 
 const Information = (): JSX.Element => {
   const { channelId } = useParams();
@@ -14,10 +14,7 @@ const Information = (): JSX.Element => {
   const [studyDetailList, setStudyDetailList] = useState<(string | number | null)[]>();
   const { isEditMode, setIsEditMode } = useEditModeStore();
   const infoTitles = ["정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더"];
-  const { data, error, isLoading } = useQuery<StudyInfoType, Error>({
-    queryKey: ["studyInfo", channelId],
-    queryFn: () => getStudyInfo(Number(channelId)),
-  });
+  const { data, error, isLoading } = useGetStudyInfo(Number(channelId));
   const [newStudyInfo, setNewStudyInfo] = useState({
     name: "",
     description: "",

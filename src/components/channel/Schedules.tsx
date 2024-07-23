@@ -2,22 +2,46 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Calendar from "../schedule/Calendar";
 import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
-import { ScheduleCalcResponseType, ScheduleType } from "../../types/schedule-type";
+import { AttendMemberType, ScheduleCalcResponseType, ScheduleType } from "../../types/schedule-type";
 import { getScheduleInfo, scheduleCalculator } from "../../utils/schedule-function";
 import AddScheduleBtn from "../schedule/leader/AddScheduleBtn";
 import moment from "moment";
+import { useQuery } from "@tanstack/react-query";
+import { getAttendList } from "../../services/schedule-api";
+import CheckAttend from "../schedule/leader/CheckAttend";
+import { useEditModeStore } from "../../store/edit-mode-store";
 
-const Schedules = (): JSX.Element => {
+const Schedules = ({ isLeader }: { isLeader: boolean | undefined }): JSX.Element => {
   const { channelId } = useParams();
+
   const { selectedDate } = useSelectedDateStore();
   const { selectedMonth } = useSelectedMonthStore();
+  const { isEditMode, setIsEditMode } = useEditModeStore();
+
   const [marks, setMarks] = useState<string[]>([]);
   const [scheduleState, setScheduleState] = useState<ScheduleCalcResponseType>();
-  const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | false>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | undefined>();
+  const [isLoadingState, setIsLoadingState] = useState(false);
+
+  const [checkDay, setCheckDay] = useState(false);
   const today = new Date();
   const todayString = moment(today).format("YYYY-MM-DD");
-  // const attendList = ["홍길동", "김철수", "김영희"];
+
+  const { data, error, isLoading } = useQuery<AttendMemberType[], Error>({
+    queryKey: ["attendList", channelId, scheduleInfo?.id, selectedDate],
+    queryFn: () =>
+      getAttendList(Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated ? "repeat" : "single", selectedDate),
+  });
+
+  const [attendList, setAttendList] = useState<{
+    data: AttendMemberType[] | undefined;
+    error: Error | undefined | null;
+    isLoading: boolean;
+  }>({ data: undefined, error: undefined, isLoading: false });
+
+  useEffect(() => {
+    return () => setIsEditMode(false);
+  }, []);
 
   useEffect(() => {
     //month상태가 바뀔 때마다 scheduleCalculator()호출해 일정들 가져오기
@@ -36,21 +60,31 @@ const Schedules = (): JSX.Element => {
 
   // 선택하는 날짜가 바뀔 때마다 날짜에 해당되는 일정정보를 set하기 위해
   useEffect(() => {
+    if (scheduleInfo && moment(selectedDate).isBefore(todayString)) {
+      // 일정이 있고, 지난 날짜의 일정일 때
+      setAttendList(() => ({ data: data, error: error, isLoading: isLoading }));
+    } else if (scheduleInfo && moment(selectedDate).isSame(todayString)) {
+      // 일정이 있고, 오늘일 때
+      setCheckDay(() => true);
+    } else {
+      setAttendList(() => ({ data: undefined, error: undefined, isLoading: false }));
+    }
+
     if (scheduleState) {
-      setIsLoading(() => true);
+      setIsLoadingState(() => true);
       try {
         getScheduleInfo(selectedDate, scheduleState.scheduleList, scheduleState.scheduleMarks).then((response) => {
           if (response.result) {
             setScheduleInfo(() => response.scheduleInfo);
-          } else setScheduleInfo(() => false);
+          } else setScheduleInfo(() => undefined);
         });
       } catch (error) {
         console.log("error: 일정을 불러오는데 실패하였습니다.", error);
       } finally {
-        setIsLoading(() => false);
+        setIsLoadingState(() => false);
       }
     }
-  }, [selectedDate]);
+  }, [selectedDate, data, error, isLoading, scheduleState]);
 
   return (
     <>
@@ -59,7 +93,7 @@ const Schedules = (): JSX.Element => {
         <Calendar marks={marks} />
         <div className="schedule w-96 h-[393px] border border-solid border-Gray-3 rounded-[50px] mt-4 md:mt-0 md:ml-4">
           <div className="m-6 h-[345px] overflow-y-scroll custom-scroll">
-            {isLoading && (
+            {isLoadingState && (
               <>
                 <div className="h-[136px] bg-Gray-1 rounded-[30px]"></div>
                 <div className="h-[32px] flex items-center border border-solid border-Gray-2 rounded-[50px] p-2 my-2"></div>
@@ -120,16 +154,75 @@ const Schedules = (): JSX.Element => {
                   <h3 className="text-2xl font-bold text-Blue-2 text-center my-4">
                     {selectedDate.split("-")[1]}.{selectedDate.split("-")[2]} 출석 멤버
                   </h3>
-                  <div className="text-center text-Gray-3">아직 출석체크를 하지 않았습니다.</div>
-                  {/* 출석완료 후 렌더링 될 요소 */}
-                  {/* <div className="h-28 flex flex-wrap">
-                    {attendList.map((member) => (
-                      <div key={member} className="member w-fit h-fit flex flex-col justify-center items-center mx-2">
-                        <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-                        <span>{member}</span>
+                  {/* 조건 : 리더, 오늘, 출석체크비활성화 시 버튼 렌더링 */}
+                  {isLeader && checkDay && !isEditMode ? (
+                    <>
+                      <div className="flex justify-center items-center">
+                        <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
+                          출석체크
+                        </button>
                       </div>
-                    ))}
-                  </div> */}
+                      {channelId && isEditMode && (
+                        <CheckAttend
+                          channelId={Number(channelId)}
+                          scheduleInfo={{
+                            scheduleType: scheduleInfo.repeated ? "REPEAT" : "SINGLE",
+                            scheduleId: scheduleInfo.id,
+                            attendanceCheckDate: selectedDate,
+                          }}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {/* 출석체크 작동 확인용 */}
+                      {/* <div className="flex justify-center items-center">
+                        <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
+                          출석체크
+                        </button>
+                      </div>
+                      {channelId && isEditMode && (
+                        <CheckAttend
+                          channelId={Number(channelId)}
+                          scheduleInfo={{
+                            scheduleType: scheduleInfo.repeated ? "REPEAT" : "SINGLE",
+                            scheduleId: scheduleInfo.id,
+                            attendanceCheckDate: selectedDate,
+                          }}
+                        />
+                      )} */}
+                    </>
+                  )}
+                  {!attendList || (Array.isArray(attendList.data) && attendList.data?.length === 0) ? (
+                    <div className="text-center text-Gray-3">출석체크를 하지 않았습니다.</div>
+                  ) : attendList.isLoading ? (
+                    <div className="skeleton w-full h-28 rounded-[30px] bg-Gray-1 animate-pulse"></div>
+                  ) : (
+                    <div className="h-28 flex flex-wrap">
+                      {attendList &&
+                        attendList.data?.map(
+                          (member) =>
+                            member.attendance && (
+                              <div
+                                key={member.studyMemberId}
+                                className="member w-fit h-fit flex flex-col justify-center items-center mx-2"
+                              >
+                                {member.imageUrl ? (
+                                  <img
+                                    src={member.imageUrl}
+                                    alt="프로필이미지"
+                                    className="w-16 h-16 object-cover rounded-full bg-Gray-2"
+                                  />
+                                ) : (
+                                  <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
+                                )}
+
+                                <span>{member.name}</span>
+                              </div>
+                            ),
+                        )}
+                    </div>
+                  )}
                 </>
               </>
             ) : (
@@ -144,7 +237,7 @@ const Schedules = (): JSX.Element => {
         </div>
       </div>
       {/* 스터디 리더 용 일정등록/변경 버튼 */}
-      {new Date(selectedDate) >= new Date(todayString) && <AddScheduleBtn originInfo={scheduleInfo} />}
+      {isLeader && new Date(selectedDate) >= new Date(todayString) && <AddScheduleBtn originInfo={scheduleInfo} />}
     </>
   );
 };
