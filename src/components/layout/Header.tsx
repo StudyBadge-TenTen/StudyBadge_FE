@@ -95,22 +95,23 @@ const Header = (): JSX.Element => {
               <Toast setNewIcon={setNewIcon} />
             </button>
           </div>
-          <button
-            className={`hidden ${accessToken ? "md:hidden" : "md:inline-block"} btn-blue`}
-            onClick={() => navigate("/login")}
-          >
-            로그인
-          </button>
-          <button
-            className={`hidden ${!accessToken ? "md:hidden" : "md:inline-block"} btn-blue`}
-            onClick={async () => {
-              await logout();
-              reset();
-              navigate("/");
-            }}
-          >
-            로그아웃
-          </button>
+          {accessToken ? (
+            <button
+              className={`hidden md:inline-block btn-blue`}
+              onClick={async () => {
+                await logout();
+                reset();
+                navigate("/");
+                window.location.reload();
+              }}
+            >
+              로그아웃
+            </button>
+          ) : (
+            <button className={`hidden md:inline-block btn-blue`} onClick={() => navigate("/login")}>
+              로그인
+            </button>
+          )}
         </div>
       </div>
     </section>

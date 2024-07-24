@@ -35,7 +35,7 @@ export const useSSE = () => {
     let retryTimeout: NodeJS.Timeout | null = null; // 메인페이지에서 계속 쿼리가 실행되는 것 디버깅하기 위한 코드
 
     const connect = () => {
-      eventSource = new EventSourcePolyfill(API_BASE_URL + `/api/notifications/subscribe`, {
+      eventSource = new EventSourcePolyfill(`${API_BASE_URL}/api/notifications/subscribe`, {
         headers: {
           "Last-Event-ID": localStorage.getItem(LAST_EVENT_ID) ?? "",
           Authorization: `Bearer ${accessToken}`,
