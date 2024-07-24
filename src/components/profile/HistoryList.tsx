@@ -70,7 +70,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
               >
                 <span className="text-sm text-Gray-4 text-center">
                   결제날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간:{" "}
-                  {moment(data.createdAt).format("hh:mm:ss")}
+                  {moment(data.createdAt).format("hh:mm")}
                 </span>
                 <div className="flex items-center">
                   {isPossibleCancel(data) ? (
@@ -122,8 +122,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
                 className="h-16 border-b border-solid border-Gray-2 p-4 flex justify-between items-center"
               >
                 <span className="text-sm text-Gray-4 text-center">
-                  결제날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간:{" "}
-                  {moment(data.createdAt).format("hh:mm:ss")}
+                  날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간: {moment(data.createdAt).format("hh:mm")}
                 </span>
                 <div className="flex items-center">
                   {data.transferType === "PAYMENT_CANCEL" && (

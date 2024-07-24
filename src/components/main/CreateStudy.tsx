@@ -30,7 +30,7 @@ const CreateStudy: React.FC = () => {
       alert("스터디의 카테고리를 선택해주세요");
       return;
     }
-    if (!study.region) {
+    if (study.meetingType === "OFFLINE" && !study.region) {
       alert("스터디모임이 주로 모임을 가질 지역을 선택해주세요");
       return;
     }
@@ -63,8 +63,9 @@ const CreateStudy: React.FC = () => {
       const response = await postStudyChannel(study);
       console.log("Study created:", response.studyChannelId);
       study.resetForm();
-
-      navigate(`/channel/${response.studyChannelId}/schedule`);
+      if (response) {
+        navigate(`/channel/${response.studyChannelId}/schedule`);
+      }
     } catch (error) {
       console.error("Failed to create study:", error);
     }
