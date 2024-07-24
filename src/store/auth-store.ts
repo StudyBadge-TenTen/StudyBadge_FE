@@ -106,6 +106,9 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   logout: async () => {
     try {
       await postLogout();
+      if (import.meta.env.DEV) {
+        localStorage.removeItem("accessToken");
+      }
     } catch (error) {
       console.error("Logout failed:", error);
       throw error;

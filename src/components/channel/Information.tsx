@@ -198,7 +198,7 @@ const Information = (): JSX.Element => {
                   ) : (
                     <span
                       key={index}
-                      className="inline-block w-full text-sm overflow-x-scroll whitespace-nowrap break-all scrollbar-hide"
+                      className={`inline-block w-full text-sm overflow-x-scroll whitespace-nowrap break-all scrollbar-hide ${data?.chattingUrl === detail && "text-Gray-4 text-xs"}`}
                     >
                       {index === 3
                         ? detail?.toLocaleString()
