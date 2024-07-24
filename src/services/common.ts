@@ -77,6 +77,7 @@ axiosInstance.interceptors.response.use(
         // 필요에 따라 로그아웃 처리 등 추가 작업 수행
         try {
           await postLogout();
+          console.log("Token refresh error - try logout:", refreshError);
         } catch (error) {
           console.error("Logout error:", refreshError);
         }
