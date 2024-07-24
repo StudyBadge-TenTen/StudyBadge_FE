@@ -21,7 +21,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
 
   useEffect(() => {
     try {
-      getPointHistory(1, 10).then((latestPointList) => setLatestPointList(() => latestPointList));
+      getPointHistory(1, 10).then((latestPointList) => latestPointList && setLatestPointList(() => latestPointList));
     } catch (error) {
       console.log(error);
     }
@@ -31,6 +31,8 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     const paymentDate = new Date(data.createdAt);
 
     for (const pointHistory of latestPointList) {
+      if (!pointHistory) false;
+
       const historyDate = new Date(pointHistory.createdAt);
 
       // 결제 이후에 발생한 포인트 사용 내역을 찾음
