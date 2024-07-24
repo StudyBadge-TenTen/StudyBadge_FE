@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/auth-store";
 
-const SocialLoginCallback: React.FC = () => {
+const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
   const navigate = useNavigate();
   const { setField } = useAuthStore();
 
@@ -12,11 +12,17 @@ const SocialLoginCallback: React.FC = () => {
 
     try {
       if (accessToken) {
+        console.log(accessToken); // 디버깅 로그 추가
+
         setField("accessToken", accessToken);
         if (import.meta.env.DEV) {
           localStorage.setItem("accessToken", accessToken);
         }
-        navigate("/profile/myInfo", { state: { social: true } });
+        if (first) {
+          navigate("/profile/myInfo", { state: { social: true } });
+        } else {
+          navigate("/");
+        }
       } else {
         alert("로그인에 실패하였습니다");
         navigate("/login");

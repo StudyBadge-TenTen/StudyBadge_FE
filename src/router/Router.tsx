@@ -26,7 +26,8 @@ const Router = (): JSX.Element => {
       <Route path="/login" element={<Login />} />
       <Route path="/SignUp" element={<SignUp />} />
       <Route path="/PasswordReset" element={<PasswordResetPage />} />
-      <Route path="/oauth2/callback/*" element={<SocialLoginCallback />} />
+      <Route path="/oauth2/callback" element={<SocialLoginCallback first={true} />} />
+      <Route path="/socialCallback" element={<SocialLoginCallback first={false} />} />
       <Route path="/profile" element={<ProfilePage />}>
         <Route path="/profile/payment" element={<Profile />} />
         <Route path="/profile/myInfo" element={<Profile />} />
