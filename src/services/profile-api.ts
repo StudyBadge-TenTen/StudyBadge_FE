@@ -25,7 +25,7 @@ const getPaymentsHistory = async (page: number, size: number) => {
 };
 
 const getPointHistory = async (page: number, size: number) => {
-  const pointHistory = await fetchCall<PointHistoryType[]>(`/api/points/history?page=${page}&size=${size}`, "get");
+  const pointHistory = await fetchCall<PointHistoryType[]>(`/api/my-point?page=${page}&size=${size}`, "get");
   return pointHistory;
 };
 
