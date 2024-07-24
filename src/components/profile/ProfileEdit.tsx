@@ -4,10 +4,12 @@ import { ProfileInfoType, ProfilePutType } from "../../types/profile-type";
 import { BANK_LIST } from "../../constants/bank-list";
 import axios from "axios";
 import { useAuthStore } from "../../store/auth-store";
+import { useNavigate } from "react-router";
 
 const ProfileEdit = (): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
 
+  const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState({
     nickname: "",
     introduction: "",
@@ -137,6 +139,7 @@ const ProfileEdit = (): JSX.Element => {
       });
       // 서버 응답 출력
       console.log(response.data);
+      navigate("/profile/myInfo");
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
