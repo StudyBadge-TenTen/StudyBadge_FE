@@ -34,6 +34,8 @@ const Profile = (): JSX.Element => {
 
   useEffect(() => {
     if (data) {
+      console.log(data); // 디버깅 로그
+
       (async () => {
         try {
           const myStudyList = await getMyStudy();
