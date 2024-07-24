@@ -62,11 +62,15 @@ const CreateStudy: React.FC = () => {
     try {
       const response = await postStudyChannel(study);
       console.log("Study created:", response.studyChannelId);
+      alert("스터디 채널 생성이 완료되었습니다.");
       study.resetForm();
 
       navigate(`/channel/${response.studyChannelId}/schedule`);
     } catch (error) {
       console.error("Failed to create study:", error);
+      alert(
+        "스터디 채널 생성에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      );
     }
   };
 

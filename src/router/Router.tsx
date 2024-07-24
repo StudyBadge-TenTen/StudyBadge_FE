@@ -16,7 +16,6 @@ import CreateStudyPage from "../pages/CreateStudyPage";
 import SocialLoginCallback from "../components/auth/SocialLoginCallback";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import PointListPage from "../pages/PointListPage";
-import Participation from "@/components/profile/Participation";
 import ParticipationPage from "@/pages/ParticipationPage";
 
 const Router = (): JSX.Element => {

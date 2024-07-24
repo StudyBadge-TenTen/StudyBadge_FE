@@ -27,7 +27,7 @@ const Information = (): JSX.Element => {
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
-    return setIsEditMode(false);
+    return () => setIsEditMode(false);
   }, []);
 
   useEffect(() => {
@@ -155,7 +155,7 @@ const Information = (): JSX.Element => {
               <textarea
                 id="descriptionEdit"
                 name="descriptionEdit"
-                className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2 resize-none"
+                className="w-full border border-solid border-Gray-2 rounded-[10px] px-3 py-2 resize-none"
                 rows={8}
                 cols={30}
                 value={newStudyInfo.description}
