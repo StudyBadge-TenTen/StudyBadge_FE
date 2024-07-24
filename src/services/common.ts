@@ -4,7 +4,7 @@ import { postLogout } from "./auth-api";
 
 // 공통 axios 만들기
 const API_BASE_URL = import.meta.env.DEV
-  ? import.meta.env.VITE_APP_BASE_URL_LOCAL // .env파일 - VITE_APP_BASE_URL_LOCAL=localhost:8080
+  ? import.meta.env.VITE_APP_LOCAL_BASE_URL // .env파일 - VITE_APP_BASE_URL_LOCAL=localhost:8080
   : import.meta.env.VITE_APP_PRODUCTION_BASE_URL; // 서버 도메인 정해지면 환경변수에 등록
 let API_TOKEN = "";
 
@@ -26,7 +26,12 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // 요청 헤더에 인증 토큰 추가
-    config.headers.Authorization = `Bearer ${API_TOKEN}`;
+    if (import.meta.env.DEV) {
+      const storageToken = localStorage.getItem("accessToken");
+      config.headers.Authorization = `Bearer ${storageToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${API_TOKEN}`;
+    }
     console.log("Request headers:", config.headers); // 디버깅을 위해 추가
     return config;
   },

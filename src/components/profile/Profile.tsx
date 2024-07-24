@@ -29,17 +29,21 @@ const Profile = (): JSX.Element => {
   useEffect(() => {
     console.log(accessToken); // accessToken 확인용 디버깅 코드
 
-    (async () => {
-      try {
-        const myStudyList = await getMyStudy();
-        setMyStudy(() => myStudyList);
-      } catch (error) {
-        console.log("내 스터디 리스트 로딩에 실패하였습니다." + error);
-      }
-    })();
-
     return () => setIsEditMode(false); // 클린업 함수로 변경
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      (async () => {
+        try {
+          const myStudyList = await getMyStudy();
+          setMyStudy(() => myStudyList);
+        } catch (error) {
+          console.log("내 스터디 리스트 로딩에 실패하였습니다." + error);
+        }
+      })();
+    }
+  }, [data]);
 
   useEffect(() => {
     const element = document.getElementById("root");
