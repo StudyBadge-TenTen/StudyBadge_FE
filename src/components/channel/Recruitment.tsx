@@ -2,21 +2,17 @@ import NONE_BADGE from "../../assets/NONE-BADGE_PNG.png";
 import BRONZE_BADGE from "../../assets/BRONZE-BADGE_PNG.png";
 import SILVER_BADGE from "../../assets/SILVER-BADGE_PNG.png";
 import GOLD_BADGE from "../../assets/GOLD-BADGE_PNG.png";
-import { useQuery } from "@tanstack/react-query";
-import { RecruitmentInfoType } from "../../types/study-channel-type";
 import { useParams } from "react-router";
-import { getRecruitment, postApprove, postReject } from "../../services/channel-api";
+import { postApprove, postReject } from "../../services/channel-api";
 import { BAN_COUNT } from "../../constants/ban-count";
 import { useState } from "react";
 import Modal from "../common/Modal";
+import { useRecruitment } from "@/hooks/useQuery";
 
 const Recruitment = (): JSX.Element => {
   const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
-  const { data, error, isLoading } = useQuery<RecruitmentInfoType, Error>({
-    queryKey: ["recruitmentList", channelId],
-    queryFn: () => getRecruitment(Number(channelId)),
-  });
+  const { data, error, isLoading } = useRecruitment(Number(channelId));
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: "",
@@ -69,7 +65,7 @@ const Recruitment = (): JSX.Element => {
               ))}
             {!isLoading &&
               data &&
-              (data.participants ? (
+              (data.participants.length !== 0 ? (
                 data.participants.map((participant) => (
                   <div
                     key={participant.participationId}

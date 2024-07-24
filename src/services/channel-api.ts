@@ -21,8 +21,12 @@ const getStudyInfo = async (studyChannelId: number) => {
 const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
   try {
     await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
+    alert("변경한 스터디 정보가 성공적으로 반영되었습니다.");
   } catch (error) {
     console.log(error);
+    alert(
+      "스터디 정보 변경에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+    );
   }
 };
 
@@ -61,8 +65,12 @@ const postApprove = async (studyChannelId: number, participationId: number) => {
       `/api/study-channels/${studyChannelId}/participation/${participationId}/approve`,
       "post",
     );
+    alert("해당 멤버의 신청 수락이 성공적으로 완료되었습니다.");
   } catch (error) {
     console.log(error);
+    alert(
+      "해당 멤버의 신청을 수락하는 것에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+    );
   }
 };
 
@@ -72,8 +80,24 @@ const postReject = async (studyChannelId: number, participationId: number) => {
       `/api/study-channels/${studyChannelId}/participation/${participationId}/reject`,
       "post",
     );
+    alert("해당 멤버의 신청 거절이 성공적으로 완료되었습니다.");
   } catch (error) {
     console.log(error);
+    alert(
+      "해당 멤버의 신청을 거절하는 것에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+    );
+  }
+};
+
+const postParticipate = async (studyChannelId: number) => {
+  try {
+    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}/participation`, "post");
+    alert("해당 스터디에 성공적으로 신청이 접수되었습니다");
+  } catch (error) {
+    console.log(error);
+    alert(
+      "해당 스터디에 신청을 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+    );
   }
 };
 
@@ -87,4 +111,5 @@ export {
   getRecruitment,
   postReject,
   postApprove,
+  postParticipate,
 };

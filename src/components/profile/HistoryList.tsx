@@ -5,11 +5,13 @@ import Pagination from "../common/Pagination";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import { PaymentHistoryType, PointHistoryType } from "../../types/profile-type";
+import Modal from "../common/Modal";
 
 const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
   const skeletonList = [1, 2, 3, 4, 5];
   const [latestPointList, setLatestPointList] = useState<PointHistoryType[]>([]);
   const [page, setPage] = useState(1);
+  const [modalOpen, setModalOpen] = useState(false);
   const paymentQuery = useQuery<PaymentHistoryType[], Error>({
     queryKey: ["paymentList", type, page],
     queryFn: () => getPaymentsHistory(page, HISTORY_LENGTH_PER_PAGE),
@@ -47,7 +49,19 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     return true;
   };
 
-  const handleCancelClick = async (paymentKey: string) => {
+  const handleCancelClick = async (isModal: boolean, paymentKey?: string) => {
+    if (!isModal) {
+      setModalOpen(() => true);
+      return;
+    }
+    if (isModal && paymentKey) {
+      await postCancel(paymentKey);
+      setModalOpen(() => false);
+      return;
+    }
+  };
+
+  const postCancel = async (paymentKey: string) => {
     try {
       await postPaymentCancel(paymentKey);
       window.location.reload();
@@ -74,9 +88,24 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
                 </span>
                 <div className="flex items-center">
                   {isPossibleCancel(data) ? (
-                    <button className="btn-red px-2 py-1 mr-4" onClick={() => handleCancelClick(data.paymentKey)}>
-                      결제취소
-                    </button>
+                    <>
+                      <button className="btn-red px-2 py-1 mr-4" onClick={() => handleCancelClick(false)}>
+                        결제취소
+                      </button>
+                      {modalOpen && (
+                        <Modal>
+                          해당 결제를 취소하시겠습니까?
+                          <div className="flex justify-center items-center mt-4">
+                            <button onClick={() => handleCancelClick(true, data.paymentKey)} className="btn-blue w-10">
+                              예
+                            </button>
+                            <button onClick={() => setModalOpen(() => false)} className="btn-blue w-10 ml-2">
+                              아니오
+                            </button>
+                          </div>
+                        </Modal>
+                      )}
+                    </>
                   ) : (
                     <span className="text-sm text-Gray-3 px-2 py-1 mr-4">결제완료</span>
                   )}

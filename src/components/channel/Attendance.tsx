@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { AttendanceResponseType } from "../../types/study-channel-type";
 import { getAttendance } from "../../services/channel-api";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 const Attendance = (): JSX.Element => {
   const skeleton = [1, 2, 3, 4, 5];
@@ -46,12 +47,16 @@ const Attendance = (): JSX.Element => {
                 />
                 <p className="text-lg text-Blue-2 font-bold">{member.name}</p>
               </div>
-              <div className="w-full flex flex-col sm:flex-row">
+              <div className="w-full flex flex-col sm:flex-row pr-6">
                 <span className="inline-block mr-8">{member.attendanceRatio}%</span>
-                <div className="w-full h-8 bg-Gray-1 rounded-[30px] relative z-10">
-                  <div
-                    className={`${member.attendanceRatio === 100 ? "w-full" : `w-[${member.attendanceRatio}%]`} h-8 bg-Blue-2 rounded-[30px] absolute top-0 left-0 z-20 keyframes-grow`}
-                  ></div>
+                <div className="w-full h-8 bg-Gray-1 relative z-10">
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: member.attendanceRatio * 0.01 }}
+                    transition={{ duration: 0.5, originX: 0, originY: 1 }}
+                    style={{ transformOrigin: "0% 100%" }}
+                    className={`w-full h-8 bg-Blue-2 absolute top-0 left-0 z-20`}
+                  ></motion.div>
                 </div>
               </div>
             </div>

@@ -157,6 +157,13 @@ export const handlers = [
     console.log(`Captured a "GET /api/points/history?page=${page}&size=${size}" request`);
     return HttpResponse.json(pointList);
   }),
+  // http.get("/api/members/my-apply", async ({ request }) => {
+  //   const url = new URL(request.url);
+  //   const page = url.searchParams.get("page");
+  //   const size = url.searchParams.get("size");
+  //   console.log(`Captured a "GET /api/points/history?page=${page}&size=${size}" request`);
+  //   return HttpResponse.json(pointList);
+  // }),
 
   // payment handlers
   http.post("/api/payments/toss", async ({ request }) => {
@@ -170,6 +177,12 @@ export const handlers = [
     console.log(`Captured a "POST /api/payments/success" request`);
     console.log(requestBody);
     return HttpResponse.json(paymentSuccessResponse, { status: 200 });
+  }),
+  http.post("/api/payments/cancel", async ({ request }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "POST /api/payments/cancel" request`);
+    console.log(requestBody);
+    return HttpResponse.json({ status: 200 });
   }),
 
   // studyChannel handlers

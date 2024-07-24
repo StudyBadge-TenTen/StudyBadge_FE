@@ -10,6 +10,10 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
   const { setIsEditMode } = useEditModeStore();
 
   useEffect(() => {
+    return () => setIsEditMode(false);
+  }, []);
+
+  useEffect(() => {
     if (data) {
       const attendList = data.studyMembers.map((member) => {
         return { studyMemberId: member.memberId, isAttendance: false };

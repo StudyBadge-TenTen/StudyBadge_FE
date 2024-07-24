@@ -1,4 +1,11 @@
-import { MyStudyType, PaymentHistoryType, PointHistoryType, ProfilePutType, UserInfoType } from "../types/profile-type";
+import {
+  MyStudyType,
+  ParticipationType,
+  PaymentHistoryType,
+  PointHistoryType,
+  ProfilePutType,
+  UserInfoType,
+} from "../types/profile-type";
 import { fetchCall } from "./common";
 
 const getProfile = async () => {
@@ -34,4 +41,9 @@ const postPaymentCancel = async (paymentKey: string) => {
   await fetchCall<ResponseType>(`/api/payments/cancel`, "post", requestBody);
 };
 
-export { getProfile, putProfile, getMyStudy, getPaymentsHistory, getPointHistory, postPaymentCancel };
+const getParticipation = async () => {
+  const participationList = await fetchCall<ParticipationType[]>(`/api/members/my-apply`, "get");
+  return participationList;
+};
+
+export { getProfile, putProfile, getMyStudy, getPaymentsHistory, getPointHistory, postPaymentCancel, getParticipation };
