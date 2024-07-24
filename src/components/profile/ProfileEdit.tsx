@@ -120,7 +120,7 @@ const ProfileEdit = (): JSX.Element => {
     }
 
     const formData = new FormData();
-    formData.append("updateRequest", JSON.stringify(profileInfo));
+    formData.append("updateRequest", new Blob([JSON.stringify(profileInfo)], { type: "application/json" }));
 
     if (imageFile) {
       // FormData에 데이터 추가
