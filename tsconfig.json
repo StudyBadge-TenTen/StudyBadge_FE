@@ -37,6 +37,6 @@
     "typeRoots": ["./node_modules/@types", "./src/types"]
     // ... other options
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "types": ["vite/client"]
 }
