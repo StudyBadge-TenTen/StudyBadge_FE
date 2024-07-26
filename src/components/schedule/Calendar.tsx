@@ -5,6 +5,7 @@ import moment from "moment";
 import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
 import PrevMonthBtn from "./PrevMonthBtn";
 import NextMonthBtn from "./NextMonthBtn";
+import { useParams } from "react-router";
 
 const Calendar = ({
   marks,
@@ -13,32 +14,24 @@ const Calendar = ({
   marks?: string[];
   setRepeatEndDate?: React.Dispatch<React.SetStateAction<string>>;
 }): JSX.Element => {
-  const curDate = new Date();
+  const { selectedDateParam } = useParams();
+
+  // if (selectedDateParam) {
   const { setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
-  const [value, onChange] = useState<Value>(curDate);
-  const [mark, setMark] = useState(marks);
+  const [value, onChange] = useState<Value>(selectedDateParam ? new Date(selectedDateParam) : new Date());
+  const [mark, setMark] = useState<string[]>([]);
+  // const [mark, setMark] = useState(marks);
   // 달력에 일정표시할 날짜들을 mark배열에 "YYYY-MM-DD"형태로 담을 예정
 
-  // useQuery이용해서 데이터 가져오기(예시)
-  // const { data } = useQuery(
-  //   ["logDate", month],
-  //   async () => {
-  //     const result = await axios.get(
-  //       `일정 호출할 api 주소`
-  //     );
-  //     return result.data;
-  //   },
-  //   {
-  //     onSuccess: (data: any) => {
-  //       setMark(data);
-  //      // ["2022-02-02", "2022-02-02", "2022-02-10"] 형태로 mark배열에 담으면 해당 날짜에 표시
-  //     },
-  //   }
-  // );
+  useEffect(() => {
+    if (selectedDateParam) {
+      onChange(() => new Date(selectedDateParam));
+    }
+  }, [selectedDateParam]);
 
   useEffect(() => {
-    setMark(() => marks);
+    setMark(() => marks ?? []);
   }, [marks]);
 
   const handleValueChange = (selectedDate: Value) => {
@@ -47,12 +40,13 @@ const Calendar = ({
   const handleDayClick = (date: Date) => {
     const transDate = moment(date).format("YYYY-MM-DD");
 
-    if (!mark && setRepeatEndDate) {
+    if (!mark.length && setRepeatEndDate) {
       setRepeatEndDate(() => transDate);
       return;
     }
 
     setSelectedDate(transDate);
+    onChange(() => date);
   };
   const handleMonthClick = (date: Date) => {
     const transDate = moment(date).format("YYYY-MM");
@@ -99,6 +93,8 @@ const Calendar = ({
       />
     </>
   );
+  // }
+  // return <></>;
 };
 
 export default Calendar;

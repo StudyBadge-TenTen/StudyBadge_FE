@@ -3,5 +3,23 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "cSpell.words": ["BRANDPAY", "Kakao", "KEYIN", "Naver", "tailwindcss", "tanstack", "tosspayments", "zustand"]
+  "cSpell.words": [
+    "appkey",
+    "autoload",
+    "BRANDPAY",
+    "dapi",
+    "editmode",
+    "infowindow",
+    "jibun",
+    "Kakao",
+    "KEYIN",
+    "latlng",
+    "Naver",
+    "Noti",
+    "tailwindcss",
+    "tanstack",
+    "tosspayments",
+    "tsbuildinfo",
+    "zustand"
+  ]
 }

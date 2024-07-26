@@ -1,5 +1,4 @@
 interface SelectAmountPropsType {
-  // setIsPaying: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   chargeAmount: number;
   setChargeAmount: React.Dispatch<React.SetStateAction<number>>;
@@ -9,38 +8,29 @@ interface PaymentBodyType {
   payType: string;
   amount: number;
   orderName: string;
-  successUrl: string;
-  failUrl: string;
 }
 
 interface PaymentResponseType {
+  payType: string;
   amount: number;
-  orderId: string;
   orderName: string;
+  orderId: string;
+  customerEmail: string;
   customerName: string;
   successUrl: string;
   failUrl: string;
-  customerEmail: string;
+  failReason: string;
+  cancelYN: true;
+  cancelReason: string;
 }
 
-interface ConfirmResponseType {
-  mid: string;
-  version: string;
+interface SuccessResponseType {
   paymentKey: string;
   orderId: string;
   orderName: string;
-  currency: string;
   method: string;
-  totalAmount: string;
-  balanceAmount: string;
-  suppliedAmount: string;
-  vat: string;
-  status: string;
-  requestedAt: string;
-  approvedAt: string;
-  useEscrow: string;
-  cultureExpense: string;
-  type: string;
+  requestedAt: Date;
+  approvedAt: Date;
 }
 
 interface FailResponseType {
@@ -71,7 +61,7 @@ export type {
   SelectAmountPropsType,
   PaymentBodyType,
   PaymentResponseType,
-  ConfirmResponseType,
+  SuccessResponseType,
   FailResponseType,
   PaymentMethodsWidget,
 };

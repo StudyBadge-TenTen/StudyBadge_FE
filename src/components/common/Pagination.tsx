@@ -1,29 +1,20 @@
 import { useEffect, useState } from "react";
-import { PAGE_COUNT } from "../../constants/page";
+import { DATA_LENGTH_PER_PAGE, PAGE_COUNT } from "../../constants/page";
+import { PaginationPropsType } from "../../types/pagination-type";
 
 const Pagination = ({
-  curPage,
-  setCurPage,
-}: {
-  curPage: number;
-  setCurPage: React.Dispatch<React.SetStateAction<number>>;
-}): JSX.Element => {
-  // PAGE_COUNT = 5 (한 번에 노출할 페이지버튼 개수)
-  // DATA_LENGTH_PER_PAGE = 6 (한 페이지당 보여질 데이터 개수)
-  // 예)
-  // dataList length === 43
-  // const lastPageGroup = 2; // 전체 dataList길이에 따라 달라져야 함
-  // totalPage = Math.ceil(dataList length / DATA_LENGTH_PER_PAGE) = 8
-  // lastPageGroup = Math.ceil(totalPage / DATA_LENGTH_PER_PAGE) = 2
-  // curPageGroup = 이전/다음 버튼 클릭 시 변화
-  // pageList = [1,2,3,4,5] [6,7,8,9,10] [11,12,13,14,15]
+  type,
+  filter,
+  setFilter,
+  dataListLength,
+  pageState,
+  setPage,
+  historyList,
+}: PaginationPropsType): JSX.Element => {
   const [curPageGroup, setCurPageGroup] = useState(1);
   const [pageList, setPageList] = useState<number[]>([]);
-
-  // 배포 테스트를 위한 콘솔 코드
-  useEffect(() => {
-    console.log(setCurPage, setCurPageGroup);
-  }, [curPage]);
+  const totalPage = type === "CHANNEL" ? Math.ceil(dataListLength / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
+  const lastPageGroup = type === "CHANNEL" ? Math.ceil(totalPage / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
 
   useEffect(() => {
     let newPageList = [];
@@ -37,15 +28,62 @@ const Pagination = ({
     setPageList(() => newPageList);
   }, [curPageGroup]);
 
+  const handlePageClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const target = e.target as HTMLButtonElement;
+
+    if (target.classList.contains("prev-btn")) {
+      if (curPageGroup === 1) return;
+      else {
+        setCurPageGroup((origin) => origin - 1);
+      }
+    } else if (target.classList.contains("next-btn")) {
+      if (type === "CHANNEL") {
+        if (curPageGroup === lastPageGroup) return;
+        else {
+          setCurPageGroup((origin) => origin + 1);
+        }
+      }
+      if (type === "HISTORY") {
+        if (!historyList || historyList.length === 0) return;
+        else {
+          setCurPageGroup((origin) => origin + 1);
+        }
+      }
+    } else if (target.classList.contains("page-btn")) {
+      if (type === "CHANNEL") {
+        if (filter && setFilter) {
+          setFilter({
+            ...filter,
+            page: Number(target.innerText),
+          });
+        }
+      }
+      if (type === "HISTORY" && setPage) {
+        if (!historyList || historyList.length === 0) return;
+        else setPage(() => Number(target.innerText));
+      }
+    }
+  };
+
   return (
-    <div>
-      <button className={`btn-blue rounded-r-none mr-1`}>{`<`}</button>
+    <div className="flex justify-center items-center mt-10">
+      <button
+        className={`prev-btn btn-blue rounded-r-none mr-1 ${curPageGroup === 1 && "cursor-default bg-Gray-2 hover:bg-Gray-2"}`}
+        onClick={(e) => handlePageClick(e)}
+      >{`<`}</button>
       {pageList.map((page) => (
-        <button key={`page_${page}`} className={`btn-blue rounded-none ${page === curPage && "bg-Blue-1"} mt-10`}>
+        <button
+          key={`page_${page}`}
+          className={`page-btn btn-blue rounded-none ${type === "CHANNEL" ? filter && page === filter.page && "bg-Blue-1" : pageState === page && "bg-Blue-1"}`}
+          onClick={(e) => handlePageClick(e)}
+        >
           {page}
         </button>
       ))}
-      <button className={`btn-blue rounded-l-none ml-1`}>{`>`}</button>
+      <button
+        className={`next-btn btn-blue rounded-l-none ml-1 ${type === "CHANNEL" ? curPageGroup === lastPageGroup && "cursor-default bg-Gray-2 hover:bg-Gray-2" : (!historyList || historyList.length === 0) && "cursor-default bg-Gray-2 hover:bg-Gray-2"}`}
+        onClick={(e) => handlePageClick(e)}
+      >{`>`}</button>
     </div>
   );
 };

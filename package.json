@@ -15,16 +15,19 @@
     "@tosspayments/payment-widget-sdk": "^0.11.1",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
+    "event-source-polyfill": "^1.0.31",
+    "framer-motion": "^11.3.12",
     "nanoid": "^5.0.7",
     "react": "^18.3.1",
     "react-calendar": "^5.0.0",
     "react-dom": "^18.3.1",
-    "socket.io-client": "^4.7.5",
     "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
+    "@types/event-source-polyfill": "^1.0.5",
+    "@types/node": "^20.14.11",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-router": "^5.1.20",
@@ -47,7 +50,8 @@
     "tailwindcss": "^3.4.4",
     "typescript": "^5.2.2",
     "vite": "^5.3.3",
-    "vitest": "^2.0.1",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^2.0.3",
     "zustand": "^4.5.4"
   },
   "msw": {

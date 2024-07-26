@@ -1,21 +1,31 @@
 import { useRef, useState } from "react";
-import { putProfile } from "../../services/profile-api";
+// import { putProfile } from "../../services/profile-api";
 import { ProfileInfoType, ProfilePutType } from "../../types/profile-type";
+import { BANK_LIST } from "../../constants/bank-list";
+import axios from "axios";
+import { useAuthStore } from "../../store/auth-store";
+import { useNavigate } from "react-router";
 
 const ProfileEdit = (): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
 
+  const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState({
     nickname: "",
     introduction: "",
     account: "",
+    accountBank: "",
     imgUrl: "",
   });
   const [imageFile, setImageFile] = useState<File>();
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const nicknameRef = useRef<HTMLInputElement>(null);
+  const accountRef = useRef<HTMLInputElement>(null);
+  const accountBankRef = useRef<HTMLSelectElement>(null);
+  const { accessToken } = useAuthStore();
 
   // input 값의 change를 감지해 상태로 저장
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (e.target.id === "editNickname") {
       setProfileInfo((origin) => ({
         ...origin,
@@ -26,6 +36,12 @@ const ProfileEdit = (): JSX.Element => {
       setProfileInfo((origin) => ({
         ...origin,
         introduction: e.target.value,
+      }));
+    }
+    if (e.target.id === "bankDropdown") {
+      setProfileInfo((origin) => ({
+        ...origin,
+        accountBank: e.target.value,
       }));
     }
     if (e.target.id === "editAccount") {
@@ -71,17 +87,72 @@ const ProfileEdit = (): JSX.Element => {
 
   // 프로필 수정을 저장할 때 반영하도록 하는 함수
   const handleSaveClick = async (profileInfo: ProfileInfoType, imageFile: ProfilePutType["file"]) => {
-    const profileObj = {
-      memberUpdateRequest: profileInfo,
-      file: imageFile,
-    };
-    const newUserInfo = await putProfile(profileObj);
-    console.log(newUserInfo); // 이 데이터로 user info set하면 됨
+    // 계좌정보 값 필수 체크
+    if (accountRef.current) {
+      if (!accountRef.current.value) {
+        alert("계좌정보 기재는 필수입니다.");
+        accountRef.current.classList.add("outline-Red-2");
+        accountRef.current.focus();
+        return;
+      }
+      if (accountRef.current.value.length < 10) {
+        alert("올바른 계좌번호가 아닙니다. 계좌번호를 다시 한 번 확인해주시기 바랍니다.");
+        accountRef.current.classList.add("outline-Red-2");
+        accountRef.current.focus();
+        return;
+      }
+    }
+
+    if (accountBankRef.current) {
+      if (!accountBankRef.current.value) {
+        alert("금융기관을 선택해주십시오.");
+        accountBankRef.current.classList.add("outline-Red-2");
+        accountBankRef.current.focus();
+        return;
+      }
+    }
+
+    if (nicknameRef.current) {
+      if (!nicknameRef.current.value) {
+        alert("닉네임 입력은 필수입니다.");
+        nicknameRef.current.classList.add("outline-Red-2");
+        nicknameRef.current.focus();
+        return;
+      }
+    }
+
+    const formData = new FormData();
+    formData.append("updateRequest", new Blob([JSON.stringify(profileInfo)], { type: "application/json" }));
+
+    if (imageFile) {
+      // FormData에 데이터 추가
+      formData.append("file", imageFile);
+    }
+    try {
+      // 서버로 FormData 전송
+      const response = await axios.put("/api/members/my-info/update", formData, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      // 서버 응답 출력
+      console.log(response.data); // 디버깅 로그
+      navigate("/profile/myInfo");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
     <>
-      <div className="w-full min-h-96 border border-solid border-Gray-3 rounded-[30px] px-10 py-16 flex flex-col justify-center items-center">
+      <form
+        method="post"
+        encType="multipart/form-data"
+        className="w-full min-h-96 border border-solid border-Gray-3 rounded-[30px] px-10 py-16 flex flex-col justify-center items-center"
+      >
         <div className="image-edit flex items-center mb-16">
           <div className="image-preview w-32 h-32 bg-Gray-2 rounded-full flex justify-center items-center mr-8">
             <img src={profileInfo.imgUrl} alt="업로드 이미지" className="object-cover w-32 h-32 rounded-full" />
@@ -119,7 +190,9 @@ const ProfileEdit = (): JSX.Element => {
             type="text"
             className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2 mb-8"
             value={profileInfo.nickname}
-            onChange={handleInputChange}
+            onChange={handleChange}
+            ref={nicknameRef}
+            required
           ></input>
           <label htmlFor="editIntroduction" className="mb-2 text-Blue-2">
             소개
@@ -131,7 +204,7 @@ const ProfileEdit = (): JSX.Element => {
             rows={5}
             cols={30}
             value={profileInfo.introduction}
-            onChange={handleInputChange}
+            onChange={handleChange}
           ></textarea>
           <label htmlFor="editAccount" className="mb-2 text-Blue-2">
             계좌번호
@@ -143,15 +216,32 @@ const ProfileEdit = (): JSX.Element => {
             id="editAccount"
             name="editAccount"
             type="text"
-            className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2 mb-8"
+            className="border border-solid border-Gray-2 rounded-[10px] px-3 py-2"
             value={profileInfo.account}
-            onChange={handleInputChange}
+            onChange={handleChange}
+            ref={accountRef}
+            required
           ></input>
+          <select
+            name="bank"
+            id="bankDropdown"
+            className="w-fit p-1 border border-solid border-Gray-2 rounded-[10px] mt-2 mb-8"
+            value={profileInfo.accountBank}
+            ref={accountBankRef}
+            onChange={handleChange}
+          >
+            <option value="">-- 금융기관을 선택해주세요 --</option>
+            {BANK_LIST.map((bank) => (
+              <option key={bank} value={bank}>
+                {bank}
+              </option>
+            ))}
+          </select>
           <button onClick={() => handleSaveClick(profileInfo, imageFile)} className="btn-blue w-fit self-center mt-10">
             저장하기
           </button>
         </div>
-      </div>
+      </form>
     </>
   );
 };

@@ -1,15 +1,19 @@
 import { create } from "zustand";
-import moment from "moment";
-import { DateStoreType, MonthStoreType } from "../types/schedule-type";
+import { DateStoreType, MonthStoreType, NewScheduleStoreType } from "../types/schedule-type";
 
 const useSelectedDateStore = create<DateStoreType>((set) => ({
-  selectedDate: moment(new Date()).format("YYYY-MM-DD"),
+  selectedDate: "",
   setSelectedDate: (selectedDate) => set({ selectedDate: selectedDate }),
 }));
 
 const useSelectedMonthStore = create<MonthStoreType>((set) => ({
-  selectedMonth: moment(new Date()).format("YYYY-MM"),
+  selectedMonth: "",
   setSelectedMonth: (selectedMonth) => set({ selectedMonth: selectedMonth }),
 }));
 
-export { useSelectedDateStore, useSelectedMonthStore };
+const useNewScheduleStore = create<NewScheduleStoreType>((set) => ({
+  newSchedule: {},
+  setNewSchedule: (newSchedule) => set({ newSchedule: newSchedule }),
+}));
+
+export { useSelectedDateStore, useSelectedMonthStore, useNewScheduleStore };
