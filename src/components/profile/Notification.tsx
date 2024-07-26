@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useNotificationStore } from "../../store/notification-store";
 // import { notificationList } from "../../mocks/data"; // 프론트용 msw 알림
 import { Link } from "react-router-dom";
@@ -7,9 +7,9 @@ import { patchReadNoti } from "../../services/notification-api";
 const Notification = (): JSX.Element => {
   const { notificationList } = useNotificationStore();
 
-  useEffect(() => {
-    console.log(notificationList);
-  }, [notificationList]);
+  // useEffect(() => {
+  //   console.log(notificationList); // 디버깅로그
+  // }, [notificationList]);
 
   const handleClick = (notificationId: number) => {
     if (notificationId) {

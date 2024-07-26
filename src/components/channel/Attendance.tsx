@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import { AttendanceResponseType } from "../../types/study-channel-type";
 import { getAttendance } from "../../services/channel-api";
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 const Attendance = (): JSX.Element => {
@@ -12,10 +11,6 @@ const Attendance = (): JSX.Element => {
     queryKey: ["attendance", channelId],
     queryFn: () => getAttendance(Number(channelId)),
   });
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <>

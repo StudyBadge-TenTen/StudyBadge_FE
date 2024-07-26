@@ -138,7 +138,7 @@ const ProfileEdit = (): JSX.Element => {
         },
       });
       // 서버 응답 출력
-      console.log(response.data);
+      console.log(response.data); // 디버깅 로그
       navigate("/profile/myInfo");
       window.location.reload();
     } catch (error) {

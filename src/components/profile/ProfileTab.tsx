@@ -3,6 +3,9 @@ import { useEditModeStore } from "../../store/edit-mode-store";
 import { useEffect, useState } from "react";
 import Modal from "../common/Modal";
 import { deleteAccount } from "@/services/profile-api";
+import usePageScrollTop from "../common/PageScrollTop";
+import { postLogout } from "@/services/auth-api";
+import { useAuthStore } from "@/store/auth-store";
 
 const PROFILE_TAB_LIST = [
   { kr: "내 정보", en: "myInfo" },
@@ -13,11 +16,14 @@ const PROFILE_TAB_LIST = [
 ];
 
 const ProfileTab = (): JSX.Element => {
+  usePageScrollTop();
   const navigate = useNavigate();
   const location = useLocation();
   const { setIsEditMode } = useEditModeStore();
   const [profileState, setProfileState] = useState("myInfo");
   const [modalOpen, setModalOpen] = useState(false);
+  const [logoutModal, setLogoutModal] = useState(false);
+  const { accessToken } = useAuthStore();
 
   useEffect(() => {
     if (location) {
@@ -36,8 +42,8 @@ const ProfileTab = (): JSX.Element => {
   };
 
   return (
-    <div className="menu w-full md:w-1/4 md:min-h-52 flex md:flex-col justify-between border border-solid border-Gray-3 rounded-[30px] p-6 mr-8 mb-8 md:mb-0">
-      <div className="menu-container flex md:flex-col">
+    <div className="menu w-full md:w-1/4 md:min-h-52 flex md:flex-col flex-wrap md:flex-nowrap justify-between border border-solid border-Gray-3 rounded-[30px] p-6 mr-8 mb-8 md:mb-0">
+      <div className="menu-container flex md:flex-col flex-wrap md:flex-nowrap">
         {PROFILE_TAB_LIST.map((tabInfo) => (
           <span
             key={tabInfo.en}
@@ -52,9 +58,29 @@ const ProfileTab = (): JSX.Element => {
           </span>
         ))}
       </div>
-      <button onClick={() => setModalOpen(() => true)} className="w-full text-center text-Red-2 py-2">
-        회원 탈퇴하기
-      </button>
+      <div className="w-full flex justify-between mt-8">
+        <button onClick={() => setModalOpen(() => true)} className="w-24 md:w-full text-center text-Red-2 py-2">
+          회원 탈퇴하기
+        </button>
+        <button onClick={() => setLogoutModal(() => true)} className={`w-20 btn-blue w-10 md:hidden`}>
+          로그아웃
+        </button>
+        {logoutModal && (
+          <Modal>
+            <div className="flex flex-col justify-center items-center">
+              <p>로그아웃 하시겠습니까?</p>
+              <div className="flex mt-6">
+                <button onClick={() => postLogout()} className="w-10 btn-blue">
+                  예
+                </button>
+                <button onClick={() => setLogoutModal(() => false)} className="w-10 btn-blue ml-2">
+                  아니요
+                </button>
+              </div>
+            </div>
+          </Modal>
+        )}
+      </div>
       {modalOpen && (
         <Modal>
           <div className="flex flex-col justify-center items-center">

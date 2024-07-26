@@ -13,7 +13,7 @@ const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
 
     try {
       if (accessToken) {
-        console.log(accessToken); // 디버깅 로그 추가
+        // console.log(accessToken); // 디버깅 로그 추가
 
         setField("accessToken", accessToken);
         if (import.meta.env.DEV) {

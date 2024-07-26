@@ -8,6 +8,8 @@ import Recruitment from "./Recruitment";
 import { useGetStudyInfo } from "@/hooks/useQuery";
 import { useSelectedDateStore, useSelectedMonthStore } from "@/store/schedule-store";
 import moment from "moment";
+import PageScrollTop from "../common/PageScrollTop";
+import usePageScrollTop from "../common/PageScrollTop";
 
 const ChannelBook = (): JSX.Element => {
   const { selectedDateParam } = useParams();
@@ -19,6 +21,7 @@ const ChannelBook = (): JSX.Element => {
   const { data } = useGetStudyInfo(Number(channelId));
   const { selectedDate, setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
+  usePageScrollTop();
 
   useEffect(() => {
     if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {
@@ -29,14 +32,10 @@ const ChannelBook = (): JSX.Element => {
   }, [selectedDateParam, setSelectedDate, setSelectedMonth]);
 
   useEffect(() => {
-    const element = document.getElementById("root");
-    if (element) {
-      element.scrollIntoView();
-    }
     if (state && state.tab) {
       setTabState(() => state.tab);
     }
-  }, [channelId]);
+  }, [state]);
 
   useEffect(() => {
     if (state && state.tab) {
@@ -80,6 +79,7 @@ const ChannelBook = (): JSX.Element => {
   if (data) {
     return (
       <>
+        <PageScrollTop />
         <div className="container w-fit min-w-80 h-fit flex flex-col rounded-[50px] shadow-card">
           <div className="tab-container h-20 bg-Blue-2 rounded-t-[50px] flex items-end">
             {/* todo: '정보', '일정', '멤버', '출석현황', '모집' 탭 필요 */}

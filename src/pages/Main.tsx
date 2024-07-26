@@ -2,8 +2,10 @@ import CREATE_STUDY_SVG from "../assets/image/CREATE_STUDY_SVG.svg";
 import Carousel from "../components/common/Carousel";
 import StudyList from "../components/main/StudyList";
 import { Link } from "react-router-dom";
+import usePageScrollTop from "@/components/common/PageScrollTop";
 
 const Main = (): JSX.Element => {
+  usePageScrollTop();
   // 함수 작성 금지
 
   return (

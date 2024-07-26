@@ -58,7 +58,7 @@ export const useSSE = () => {
     const onMessage = (ev: MessageEvent) => {
       if (!accessToken) return;
 
-      console.log("Event received: ", ev.data); // 디버깅 로그 추가
+      // console.log("Event received: ", ev.data); // 디버깅 로그 추가
       try {
         const parsedData = JSON.parse(ev.data);
         // 추가해야할 코드 : 더미 데이터일 경우 return
@@ -67,7 +67,7 @@ export const useSSE = () => {
           return;
         } else {
           const newNotification: NotificationType = parsedData;
-          console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
+          // console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
 
           // 중복 알림 필터링
           const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);

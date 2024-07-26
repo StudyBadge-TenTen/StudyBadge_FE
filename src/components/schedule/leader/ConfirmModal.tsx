@@ -32,8 +32,9 @@ const ConfirmModal = ({
       if (!originInfo) {
         // 일정 생성일 때
         if (target.classList.contains("yes")) {
-          const response = await postSchedule(Number(channelId), newSchedule, repeatState);
-          console.log(response);
+          await postSchedule(Number(channelId), newSchedule, repeatState);
+          // const response = await postSchedule(Number(channelId), newSchedule, repeatState);
+          // console.log(response); // 디버깅로그
           navigate(`/channel/${channelId}/schedule/${selectedDate}`);
         } else if (target.classList.contains("no")) {
           setModalInfo(() => ({
@@ -48,20 +49,20 @@ const ConfirmModal = ({
       else if (modalInfo.modalFor === "EDIT" && originInfo) {
         if (modalInfo.isAfterCheck) {
           if (target.classList.contains("yes")) {
-            // PUT ~/api/study-channels/{studyChannelId}/schedules/isAfterEvent?Same=true
-            const response = await putSchedule(Number(channelId), newSchedule, true);
-            console.log(response);
+            await putSchedule(Number(channelId), newSchedule, true);
+            // const response = await putSchedule(Number(channelId), newSchedule, true);
+            // console.log(response); // 디버깅로그
           } else if (target.classList.contains("no")) {
-            // PUT ~/api/study-channels/{studyChannelId}/schedules/isAfterEvent?Same=false
-            const response = await putSchedule(Number(channelId), newSchedule, false);
-            console.log(response);
+            await putSchedule(Number(channelId), newSchedule, false);
+            // const response = await putSchedule(Number(channelId), newSchedule, false);
+            // console.log(response); // 디버깅로그
           }
           navigate(`/channel/${channelId}`);
         } else {
           if (target.classList.contains("yes")) {
-            // PUT ~/api/study-channels/{studyChannelId}/schedules/
-            const response = putSchedule(Number(channelId), newSchedule);
-            console.log(response);
+            await putSchedule(Number(channelId), newSchedule);
+            // const response = await putSchedule(Number(channelId), newSchedule);
+            // console.log(response); // 디버깅로그
             navigate(`/channel/${channelId}`);
           } else if (target.classList.contains("no")) {
             setModalInfo(() => ({
@@ -82,20 +83,20 @@ const ConfirmModal = ({
           // 일정 삭제일 때
           if (modalInfo.isAfterCheck) {
             if (target.classList.contains("yes")) {
-              // DELETE ~/api/study-channels/{studyChannelId}/schedules/isAfterEvent?Same=true
-              const response = await deleteSchedule(Number(channelId), deleteRequestBody, true);
-              console.log(response);
+              await deleteSchedule(Number(channelId), deleteRequestBody, true);
+              // const response = await deleteSchedule(Number(channelId), deleteRequestBody, true);
+              // console.log(response); // 디버깅로그
             } else if (target.classList.contains("no")) {
-              // DELETE ~/api/study-channels/{studyChannelId}/schedules/isAfterEvent?Same=false
-              const response = await deleteSchedule(Number(channelId), deleteRequestBody, false);
-              console.log(response);
+              await deleteSchedule(Number(channelId), deleteRequestBody, false);
+              // const response = await deleteSchedule(Number(channelId), deleteRequestBody, false);
+              // console.log(response); // 디버깅로그
             }
             navigate(`/channel/${channelId}`);
           } else {
             if (target.classList.contains("yes")) {
-              // DELETE ~/api/study-channels/{studyChannelId}/schedules/
-              const response = await deleteSchedule(Number(channelId), deleteRequestBody);
-              console.log(response);
+              await deleteSchedule(Number(channelId), deleteRequestBody);
+              // const response = await deleteSchedule(Number(channelId), deleteRequestBody);
+              // console.log(response); // 디버깅로그
               navigate(`/channel/${channelId}`);
             } else if (target.classList.contains("no")) {
               setModalInfo(() => ({

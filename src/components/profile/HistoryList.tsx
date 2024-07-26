@@ -76,7 +76,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
             {paymentQuery.data.map((data) => (
               <div
                 key={new Date(data.createdAt).toDateString()}
-                className="h-16 border-b border-solid border-Gray-2 p-4 flex justify-between items-center"
+                className="h-fit sm:h-16 border-b border-solid border-Gray-2 p-4 flex flex-col sm:flex-row justify-between items-center"
               >
                 <span className="text-sm text-Gray-4 text-center">
                   결제날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간:{" "}
@@ -144,7 +144,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
             {pointQuery.data.map((data) => (
               <div
                 key={new Date(data.createdAt).toDateString()}
-                className="h-16 border-b border-solid border-Gray-2 p-4 flex justify-between items-center"
+                className="h-16 border-b border-solid border-Gray-2 p-4 flex flex-col sm:flex-row justify-between items-center justify-between items-center"
               >
                 <span className="text-sm text-Gray-4 text-center">
                   날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간: {moment(data.createdAt).format("hh:mm")}

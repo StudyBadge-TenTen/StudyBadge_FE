@@ -11,7 +11,6 @@ function App() {
   const { refreshToken, refreshAccessToken, setField } = useAuthStore();
 
   useEffect(() => {
-    console.log(location.origin);
     if (import.meta.env.DEV) {
       const storageToken = localStorage.getItem("accessToken");
       storageToken && setField("accessToken", storageToken);
@@ -37,13 +36,15 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header />
-      <section className="main min-h-screen flex justify-center items-center">
-        <div className="w-[1025px] min-h-screen flex justify-center items-center">
-          <Router />
-        </div>
-      </section>
-      <Footer />
+      <div id="topContainer" className="w-screen h-screen relative">
+        <Header />
+        <section className="main min-h-screen flex justify-center items-center pt-36">
+          <div className="w-[1025px] min-h-screen flex justify-center items-center">
+            <Router />
+          </div>
+        </section>
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }

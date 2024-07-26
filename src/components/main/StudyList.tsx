@@ -17,7 +17,7 @@ const StudyList = (): JSX.Element => {
   const [openOrderFilter, setOpenOrderFilter] = useState(false);
   const [totalDataLength, setTotalDataLength] = useState(0);
   const { data, error, isLoading } = useQuery<StudyListResponseType, Error>({
-    queryKey: ["studyList", filter],
+    queryKey: ["studyList", filter.category, filter.keyword, filter.order, filter.page, filter.status, filter.type],
     queryFn: () => getStudyList(filter),
   });
   const skeletonList = [1, 2, 3, 4, 5, 6];
@@ -50,11 +50,6 @@ const StudyList = (): JSX.Element => {
 
     navigate(newLocation);
   }, [data, filter]);
-
-  // 스터디 리스트 체크용 코드
-  useEffect(() => {
-    console.log(studyList);
-  }, [studyList]);
 
   const handleOrderClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;

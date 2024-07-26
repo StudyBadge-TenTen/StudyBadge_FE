@@ -24,9 +24,9 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
     }
   }, [channelId, data]);
 
-  useEffect(() => {
-    console.log(attendList);
-  }, [attendList]);
+  // useEffect(() => {
+  //   console.log(attendList); // 디버깅로그
+  // }, [attendList]);
 
   if (isLoading) {
     return <div className="text-Gray-3 text-center">멤버 리스트를 로딩중입니다...</div>;

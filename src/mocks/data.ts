@@ -90,16 +90,19 @@ export const myStudyList = [
     studyId: 1,
     studyName: "모각코",
     role: "LEADER",
+    attendanceRatio: 80,
   },
   {
     studyId: 2,
     studyName: "이런 북스터디",
     role: "MEMBER",
+    attendanceRatio: 60,
   },
   {
     studyId: 3,
     studyName: "내일은 코딩왕",
     role: "MEMBER",
+    attendanceRatio: 100,
   },
 ];
 export const paymentsList = [

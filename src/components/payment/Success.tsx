@@ -21,9 +21,9 @@ const Success = (): JSX.Element => {
   useEffect(() => {
     async function confirm() {
       try {
-        if (data) {
-          console.log(data);
-        }
+        // if (data) {
+        //   console.log(data); // 디버깅로그
+        // }
       } catch (error: any) {
         console.error("Error fetching data:", error);
         navigate(`/paymentFail/?message=${error.message}&code=${error.code}`);

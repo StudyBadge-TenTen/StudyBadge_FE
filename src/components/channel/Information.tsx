@@ -52,7 +52,7 @@ const Information = (): JSX.Element => {
         detailList.push(data.region);
       }
       setStudyDetailList(() => detailList);
-      console.log("Updated studyDetailList:", detailList);
+      // console.log("Updated studyDetailList:", detailList); // 디버깅로그
     } else {
       console.log("No data:", error);
     }

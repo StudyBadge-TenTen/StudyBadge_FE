@@ -11,7 +11,7 @@ let API_TOKEN = "";
 const setApiToken = (token: string) => {
   API_TOKEN = token;
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${API_TOKEN}`;
-  console.log("Token set:", API_TOKEN); // 디버깅을 위해 추가
+  // console.log("Token set:", API_TOKEN); // 디버깅을 위해 추가
 };
 
 const axiosInstance = axios.create({

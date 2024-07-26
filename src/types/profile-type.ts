@@ -43,6 +43,7 @@ interface MyStudyType {
   studyId: number;
   studyName: string;
   role: "LEADER" | string;
+  attendanceRatio: number;
 }
 
 interface PaymentHistoryType {

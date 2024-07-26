@@ -7,8 +7,10 @@ import { situationCalculator } from "../../utils/schedule-function";
 import ConfirmModal from "./leader/ConfirmModal";
 import Setters from "./leader/Setters";
 import { useGetStudyInfo } from "../../hooks/useQuery";
+import usePageScrollTop from "../common/PageScrollTop";
 
 const ScheduleEdit = (): JSX.Element => {
+  usePageScrollTop();
   const { channelId } = useParams();
   const { data } = useGetStudyInfo(Number(channelId));
   const navigate = useNavigate();
@@ -61,9 +63,9 @@ const ScheduleEdit = (): JSX.Element => {
     return window.removeEventListener("click", (e) => handleSelectorReset(e));
   }, []);
 
-  useEffect(() => {
-    console.log(placeId); // placeId 디버깅 로그
-  }, [placeId]);
+  // useEffect(() => {
+  //   console.log(placeId); // placeId 디버깅 로그
+  // }, [placeId]);
 
   useEffect(() => {
     if (repeatState === "NONE") {
@@ -271,7 +273,11 @@ const ScheduleEdit = (): JSX.Element => {
             {placeId && <div className="text-center mt-2 text-Gray-3">현재 선택된 장소가 있습니다.</div>}
           </div>
           <div className="flex justify-between items-center px-8 mt-8">
-            <button type="button" onClick={() => navigate(`/channel/${channelId}`)} className="btn-blue w-24">
+            <button
+              type="button"
+              onClick={() => navigate(`/channel/${channelId}/schedule/${selectedDate}`)}
+              className="btn-blue w-24"
+            >
               취소
             </button>
             <button type="button" onClick={() => handleSubmitClick()} className="btn-blue w-24">

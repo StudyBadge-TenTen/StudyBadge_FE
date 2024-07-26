@@ -11,10 +11,10 @@ import { useQuery } from "@tanstack/react-query";
 import { MyStudyType, UserInfoType } from "../../types/profile-type";
 import { getMyStudy, getProfile } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
-import { useAuthStore } from "../../store/auth-store";
+// import { useAuthStore } from "../../store/auth-store";
 import { Link } from "react-router-dom";
 import { useSelectedDateStore } from "@/store/schedule-store";
-// import { motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
@@ -28,17 +28,17 @@ const Profile = (): JSX.Element => {
     queryKey: ["UserInfo"],
     queryFn: () => getProfile(),
   });
-  const { accessToken } = useAuthStore();
+  // const { accessToken } = useAuthStore();
 
   useEffect(() => {
-    console.log(accessToken); // accessToken 확인용 디버깅 코드
+    // console.log(accessToken); // accessToken 확인용 디버깅 코드
 
     return () => setIsEditMode(false); // 클린업 함수로 변경
   }, []);
 
   useEffect(() => {
     if (data) {
-      console.log(data); // 디버깅 로그
+      // console.log(data); // 디버깅 로그
 
       (async () => {
         try {
@@ -166,13 +166,13 @@ const Profile = (): JSX.Element => {
                   <div className="w-full md:w-[70%] flex justify-center items-center flex-wrap">
                     <span className="inline-block w-fit text-Blue-2 text-sm md:text-base mr-4">출석률</span>
                     <div className="w-[75%] h-4 bg-Gray-1 relative z-10">
-                      {/* <motion.div
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: member.attendanceRatio * 0.01 }}
-                      transition={{ duration: 0.5, originX: 0, originY: 1 }}
-                      style={{ transformOrigin: "0% 100%" }}
-                      className={`w-full h-4 bg-Blue-2 absolute top-0 left-0 z-20`}
-                    ></motion.div> */}
+                      <motion.div
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: studyChannel.attendanceRatio * 0.01 }}
+                        transition={{ duration: 0.5, originX: 0, originY: 1 }}
+                        style={{ transformOrigin: "0% 100%" }}
+                        className={`w-full h-4 bg-Blue-2 absolute top-0 left-0 z-20`}
+                      ></motion.div>
                     </div>
                   </div>
                 </Link>

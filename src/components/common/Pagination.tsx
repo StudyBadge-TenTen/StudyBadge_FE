@@ -66,7 +66,7 @@ const Pagination = ({
   };
 
   return (
-    <div>
+    <div className="flex justify-center items-center mt-10">
       <button
         className={`prev-btn btn-blue rounded-r-none mr-1 ${curPageGroup === 1 && "cursor-default bg-Gray-2 hover:bg-Gray-2"}`}
         onClick={(e) => handlePageClick(e)}
@@ -74,7 +74,7 @@ const Pagination = ({
       {pageList.map((page) => (
         <button
           key={`page_${page}`}
-          className={`page-btn btn-blue rounded-none mt-10 ${type === "CHANNEL" ? filter && page === filter.page && "bg-Blue-1" : pageState === page && "bg-Blue-1"}`}
+          className={`page-btn btn-blue rounded-none ${type === "CHANNEL" ? filter && page === filter.page && "bg-Blue-1" : pageState === page && "bg-Blue-1"}`}
           onClick={(e) => handlePageClick(e)}
         >
           {page}

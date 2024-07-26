@@ -117,8 +117,12 @@ const postAttendList = async (studyChannelId: number, requestBody: postAttendReq
   if (!requestBody) return;
   try {
     await fetchCall(`/api/study-channels/${studyChannelId}/check-attendance`, "post", requestBody);
+    console.log("출석 정보가 변경되었습니다.");
   } catch (error) {
     console.log(error);
+    console.log(
+      "출석체크에 문제가 발생하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+    );
   }
 };
 

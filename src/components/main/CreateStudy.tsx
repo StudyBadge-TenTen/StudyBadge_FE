@@ -63,7 +63,7 @@ const CreateStudy: React.FC = () => {
 
     try {
       const response = await postStudyChannel(study);
-      console.log("Study created:", response.studyChannelId);
+      // console.log("Study created:", response.studyChannelId); // 디버깅로그
       alert("스터디 채널 생성이 완료되었습니다.");
       study.resetForm();
       if (response) {

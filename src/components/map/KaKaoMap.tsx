@@ -52,7 +52,7 @@ const KakaoMap = ({ originPlaceId, studyChannelId, onClose, setPlaceId }: KakaoM
   }, [originPlaceId, studyChannelId]);
 
   const handleCafeSelect = (cafe: LocateType) => {
-    console.log(cafe);
+    // console.log(cafe); // 디버깅로그
     setSelectedCafe(cafe);
   };
 
@@ -62,7 +62,7 @@ const KakaoMap = ({ originPlaceId, studyChannelId, onClose, setPlaceId }: KakaoM
       const response = await postLocate(studyChannelId, selectedCafe);
       const placeId = response.placeId;
       setPlaceId(() => placeId);
-      console.log("Selected place ID:", placeId);
+      // console.log("Selected place ID:", placeId); // 디버깅로그
       onClose();
     } catch (error) {
       console.error("Error selecting place:", error);
