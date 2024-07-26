@@ -19,6 +19,7 @@ export default defineConfig({
         target: "https://study-badge.shop",
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
       // "/api": {
       //   target: "http://localhost:8080", // 안될 경우 'http://127.0.0.1:8000', 이런식으로 IP 명시
