@@ -11,6 +11,11 @@ let API_TOKEN = "";
 const setApiToken = (token: string) => {
   API_TOKEN = token;
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${API_TOKEN}`;
+  if (import.meta.env.DEV) {
+    const expirationTime = new Date().getTime() + 7200000;
+    localStorage.setItem("accessToken", token);
+    localStorage.setItem("accessTokenExpiration", expirationTime.toString());
+  }
   // console.log("Token set:", API_TOKEN); // 디버깅을 위해 추가
 };
 
@@ -24,11 +29,38 @@ const axiosInstance = axios.create({
 
 // 요청 인터셉터 추가
 axiosInstance.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // 요청 헤더에 인증 토큰 추가
     if (import.meta.env.DEV) {
-      const storageToken = localStorage.getItem("accessToken");
-      config.headers.Authorization = `Bearer ${storageToken}`;
+      // dev 모드 시 스토리지에 토큰 저장
+      const tokenExpiration = localStorage.getItem("accessTokenExpiration");
+
+      if (tokenExpiration) {
+        const isTokenExpired = new Date().getTime() > parseInt(tokenExpiration);
+        if (isTokenExpired) {
+          console.log("Token expired, refreshing...");
+          const refreshToken = getCookie("refreshToken");
+          if (refreshToken) {
+            try {
+              const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
+                headers: {
+                  Authorization: `Bearer ${refreshToken}`,
+                },
+              });
+              const newAccessToken = response.headers["authorization"].split(" ")[1];
+              setApiToken(newAccessToken);
+              config.headers.Authorization = `Bearer ${newAccessToken}`;
+            } catch (error) {
+              console.error("Token refresh error:", error);
+              await postLogout();
+              return Promise.reject(error);
+            }
+          }
+        }
+      } else {
+        const storageToken = localStorage.getItem("accessToken");
+        config.headers.Authorization = `Bearer ${storageToken}`;
+      }
     } else {
       config.headers.Authorization = `Bearer ${API_TOKEN}`;
     }
