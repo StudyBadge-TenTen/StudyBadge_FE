@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       account: "",
       password: "",
       checkPassword: "",
-      accessToken: "",
+      accessToken: null,
       refreshToken: null,
     }),
 
@@ -130,7 +130,6 @@ const usePasswordResetStore = create<PasswordResetStore>((set) => ({
   setVerificationCode: (verificationCode) => set({ verificationCode }),
   setShowVerificationForm: (showVerificationForm) => set({ showVerificationForm }),
   setShowNewPasswordForm: (showNewPasswordForm) => set({ showNewPasswordForm }),
-  setError: (error) => set({ error }),
 }));
 
 export { usePasswordResetStore };

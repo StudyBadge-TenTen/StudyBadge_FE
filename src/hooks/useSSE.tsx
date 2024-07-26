@@ -50,6 +50,8 @@ export const useSSE = () => {
     };
 
     const onMessage = (ev: MessageEvent) => {
+      if (!accessToken) return;
+
       console.log("Event received: ", ev.data); // 디버깅 로그 추가
       try {
         const parsedData = JSON.parse(ev.data);
@@ -57,11 +59,12 @@ export const useSSE = () => {
         if (parsedData.isDummy) {
           console.log("연결 더미데이터 수신");
           return;
+        } else {
+          const newNotification: NotificationType = parsedData;
+          console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
+          setNewNotification(newNotification); // 토스트에 넣을 새로운 알림
+          localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
         }
-        const newNotification: NotificationType = parsedData;
-        console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
-        setNewNotification(newNotification); // 토스트에 넣을 새로운 알림
-        localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
       } catch (error) {
         console.error("Failed to parse event data: ", error);
       }

@@ -1,12 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import {
-  FilterStoreType,
-  KeywordStoreType,
-  StudyListRequestType,
-  StudyListStoreType,
-  StudyStoreType,
-} from "../types/study-channel-type";
+import { FilterStoreType, StudyListRequestType, StudyListStoreType, StudyStoreType } from "../types/study-channel-type";
 
 const useStudyStore = create<StudyStoreType>((set) => ({
   name: "",
@@ -45,11 +39,12 @@ const useStudyListStore = create<StudyListStoreType>((set) => ({
 }));
 
 const initialFilter: StudyListRequestType = {
-  type: null,
-  category: null,
-  status: null,
+  type: undefined,
+  category: undefined,
+  status: undefined,
   order: "RECENT",
   page: 1,
+  keyword: undefined,
 };
 
 const useFilterStore = create(
@@ -65,9 +60,4 @@ const useFilterStore = create(
   ),
 );
 
-const useKeywordStore = create<KeywordStoreType>((set) => ({
-  keywordValue: null,
-  setKeywordValue: (keyword) => set({ keywordValue: keyword }),
-}));
-
-export { useStudyStore, useStudyListStore, initialFilter, useFilterStore, useKeywordStore };
+export { useStudyStore, useStudyListStore, initialFilter, useFilterStore };

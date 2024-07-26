@@ -140,6 +140,23 @@ export const pointList = [
     createdAt: "2024-06-01T07:08:08.440Z",
   },
 ];
+export const applicationList = [
+  {
+    studyChannelId: 10,
+    studyChannelName: "책과 커피",
+    participationStatus: "APPROVE_WAITING",
+  },
+  {
+    studyChannelId: 11,
+    studyChannelName: "불타는 취준생들",
+    participationStatus: "APPROVED",
+  },
+  {
+    studyChannelId: 12,
+    studyChannelName: "내일은 발명왕",
+    participationStatus: "CANCELED",
+  },
+];
 
 // payment data
 export const paymentResponse = {
@@ -283,7 +300,7 @@ export const studyInfoResponse = {
   deposit: 20000,
   leaderName: "홍길동",
   subLeaderName: "김스뱃",
-  isLeader: true,
+  leader: true,
 };
 
 // memberList data

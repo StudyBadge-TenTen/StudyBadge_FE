@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import {
+  applicationList,
   attendanceResponse,
   attendList,
   memberListResponse,
@@ -150,20 +151,21 @@ export const handlers = [
     console.log(`Captured a "GET /api/payments/history?page=${page}&size=${size}" request`);
     return HttpResponse.json(paymentsList);
   }),
-  http.get("/api/points/history", async ({ request }) => {
+  http.get("/api/my-point", async ({ request }) => {
     const url = new URL(request.url);
     const page = url.searchParams.get("page");
     const size = url.searchParams.get("size");
-    console.log(`Captured a "GET /api/points/history?page=${page}&size=${size}" request`);
+    console.log(`Captured a "GET /api/my-point?page=${page}&size=${size}" request`);
     return HttpResponse.json(pointList);
   }),
-  // http.get("/api/members/my-apply", async ({ request }) => {
-  //   const url = new URL(request.url);
-  //   const page = url.searchParams.get("page");
-  //   const size = url.searchParams.get("size");
-  //   console.log(`Captured a "GET /api/points/history?page=${page}&size=${size}" request`);
-  //   return HttpResponse.json(pointList);
-  // }),
+  http.get("/api/members/my-apply", async () => {
+    console.log(`Captured a "GET /api/members/my-apply" request`);
+    return HttpResponse.json(applicationList);
+  }),
+  http.delete("/api/members/withdrawal", async () => {
+    console.log(`Captured a "DELETE /api/members/withdrawal" request`);
+    return HttpResponse.json({ status: 200 });
+  }),
 
   // payment handlers
   http.post("/api/payments/toss", async ({ request }) => {
@@ -236,6 +238,16 @@ export const handlers = [
       return HttpResponse.json({ status: 200 });
     },
   ),
+  http.post("/api/study-channels/:studyChannelId/participation", async ({ params }) => {
+    console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}/participation" request`);
+    return HttpResponse.json({ status: 200 });
+  }),
+  http.post("/api/study-channels/:studyChannelId/members/:studyMemberId/ban", async ({ params }) => {
+    console.log(
+      `Captured a "POST /api/study-channels/${params.studyChannelId}/members/${params.studyMemberId}/ban" request`,
+    );
+    return HttpResponse.json({ status: 200 });
+  }),
 
   // auth handlers
   http.post(`/oauth2/authorization/kakao`, async ({ request }) => {

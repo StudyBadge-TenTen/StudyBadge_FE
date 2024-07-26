@@ -34,7 +34,7 @@ const ConfirmModal = ({
         if (target.classList.contains("yes")) {
           const response = await postSchedule(Number(channelId), newSchedule, repeatState);
           console.log(response);
-          navigate(`/channel/${channelId}/schedule`);
+          navigate(`/channel/${channelId}/schedule/${selectedDate}`);
         } else if (target.classList.contains("no")) {
           setModalInfo(() => ({
             isOpen: false,

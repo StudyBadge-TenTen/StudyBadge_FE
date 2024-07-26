@@ -2,9 +2,15 @@ import { StudyListRequestType, StudyListResponseType } from "../types/study-chan
 import { fetchCall } from "./common";
 
 const getStudyList = async ({ page, order, type, category, status, keyword }: StudyListRequestType) => {
+  const params = { page, order, type, category, status, keyword };
+  // undefined 값을 제거하는 로직 추가
+  const filteredParams = Object.fromEntries(Object.entries(params).filter(([_, v]) => v !== undefined));
+
   const studyChannelListResponse = await fetchCall<StudyListResponseType>(
-    `/api/study-channels?page=${page ?? 1}&order=${order ?? "RECENT"}${type ? `&type=${type}` : ""}${category ? `&category=${category}` : ""}${status ? `&status=${status}` : ""}${keyword ? `&keyword=${keyword}` : ""}`,
+    `/api/study-channels`,
     "get",
+    null,
+    filteredParams,
   );
   return studyChannelListResponse;
 };

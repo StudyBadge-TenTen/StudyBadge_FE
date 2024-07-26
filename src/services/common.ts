@@ -26,7 +26,12 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // 요청 헤더에 인증 토큰 추가
-    config.headers.Authorization = `Bearer ${API_TOKEN}`;
+    if (import.meta.env.DEV) {
+      const storageToken = localStorage.getItem("accessToken");
+      config.headers.Authorization = `Bearer ${storageToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${API_TOKEN}`;
+    }
     console.log("Request headers:", config.headers); // 디버깅을 위해 추가
     return config;
   },
@@ -53,12 +58,16 @@ axiosInstance.interceptors.response.use(
     // 여기서 에러 처리 로직 구현
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      try {
-        // refreshToken을 쿠키에서 가져와 accessToken 갱신 로직 추가
-        const refreshToken = getCookie("refreshToken");
-        if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh-token`, { token: refreshToken });
-          const newAccessToken = response.data.accessToken;
+      // refreshToken을 쿠키에서 가져와 accessToken 갱신 로직 추가
+      const refreshToken = getCookie("refreshToken");
+      if (refreshToken) {
+        try {
+          const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
+            headers: {
+              Authorization: `Bearer ${refreshToken}`,
+            },
+          });
+          const newAccessToken = response.headers["authorization"].split(" ")[1];
 
           // 새로운 토큰 저장 및 요청 헤더에 추가
           setApiToken(newAccessToken);
@@ -66,14 +75,15 @@ axiosInstance.interceptors.response.use(
 
           // 원래 요청을 다시 시도
           return axiosInstance(originalRequest);
-        }
-      } catch (refreshError) {
-        console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
-        // 필요에 따라 로그아웃 처리 등 추가 작업 수행
-        try {
-          await postLogout();
-        } catch (error) {
-          console.error("Logout error:", refreshError);
+        } catch (refreshError) {
+          console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
+          // 필요에 따라 로그아웃 처리 등 추가 작업 수행
+          try {
+            await postLogout();
+            console.log("Token refresh error - try logout:", refreshError);
+          } catch (error) {
+            console.error("Logout error:", refreshError);
+          }
         }
       }
       return Promise.reject(axiosError);
@@ -81,11 +91,17 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-async function fetchCall<T>(url: string, method: "get" | "post" | "put" | "delete" | "patch", data?: any): Promise<T> {
+async function fetchCall<T>(
+  url: string,
+  method: "get" | "post" | "put" | "delete" | "patch",
+  data?: any,
+  params?: Record<string, any>,
+): Promise<T> {
   const config = {
     method,
     url,
     ...(data && { data }), // data가 있을 경우에만 data 속성 추가
+    ...(params && { params }), // params가 있을 경우에만 params 속성 추가
   };
   return axiosInstance(config);
 }

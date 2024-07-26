@@ -95,7 +95,7 @@ const Information = (): JSX.Element => {
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 정보</h2>
       <div className="flex justify-end">
         {/* 리더에게만 보일 수정 버튼 */}
-        {data?.isLeader && (
+        {data?.leader && (
           <button
             onClick={() => {
               if (isEditMode) {

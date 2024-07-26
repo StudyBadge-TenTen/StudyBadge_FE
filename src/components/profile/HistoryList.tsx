@@ -23,7 +23,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
 
   useEffect(() => {
     try {
-      getPointHistory(1, 10).then((latestPointList) => setLatestPointList(() => latestPointList));
+      getPointHistory(1, 10).then((latestPointList) => latestPointList && setLatestPointList(() => latestPointList));
     } catch (error) {
       console.log(error);
     }
@@ -33,6 +33,8 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     const paymentDate = new Date(data.createdAt);
 
     for (const pointHistory of latestPointList) {
+      if (!pointHistory) false;
+
       const historyDate = new Date(pointHistory.createdAt);
 
       // 결제 이후에 발생한 포인트 사용 내역을 찾음
@@ -60,12 +62,8 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
   };
 
   const postCancel = async (paymentKey: string) => {
-    try {
-      await postPaymentCancel(paymentKey);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
+    await postPaymentCancel(paymentKey);
+    window.location.reload();
   };
 
   // 결제내역 / 포인트내역 조회해서 리스트로 렌더링
@@ -82,7 +80,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
               >
                 <span className="text-sm text-Gray-4 text-center">
                   결제날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간:{" "}
-                  {moment(data.createdAt).format("hh:mm:ss")}
+                  {moment(data.createdAt).format("hh:mm")}
                 </span>
                 <div className="flex items-center">
                   {isPossibleCancel(data) ? (
@@ -123,9 +121,9 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
       );
     } else if (paymentQuery.isLoading) {
       return (
-        <div className="w-full h-fit min-h-96">
+        <div className="w-full h-fit min-h-96 flex flex-col justify-center items-center">
           {skeletonList.map((value) => (
-            <div key={`skeleton_${value}`} className="w-full h-4 bg-Gray-1 m-4 rounded-[50px] animate-pulse"></div>
+            <div key={`skeleton_${value}`} className="w-full h-4 bg-Gray-1 my-6 rounded-[50px] animate-pulse"></div>
           ))}
         </div>
       );
@@ -139,7 +137,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     }
   } else if (type === "POINT") {
     if (pointQuery.data && Array.isArray(pointQuery.data)) {
-      if (pointQuery.data.length === 0) return <div>결제 내역이 존재하지 않습니다.</div>;
+      if (pointQuery.data.length === 0) return <div>포인트 내역이 존재하지 않습니다.</div>;
       return (
         <>
           <div className="w-full h-fit min-h-96">
@@ -149,8 +147,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
                 className="h-16 border-b border-solid border-Gray-2 p-4 flex justify-between items-center"
               >
                 <span className="text-sm text-Gray-4 text-center">
-                  결제날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간:{" "}
-                  {moment(data.createdAt).format("hh:mm:ss")}
+                  날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간: {moment(data.createdAt).format("hh:mm")}
                 </span>
                 <div className="flex items-center">
                   {data.transferType === "PAYMENT_CANCEL" && (
@@ -190,9 +187,9 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
       );
     } else if (pointQuery.isLoading) {
       return (
-        <div className="w-full h-fit min-h-96">
+        <div className="w-full h-fit min-h-96 flex flex-col justify-center items-center">
           {skeletonList.map((value) => (
-            <div key={`skeleton_${value}`} className="w-full h-4 bg-Gray-1 m-4 rounded-[50px] animate-pulse"></div>
+            <div key={`skeleton_${value}`} className="w-full h-4 bg-Gray-1 my-6 rounded-[50px] animate-pulse"></div>
           ))}
         </div>
       );

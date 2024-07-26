@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pagination from "../common/Pagination";
 import Card from "./Card";
-import { initialFilter, useFilterStore, useKeywordStore, useStudyListStore } from "../../store/study-store";
+import { initialFilter, useFilterStore, useStudyListStore } from "../../store/study-store";
 import { getStudyList } from "../../services/study-list-api";
 import { useLocation, useNavigate } from "react-router";
 import Filter from "./Filter";
@@ -14,7 +14,6 @@ const StudyList = (): JSX.Element => {
   const navigate = useNavigate();
   const { studyList, setStudyList } = useStudyListStore();
   const { filter, setFilter } = useFilterStore();
-  const { keywordValue } = useKeywordStore();
   const [openOrderFilter, setOpenOrderFilter] = useState(false);
   const [totalDataLength, setTotalDataLength] = useState(0);
   const { data, error, isLoading } = useQuery<StudyListResponseType, Error>({
@@ -37,8 +36,8 @@ const StudyList = (): JSX.Element => {
 
   // 필터와 키워드 상태가 바뀔 때마다
   useEffect(() => {
-    const { type, category, status, order, page } = filter;
-    const newLocation = `/${type ?? "ALL"}/${status ?? "ALL"}/${category ?? "ALL"}/${keywordValue ?? "NONE"}/${order ?? "ALL"}/${page}`;
+    const { type, category, status, order, page, keyword } = filter;
+    const newLocation = `/${type ?? "ALL"}/${status ?? "ALL"}/${category ?? "ALL"}/${keyword ?? "NONE"}/${order ?? "ALL"}/${page}`;
 
     if (data) {
       setStudyList(data.studyChannels);
@@ -50,7 +49,7 @@ const StudyList = (): JSX.Element => {
     }
 
     navigate(newLocation);
-  }, [data, filter, keywordValue]);
+  }, [data, filter]);
 
   // 스터디 리스트 체크용 코드
   useEffect(() => {

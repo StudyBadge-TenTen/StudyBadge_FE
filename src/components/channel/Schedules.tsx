@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Calendar from "../schedule/Calendar";
 import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
 import { AttendMemberType, ScheduleCalcResponseType, ScheduleType } from "../../types/schedule-type";
@@ -11,11 +11,18 @@ import { getAttendList } from "../../services/schedule-api";
 import CheckAttend from "../schedule/leader/CheckAttend";
 import { useEditModeStore } from "../../store/edit-mode-store";
 
-const Schedules = ({ isLeader }: { isLeader: boolean | undefined }): JSX.Element => {
+const Schedules = ({
+  selectedDateParam,
+  isLeader,
+}: {
+  selectedDateParam: string | undefined;
+  isLeader: boolean | undefined;
+}): JSX.Element => {
   const { channelId } = useParams();
+  const navigate = useNavigate();
 
-  const { selectedDate } = useSelectedDateStore();
-  const { selectedMonth } = useSelectedMonthStore();
+  const { selectedDate, setSelectedDate } = useSelectedDateStore();
+  const { selectedMonth, setSelectedMonth } = useSelectedMonthStore();
   const { isEditMode, setIsEditMode } = useEditModeStore();
 
   const [marks, setMarks] = useState<string[]>([]);
@@ -42,6 +49,27 @@ const Schedules = ({ isLeader }: { isLeader: boolean | undefined }): JSX.Element
   useEffect(() => {
     return () => setIsEditMode(false);
   }, []);
+
+  // 최초 로드 시 selectedDateParam 값이 있으면 상태를 업데이트
+  useEffect(() => {
+    if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {
+      const newSelectedMonth = moment(selectedDateParam).format("YYYY-MM");
+      setSelectedDate(selectedDateParam);
+      setSelectedMonth(newSelectedMonth);
+    } else {
+      const todayString = moment(today).format("YYYY-MM-DD");
+      const todayMonthString = moment(today).format("YYYY-MM");
+      setSelectedDate(todayString);
+      setSelectedMonth(todayMonthString);
+    }
+  }, [selectedDateParam]);
+
+  // selectedDate가 변경될 때마다 URL을 업데이트
+  useEffect(() => {
+    if (selectedDate && selectedDate !== selectedDateParam) {
+      navigate(`/channel/${channelId}/schedule/${selectedDate}`, { replace: true });
+    }
+  }, [selectedDate, navigate, channelId, selectedDateParam]);
 
   useEffect(() => {
     //month상태가 바뀔 때마다 scheduleCalculator()호출해 일정들 가져오기

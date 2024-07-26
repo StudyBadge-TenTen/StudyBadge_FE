@@ -34,7 +34,7 @@ interface StudyInfoType extends BasicStudyInfoType {
   region: null | string; // ONLINE 일 경우 null, 오프라인일 경우 "서울시 ~~구" 반환
   leaderName: string;
   subLeaderName: string;
-  isLeader: boolean;
+  leader: boolean;
 }
 
 interface StudyInfoPutRequestType {
@@ -54,10 +54,10 @@ interface StudyListObjectType extends BasicStudyInfoType {
 interface StudyListRequestType {
   page: number;
   order: OrderType;
-  type: null | MeetingType;
-  category: null | StudyCategoryType;
-  status: null | RecruitmentStatusType;
-  keyword?: null | string;
+  type: undefined | MeetingType;
+  category: undefined | StudyCategoryType;
+  status: undefined | RecruitmentStatusType;
+  keyword: undefined | string;
 }
 
 interface StudyListResponseType {
@@ -141,11 +141,6 @@ interface FilterStoreType {
   setFilter: (filter: StudyListRequestType) => void;
 }
 
-interface KeywordStoreType {
-  keywordValue: null | string;
-  setKeywordValue: (keyword: null | string) => void;
-}
-
 export type {
   StudyCategoryType,
   MeetingType,
@@ -169,5 +164,4 @@ export type {
   StudyStoreType,
   StudyListStoreType,
   FilterStoreType,
-  KeywordStoreType,
 };

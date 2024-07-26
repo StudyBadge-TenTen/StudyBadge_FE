@@ -5,11 +5,13 @@ import { koreanRegions } from "../common/KoreanRegions";
 import moment from "moment";
 import { postStudyChannel } from "../../services/channel-api";
 import { PENALTY_SYSTEM } from "../../constants/penalty-system-info";
+import { useSelectedDateStore } from "@/store/schedule-store";
 
 const CreateStudy: React.FC = () => {
   const study = useStudyStore();
   const [selectedRegion, setSelectedRegion] = useState("");
   const navigate = useNavigate();
+  const { selectedDate } = useSelectedDateStore();
 
   useEffect(() => {
     return study.resetForm();
@@ -30,7 +32,7 @@ const CreateStudy: React.FC = () => {
       alert("스터디의 카테고리를 선택해주세요");
       return;
     }
-    if (!study.region) {
+    if (study.meetingType === "OFFLINE" && !study.region) {
       alert("스터디모임이 주로 모임을 가질 지역을 선택해주세요");
       return;
     }
@@ -64,8 +66,9 @@ const CreateStudy: React.FC = () => {
       console.log("Study created:", response.studyChannelId);
       alert("스터디 채널 생성이 완료되었습니다.");
       study.resetForm();
-
-      navigate(`/channel/${response.studyChannelId}/schedule`);
+      if (response) {
+        navigate(`/channel/${response.studyChannelId}/schedule/${selectedDate}`);
+      }
     } catch (error) {
       console.error("Failed to create study:", error);
       alert(

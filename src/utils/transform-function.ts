@@ -1,3 +1,4 @@
+import { ParticipationStatusType } from "@/types/profile-type";
 import { AuthStoreType } from "../types/auth-type";
 
 const nameToType = (formName: string) => {
@@ -78,4 +79,42 @@ const nameToField = (formName: string) => {
   return fieldName;
 };
 
-export { nameToType, returnPlaceholder, nameToField };
+const ParticipateEnToKr = (participateState: ParticipationStatusType) => {
+  let result;
+  switch (participateState) {
+    case "APPROVED":
+      result = "수락";
+      break;
+    case "APPROVE_WAITING":
+      result = "대기중";
+      break;
+    case "CANCELED":
+      result = "신청취소";
+      break;
+    case "REJECTED":
+      result = "거절";
+      break;
+  }
+  return result;
+};
+
+const stateToColorClassName = (participateState: ParticipationStatusType) => {
+  let result;
+  switch (participateState) {
+    case "APPROVED":
+      result = "text-Green-1";
+      break;
+    case "APPROVE_WAITING":
+      result = "text-Gray-3";
+      break;
+    case "CANCELED":
+      result = "text-Gray-3";
+      break;
+    case "REJECTED":
+      result = "text-Red-2";
+      break;
+  }
+  return result;
+};
+
+export { nameToType, returnPlaceholder, nameToField, ParticipateEnToKr, stateToColorClassName };

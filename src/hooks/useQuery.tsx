@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { MemberListResponseType, RecruitmentInfoType, StudyInfoType } from "../types/study-channel-type";
 import { getMemberList, getRecruitment, getStudyInfo } from "../services/channel-api";
+import { getApplicationList } from "@/services/profile-api";
 
 export const useGetStudyInfo = (channelId: number) => {
   const { data, error, isLoading } = useQuery<StudyInfoType, Error>({
@@ -23,6 +24,14 @@ export const useRecruitment = (channelId: number) => {
   const { data, error, isLoading } = useQuery<RecruitmentInfoType, Error>({
     queryKey: ["recruitmentList", channelId],
     queryFn: () => getRecruitment(Number(channelId)),
+  });
+  return { data, error, isLoading };
+};
+
+export const useApplicationList = () => {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["participation"],
+    queryFn: () => getApplicationList(),
   });
   return { data, error, isLoading };
 };

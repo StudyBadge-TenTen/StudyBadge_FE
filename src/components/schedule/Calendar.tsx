@@ -5,6 +5,7 @@ import moment from "moment";
 import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
 import PrevMonthBtn from "./PrevMonthBtn";
 import NextMonthBtn from "./NextMonthBtn";
+import { useParams } from "react-router";
 
 const Calendar = ({
   marks,
@@ -13,15 +14,24 @@ const Calendar = ({
   marks?: string[];
   setRepeatEndDate?: React.Dispatch<React.SetStateAction<string>>;
 }): JSX.Element => {
-  const curDate = new Date();
+  const { selectedDateParam } = useParams();
+
+  // if (selectedDateParam) {
   const { setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
-  const [value, onChange] = useState<Value>(curDate);
-  const [mark, setMark] = useState(marks);
+  const [value, onChange] = useState<Value>(selectedDateParam ? new Date(selectedDateParam) : new Date());
+  const [mark, setMark] = useState<string[]>([]);
+  // const [mark, setMark] = useState(marks);
   // 달력에 일정표시할 날짜들을 mark배열에 "YYYY-MM-DD"형태로 담을 예정
 
   useEffect(() => {
-    setMark(() => marks);
+    if (selectedDateParam) {
+      onChange(() => new Date(selectedDateParam));
+    }
+  }, [selectedDateParam]);
+
+  useEffect(() => {
+    setMark(() => marks ?? []);
   }, [marks]);
 
   const handleValueChange = (selectedDate: Value) => {
@@ -30,12 +40,13 @@ const Calendar = ({
   const handleDayClick = (date: Date) => {
     const transDate = moment(date).format("YYYY-MM-DD");
 
-    if (!mark && setRepeatEndDate) {
+    if (!mark.length && setRepeatEndDate) {
       setRepeatEndDate(() => transDate);
       return;
     }
 
     setSelectedDate(transDate);
+    onChange(() => date);
   };
   const handleMonthClick = (date: Date) => {
     const transDate = moment(date).format("YYYY-MM");
@@ -82,6 +93,8 @@ const Calendar = ({
       />
     </>
   );
+  // }
+  // return <></>;
 };
 
 export default Calendar;

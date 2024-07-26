@@ -4,10 +4,12 @@ import { ProfileInfoType, ProfilePutType } from "../../types/profile-type";
 import { BANK_LIST } from "../../constants/bank-list";
 import axios from "axios";
 import { useAuthStore } from "../../store/auth-store";
+import { useNavigate } from "react-router";
 
 const ProfileEdit = (): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
 
+  const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState({
     nickname: "",
     introduction: "",
@@ -120,7 +122,7 @@ const ProfileEdit = (): JSX.Element => {
     }
 
     const formData = new FormData();
-    formData.append("memberUpdateRequest", JSON.stringify(profileInfo));
+    formData.append("updateRequest", new Blob([JSON.stringify(profileInfo)], { type: "application/json" }));
 
     if (imageFile) {
       // FormData에 데이터 추가
@@ -131,12 +133,13 @@ const ProfileEdit = (): JSX.Element => {
       const response = await axios.put("/api/members/my-info/update", formData, {
         withCredentials: true,
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
         },
       });
       // 서버 응답 출력
       console.log(response.data);
+      navigate("/profile/myInfo");
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -145,7 +148,11 @@ const ProfileEdit = (): JSX.Element => {
 
   return (
     <>
-      <div className="w-full min-h-96 border border-solid border-Gray-3 rounded-[30px] px-10 py-16 flex flex-col justify-center items-center">
+      <form
+        method="post"
+        encType="multipart/form-data"
+        className="w-full min-h-96 border border-solid border-Gray-3 rounded-[30px] px-10 py-16 flex flex-col justify-center items-center"
+      >
         <div className="image-edit flex items-center mb-16">
           <div className="image-preview w-32 h-32 bg-Gray-2 rounded-full flex justify-center items-center mr-8">
             <img src={profileInfo.imgUrl} alt="업로드 이미지" className="object-cover w-32 h-32 rounded-full" />
@@ -234,7 +241,7 @@ const ProfileEdit = (): JSX.Element => {
             저장하기
           </button>
         </div>
-      </div>
+      </form>
     </>
   );
 };

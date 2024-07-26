@@ -12,6 +12,8 @@ import { MyStudyType, UserInfoType } from "../../types/profile-type";
 import { getMyStudy, getProfile } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import { useAuthStore } from "../../store/auth-store";
+import { Link } from "react-router-dom";
+import { useSelectedDateStore } from "@/store/schedule-store";
 // import { motion } from "framer-motion";
 
 const Profile = (): JSX.Element => {
@@ -21,6 +23,7 @@ const Profile = (): JSX.Element => {
   const [chargeAmount, setChargeAmount] = useState(10000);
   const [myStudy, setMyStudy] = useState<MyStudyType[]>([]);
   const { isEditMode, setIsEditMode } = useEditModeStore();
+  const { selectedDate } = useSelectedDateStore();
   const { data, isLoading, error } = useQuery<UserInfoType, Error>({
     queryKey: ["UserInfo"],
     queryFn: () => getProfile(),
@@ -30,17 +33,23 @@ const Profile = (): JSX.Element => {
   useEffect(() => {
     console.log(accessToken); // accessToken 확인용 디버깅 코드
 
-    (async () => {
-      try {
-        const myStudyList = await getMyStudy();
-        setMyStudy(() => myStudyList);
-      } catch (error) {
-        console.log("내 스터디 리스트 로딩에 실패하였습니다." + error);
-      }
-    })();
-
     return () => setIsEditMode(false); // 클린업 함수로 변경
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data); // 디버깅 로그
+
+      (async () => {
+        try {
+          const myStudyList = await getMyStudy();
+          setMyStudy(() => myStudyList);
+        } catch (error) {
+          console.log("내 스터디 리스트 로딩에 실패하였습니다." + error);
+        }
+      })();
+    }
+  }, [data]);
 
   useEffect(() => {
     const element = document.getElementById("root");
@@ -145,9 +154,9 @@ const Profile = (): JSX.Element => {
             ) : (
               Array.isArray(myStudy) &&
               myStudy.map((studyChannel) => (
-                <div
+                <Link
+                  to={`/channel/${studyChannel.studyId}/schedule/${selectedDate}`}
                   key={studyChannel.studyId}
-                  onClick={() => navigate(`/channel/${studyChannel.studyId}/schedule`)}
                   className="border border-solid border-Gray-3 w-full h-fit p-10 rounded-[30px] flex flex-col sm:flex-row justify-center lg:justify-between items-center mt-10 flex-wrap"
                 >
                   <div className="flex items-center">
@@ -166,7 +175,7 @@ const Profile = (): JSX.Element => {
                     ></motion.div> */}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))
             )}
           </>

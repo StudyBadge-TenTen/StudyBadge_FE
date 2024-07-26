@@ -1,8 +1,10 @@
+import { useSelectedDateStore } from "@/store/schedule-store";
 import { StudyCategoryType, StudyListObjectType } from "../../types/study-channel-type";
 import { useNavigate } from "react-router";
 
 const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element => {
   const navigate = useNavigate();
+  const { selectedDate } = useSelectedDateStore();
 
   const renderCategory = (category: StudyCategoryType) => {
     let categoryKr;
@@ -25,7 +27,7 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
 
   return (
     <div
-      onClick={() => navigate(`/channel/${studyInfo.studyChannelId}/schedule`)}
+      onClick={() => navigate(`/channel/${studyInfo.studyChannelId}/schedule/${selectedDate}`)}
       className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer"
     >
       <div className="badge flex justify-between items-center mb-2">

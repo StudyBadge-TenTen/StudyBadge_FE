@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { fetchCall, setApiToken } from "./common";
 import { LoginResponse, SignUpData } from "../types/auth-type";
 
@@ -67,4 +67,19 @@ export const signUp = async (userData: SignUpData): Promise<void> => {
 
 export const postLogout = async () => {
   await fetchCall(`/api/members/logout`, "post");
+};
+
+export const postVerificationEmail = async (email: string) => {
+  const response = await fetchCall<AxiosResponse>(`/api/members/password`, "post", null, { email });
+  return response;
+};
+
+export const getCodeVerification = async (email: string, code: string) => {
+  const response = await fetchCall<AxiosResponse>(`/api/members/auth/password`, "get", null, { email, code });
+  return response;
+};
+
+export const patchResetPassword = async (email: string, newPassword: string) => {
+  const response = await fetchCall<AxiosResponse>(`/api/members/password/reset`, "patch", null, { email, newPassword });
+  return response;
 };

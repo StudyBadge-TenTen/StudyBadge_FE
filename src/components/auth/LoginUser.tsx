@@ -74,8 +74,12 @@ const LoginUser: React.FC = () => {
         <button type="button" className="btn-blue w-24 mt-12 transition-all" onClick={moveSignUpPage}>
           회원가입
         </button>
-        <button type="button" className="btn-blue w-24 mt-12 transition-all" onClick={() => navigate("/PasswordReset")}>
-          비밀번호 찾기
+        <button
+          type="button"
+          className="btn-blue w-24 mt-12 transition-all"
+          onClick={() => navigate("/sendEmail_PasswordReset")}
+        >
+          비밀번호 재설정
         </button>
       </div>
     </div>

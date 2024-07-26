@@ -101,6 +101,18 @@ const postParticipate = async (studyChannelId: number) => {
   }
 };
 
+const postBanish = async (studyChannelId: number, studyMemberId: number) => {
+  try {
+    await fetchCall(`/api/study-channels/${studyChannelId}/members/${studyMemberId}/ban`, "post");
+    alert("해당 멤버가 퇴출되었습니다.");
+  } catch (error) {
+    console.log(error);
+    alert(
+      "해당 멤버의 퇴출에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+    );
+  }
+};
+
 export {
   postStudyChannel,
   getStudyInfo,
@@ -112,4 +124,5 @@ export {
   postReject,
   postApprove,
   postParticipate,
+  postBanish,
 };

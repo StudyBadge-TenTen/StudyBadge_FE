@@ -16,7 +16,8 @@ import CreateStudyPage from "../pages/CreateStudyPage";
 import SocialLoginCallback from "../components/auth/SocialLoginCallback";
 import PasswordResetPage from "../pages/PasswordResetPage";
 import PointListPage from "../pages/PointListPage";
-import ParticipationPage from "@/pages/ParticipationPage";
+import ApplicationListPage from "@/pages/ApplicationListPage";
+import EmailCodeAuth from "@/components/auth/EmailCodeAuth";
 
 const Router = (): JSX.Element => {
   return (
@@ -26,23 +27,26 @@ const Router = (): JSX.Element => {
       <Route path="/:type/:status/:category/:keywordValue/:order/:page" element={<Main />} />
       <Route path="/login" element={<Login />} />
       <Route path="/SignUp" element={<SignUp />} />
-      <Route path="/PasswordReset" element={<PasswordResetPage />} />
-      <Route path="/oauth2/callback" element={<SocialLoginCallback />} />
+      <Route path="/sendEmail_PasswordReset" element={<PasswordResetPage />} />
+      <Route path="/resetPassword" element={<EmailCodeAuth />} />
+      <Route path="/oauth2/callback" element={<SocialLoginCallback first={true} />} />
+      <Route path="/socialCallback" element={<SocialLoginCallback first={false} />} />
       <Route path="/profile" element={<ProfilePage />}>
         <Route path="/profile/payment" element={<Profile />} />
         <Route path="/profile/myInfo" element={<Profile />} />
         <Route path="/profile/paymentList" element={<PaymentListPage />} />
         <Route path="/profile/pointList" element={<PointListPage />} />
         <Route path="/profile/notification" element={<Notification />} />
-        <Route path="/profile/participation" element={<ParticipationPage />} />
+        <Route path="/profile/myApplication" element={<ApplicationListPage />} />
       </Route>
       <Route path="/payment" element={<ProfilePage />} />
       <Route path="/paymentSuccess/*" element={<Success />} />
       <Route path="/paymentFail/*" element={<Fail />} />
       <Route path="/channel/:channelId" element={<ChannelPage />}>
         <Route path="/channel/:channelId/:tab" element={<ChannelBook />} />
+        <Route path="/channel/:channelId/schedule/:selectedDateParam" element={<ChannelBook />} />
+        <Route path="/channel/:channelId/schedule/:selectedDateParam/schedule_edit" element={<ScheduleEdit />} />
         <Route path="/channel/:channelId/information/information_edit" element={<ChannelBook />} />
-        <Route path="/channel/:channelId/schedule/schedule_edit" element={<ScheduleEdit />} />
       </Route>
       <Route path="/createStudy" element={<CreateStudyPage />} />
     </Routes>

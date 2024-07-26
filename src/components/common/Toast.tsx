@@ -10,21 +10,24 @@ const Toast = ({ setNewIcon }: { setNewIcon: React.Dispatch<React.SetStateAction
 
   useEffect(() => {
     if (newNotification) {
-      setNotificationList([newNotification, ...notificationList]);
-    }
-
-    (async () => {
-      await makeToast();
-      if (newNotification) {
-        setNewMessage(() => newNotification.content);
+      // 중복 렌더링을 피하기 위해 한 번 거름
+      const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
+      if (!isDuplicate) {
+        setNotificationList([newNotification, ...notificationList]);
       }
-      setTimeout(() => {
-        // 5초 후에 초기화
-        setNewToast(() => false);
-        setNewNotification(null);
-      }, 5000);
-    })();
-  }, [newNotification]);
+      (async () => {
+        await makeToast();
+        if (newNotification) {
+          setNewMessage(() => newNotification.content);
+        }
+        setTimeout(() => {
+          // 5초 후에 초기화
+          setNewToast(() => false);
+          setNewNotification(null);
+        }, 5000);
+      })();
+    }
+  }, [newNotification, notificationList, setNewNotification, setNotificationList]);
 
   const makeToast = async () => {
     setNewToast(() => true);

@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/auth-store";
 
-const SocialLoginCallback: React.FC = () => {
+const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setField } = useAuthStore();
 
   useEffect(() => {
@@ -12,11 +13,17 @@ const SocialLoginCallback: React.FC = () => {
 
     try {
       if (accessToken) {
+        console.log(accessToken); // 디버깅 로그 추가
+
         setField("accessToken", accessToken);
         if (import.meta.env.DEV) {
           localStorage.setItem("accessToken", accessToken);
         }
-        navigate("/profile/myInfo", { state: { social: true } });
+        if (first) {
+          navigate("/profile/myInfo", { state: { social: true } });
+        } else {
+          navigate("/");
+        }
       } else {
         alert("로그인에 실패하였습니다");
         navigate("/login");
@@ -25,7 +32,7 @@ const SocialLoginCallback: React.FC = () => {
       console.log(error);
       navigate("/login");
     }
-  }, [navigate, setField, location]);
+  }, [navigate, setField, location, first]);
 
   // axios로 소셜 로그인 요청하고 토큰 받는 방법일 때
   // useEffect(() => {

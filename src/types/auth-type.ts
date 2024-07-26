@@ -49,7 +49,6 @@ interface PasswordResetStore {
   setVerificationCode: (code: string) => void;
   setShowVerificationForm: (show: boolean) => void;
   setShowNewPasswordForm: (show: boolean) => void;
-  setError: (error: string) => void;
 }
 
 export type { LoginResponse, SignUpData, AuthStoreType, PasswordResetStore };

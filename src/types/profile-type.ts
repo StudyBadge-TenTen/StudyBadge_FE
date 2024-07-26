@@ -1,6 +1,7 @@
 type BadgeType = "NONE" | "BRONZE" | "SILVER" | "GOLD";
 type PointType = "EARNED" | "SPENT" | "DEDUCTED";
 type TransferType = "STUDY_REWARD" | "PAYMENT_CHARGE" | "STUDY_DEPOSIT" | "PAYMENT_CANCEL";
+type ParticipationStatusType = "APPROVE_WAITING" | "APPROVED" | "REJECTED" | "CANCELED";
 // STUDY_REWARD, // 정산(환급)    PaymentHistory.EARNED (+)
 // PAYMENT_CHARGE, // 충전    PaymentHistory.EARNED (+)
 // STUDY_DEPOSIT,// 예치금  PaymentHistory.SPENT (-)
@@ -57,20 +58,21 @@ interface PointHistoryType {
   createdAt: Date;
 }
 
-interface ParticipationType {
+interface ApplicationType {
   studyChannelId: number;
   studyChannelName: string;
-  participationStatus: "APPROVE_WAITING" | string;
+  participationStatus: ParticipationStatusType;
 }
 
 export type {
   BadgeType,
   ProfileInfoType,
   ProfilePutType,
+  ParticipationStatusType,
   UserInfoType,
   MyStudyMockType,
   MyStudyType,
   PaymentHistoryType,
   PointHistoryType,
-  ParticipationType,
+  ApplicationType,
 };

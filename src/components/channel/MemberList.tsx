@@ -4,7 +4,7 @@ import SILVER_BADGE from "../../assets/SILVER-BADGE_PNG.png";
 import GOLD_BADGE from "../../assets/GOLD-BADGE_PNG.png";
 import { useQuery } from "@tanstack/react-query";
 import { MemberListResponseType, SetNewSubLeaderType } from "../../types/study-channel-type";
-import { getMemberList, postSubLeader } from "../../services/channel-api";
+import { getMemberList, postBanish, postSubLeader } from "../../services/channel-api";
 import { useParams } from "react-router";
 import { useState } from "react";
 import Modal from "../common/Modal";
@@ -63,8 +63,7 @@ const MemberList = ({
       }
     }
     if (modalState.type === "BANISH") {
-      // if (target.classList.contains("yes-btn"))
-      // 퇴출 api 호출
+      if (target.classList.contains("yes-btn")) postBanish(Number(channelId), memberId);
     }
     setModalState((origin) => ({ ...origin, isOpen: false }));
     window.location.reload();
