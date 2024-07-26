@@ -10,7 +10,7 @@ export const useSSE = () => {
   const API_BASE_URL = import.meta.env.DEV
     ? import.meta.env.VITE_APP_LOCAL_BASE_URL
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
-  const { setNewNotification } = useNotificationStore();
+  const { notificationList, setNewNotification } = useNotificationStore();
 
   console.log("useSSE hook"); // useSSE 작동 테스트
 
@@ -62,8 +62,13 @@ export const useSSE = () => {
         } else {
           const newNotification: NotificationType = parsedData;
           console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
-          setNewNotification(newNotification); // 토스트에 넣을 새로운 알림
-          localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
+
+          // 중복 알림 필터링
+          const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
+          if (!isDuplicate) {
+            setNewNotification(newNotification); // 토스트에 넣을 새로운 알림
+            localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
+          }
         }
       } catch (error) {
         console.error("Failed to parse event data: ", error);
