@@ -115,6 +115,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       if (import.meta.env.DEV) {
         localStorage.removeItem("accessToken");
       }
+      setApiToken("");
     } catch (error) {
       alert(
         "로그아웃에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",

@@ -12,7 +12,7 @@ const setApiToken = (token: string) => {
   API_TOKEN = token;
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${API_TOKEN}`;
   if (import.meta.env.DEV) {
-    const expirationTime = new Date().getTime() + 7200000;
+    const expirationTime = new Date().getTime() + 7200000; // 2시간
     localStorage.setItem("accessToken", token);
     localStorage.setItem("accessTokenExpiration", expirationTime.toString());
   }
