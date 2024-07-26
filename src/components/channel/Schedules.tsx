@@ -78,10 +78,12 @@ const Schedules = ({
       const month = selectedMonth.split("-")[1];
       // 결과를 받아 상태로 저장
       scheduleCalculator({ channelId: Number(channelId), year, month }).then((response) => {
-        response.scheduleMarks.map((schedule) => {
-          setMarks((marks) => [...marks, ...schedule.marks]);
-        });
-        setScheduleState(() => response);
+        if (response) {
+          response.scheduleMarks.map((schedule) => {
+            setMarks((marks) => [...marks, ...schedule.marks]);
+          });
+          setScheduleState(() => response);
+        }
       });
     }
   }, [channelId, selectedMonth]);

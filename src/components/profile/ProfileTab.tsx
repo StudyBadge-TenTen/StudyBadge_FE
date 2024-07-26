@@ -5,7 +5,6 @@ import Modal from "../common/Modal";
 import { deleteAccount } from "@/services/profile-api";
 import usePageScrollTop from "../common/PageScrollTop";
 import { postLogout } from "@/services/auth-api";
-import { useAuthStore } from "@/store/auth-store";
 
 const PROFILE_TAB_LIST = [
   { kr: "내 정보", en: "myInfo" },
@@ -23,7 +22,6 @@ const ProfileTab = (): JSX.Element => {
   const [profileState, setProfileState] = useState("myInfo");
   const [modalOpen, setModalOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
-  const { accessToken } = useAuthStore();
 
   useEffect(() => {
     if (location) {
