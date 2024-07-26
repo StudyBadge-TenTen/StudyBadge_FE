@@ -2,7 +2,7 @@
   "redirects": [
     {
       "source": "/api/(.*)",
-      "destination": "http://study-badge.shop/api/$1",
+      "destination": "https://study-badge.shop/api/$1",
       "permanent": true
     }
   ]
