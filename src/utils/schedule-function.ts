@@ -44,16 +44,18 @@ const scheduleCalculator = async ({ channelId, year, month }: ScheduleParamsType
   try {
     const scheduleList: ScheduleType[] = await getSchedules({ channelId, year, month });
 
-    const scheduleMarks = scheduleList.map((schedule: ScheduleType) => {
-      let marks: string[] = [];
+    if (Array.isArray(scheduleList)) {
+      const scheduleMarks = scheduleList.map((schedule: ScheduleType) => {
+        let marks: string[] = [];
 
-      if (schedule.repeated) {
-        marks = repeatFunction(schedule.scheduleDate, schedule.repeatCycle, schedule.repeatEndDate);
-      } else marks = [schedule.scheduleDate];
+        if (schedule.repeated) {
+          marks = repeatFunction(schedule.scheduleDate, schedule.repeatCycle, schedule.repeatEndDate);
+        } else marks = [schedule.scheduleDate];
 
-      return { scheduleId: schedule.id, marks: marks };
-    });
-    return { scheduleList, scheduleMarks };
+        return { scheduleId: schedule.id, marks: marks };
+      });
+      return { scheduleList, scheduleMarks };
+    }
   } catch (error) {
     console.error("Error fetching or processing schedules:", error);
     return { scheduleList: [], scheduleMarks: [] };

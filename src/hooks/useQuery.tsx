@@ -1,7 +1,12 @@
 // 추후 useQuery들 재사용 가능하도록 훅으로 분리 예정
 import { useQuery } from "@tanstack/react-query";
-import { MemberListResponseType, RecruitmentInfoType, StudyInfoType } from "../types/study-channel-type";
-import { getMemberList, getRecruitment, getStudyInfo } from "../services/channel-api";
+import {
+  AttendanceResponseType,
+  MemberListResponseType,
+  RecruitmentInfoType,
+  StudyInfoType,
+} from "../types/study-channel-type";
+import { getAttendance, getMemberList, getRecruitment, getStudyInfo } from "../services/channel-api";
 import { getApplicationList } from "@/services/profile-api";
 
 export const useGetStudyInfo = (channelId: number) => {
@@ -32,6 +37,14 @@ export const useApplicationList = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["participation"],
     queryFn: () => getApplicationList(),
+  });
+  return { data, error, isLoading };
+};
+
+export const useAttendanceList = (channelId: number) => {
+  const { data, error, isLoading } = useQuery<AttendanceResponseType[], Error>({
+    queryKey: ["attendance", channelId],
+    queryFn: () => getAttendance(Number(channelId)),
   });
   return { data, error, isLoading };
 };
