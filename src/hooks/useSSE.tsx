@@ -6,7 +6,7 @@ import { NotificationType } from "../types/notification-type";
 import { LAST_EVENT_ID } from "../constants/local-storage";
 
 export const useSSE = () => {
-  const { accessToken, setField } = useAuthStore();
+  const { accessToken, setField, isLoginFailed } = useAuthStore();
   const API_BASE_URL = import.meta.env.DEV
     ? import.meta.env.VITE_APP_LOCAL_BASE_URL
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
@@ -24,6 +24,12 @@ export const useSSE = () => {
   }, [setField]);
 
   useEffect(() => {
+    // 로그인 실패 시, 재연결하지 않음
+    if (isLoginFailed) {
+      console.log("로그인 실패 상태입니다. SSE 연결을 시도하지 않습니다.");
+      return;
+    }
+
     // accessToken이 없을 경우 sse연결을 하지 않는 코드입니다
     if (!accessToken) {
       console.log("저장된 accessToken이 없습니다");

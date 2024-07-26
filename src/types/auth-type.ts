@@ -25,6 +25,8 @@ interface AuthStoreType {
   checkPassword: string;
   accessToken: string | null;
   refreshToken: string | null;
+  isLoginFailed: boolean;
+  setLoginFailed: (status: boolean) => void;
   setField: (field: keyof Omit<AuthStoreType, "setField" | "resetForm" | "login" | "signUp">, value: string) => void;
   login: (email: string, password: string) => Promise<void>;
   signUp: () => Promise<void>;

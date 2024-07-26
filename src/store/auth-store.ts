@@ -15,6 +15,8 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   checkPassword: "",
   accessToken: null,
   refreshToken: null,
+  isLoginFailed: false,
+  setLoginFailed: (status) => set((state) => ({ ...state, isLoginFailed: status })),
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
   login: async (email, password) => {
     try {

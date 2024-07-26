@@ -5,6 +5,7 @@ import Footer from "./components/layout/Footer";
 import { useSSE } from "./hooks/useSSE";
 import { useAuthStore } from "./store/auth-store";
 import { useEffect } from "react";
+import useLoginFailed from "./hooks/useLoginFailed";
 
 function App() {
   const { refreshToken, refreshAccessToken, setField } = useAuthStore();
@@ -31,6 +32,7 @@ function App() {
     }
   }, [refreshAccessToken]);
 
+  useLoginFailed();
   useSSE();
 
   return (
