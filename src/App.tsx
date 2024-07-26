@@ -31,7 +31,7 @@ function App() {
     }
   }, [refreshAccessToken]);
 
-  // useSSE();
+  useSSE();
 
   return (
     <BrowserRouter>
