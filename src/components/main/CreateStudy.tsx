@@ -5,13 +5,11 @@ import { koreanRegions } from "../common/KoreanRegions";
 import moment from "moment";
 import { postStudyChannel } from "../../services/channel-api";
 import { PENALTY_SYSTEM } from "../../constants/penalty-system-info";
-import { useSelectedDateStore } from "@/store/schedule-store";
 
 const CreateStudy: React.FC = () => {
   const study = useStudyStore();
   const [selectedRegion, setSelectedRegion] = useState({ region: "", district: "" });
   const navigate = useNavigate();
-  const { selectedDate } = useSelectedDateStore();
 
   useEffect(() => {
     return study.resetForm();
@@ -168,7 +166,7 @@ const CreateStudy: React.FC = () => {
               value={selectedRegion.district}
               onChange={(e) => {
                 setSelectedRegion((origin) => ({ ...origin, district: e.target.value }));
-                study.setField("region", `${selectedRegion.region} ${selectedRegion.district}`);
+                study.setField("region", `${selectedRegion.region} ${e.target.value}`);
               }}
               className="w-full p-1 border border-solid border-Gray-2 rounded-[10px] mt-2"
               required
