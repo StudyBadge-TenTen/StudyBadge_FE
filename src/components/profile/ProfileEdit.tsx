@@ -1,12 +1,12 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { putProfile } from "../../services/profile-api";
-import { ProfileInfoType, ProfilePutType } from "../../types/profile-type";
+import { ProfileInfoType, ProfilePutType, UserInfoType } from "../../types/profile-type";
 import { BANK_LIST } from "../../constants/bank-list";
 import axios from "axios";
 import { useAuthStore } from "../../store/auth-store";
 import { useNavigate } from "react-router";
 
-const ProfileEdit = (): JSX.Element => {
+const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
 
   const navigate = useNavigate();
@@ -23,6 +23,19 @@ const ProfileEdit = (): JSX.Element => {
   const accountRef = useRef<HTMLInputElement>(null);
   const accountBankRef = useRef<HTMLSelectElement>(null);
   const { accessToken } = useAuthStore();
+
+  useEffect(() => {
+    if (userInfo) {
+      setProfileInfo((origin) => ({
+        ...origin,
+        nickname: userInfo.nickname,
+        introduction: userInfo.introduction,
+        account: userInfo.account,
+        accountBank: userInfo.accountBank ?? "",
+        imgUrl: userInfo.imgUrl,
+      }));
+    }
+  }, [userInfo]);
 
   // input 값의 change를 감지해 상태로 저장
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

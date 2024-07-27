@@ -7,7 +7,16 @@ import {
   StudyInfoType,
 } from "../types/study-channel-type";
 import { getAttendance, getMemberList, getRecruitment, getStudyInfo } from "../services/channel-api";
-import { getApplicationList } from "@/services/profile-api";
+import { getApplicationList, getProfile } from "@/services/profile-api";
+import { UserInfoType } from "@/types/profile-type";
+
+export const useUserInfo = () => {
+  const { data, isLoading, error } = useQuery<UserInfoType, Error>({
+    queryKey: ["UserInfo"],
+    queryFn: () => getProfile(),
+  });
+  return { data, isLoading, error };
+};
 
 export const useGetStudyInfo = (channelId: number) => {
   const { data, error, isLoading } = useQuery<StudyInfoType, Error>({

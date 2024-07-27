@@ -15,6 +15,7 @@ import { useEditModeStore } from "../../store/edit-mode-store";
 import { Link } from "react-router-dom";
 import { useSelectedDateStore } from "@/store/schedule-store";
 import { motion } from "framer-motion";
+import { useUserInfo } from "@/hooks/useQuery";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
@@ -24,10 +25,7 @@ const Profile = (): JSX.Element => {
   const [myStudy, setMyStudy] = useState<MyStudyType[]>([]);
   const { isEditMode, setIsEditMode } = useEditModeStore();
   const { selectedDate } = useSelectedDateStore();
-  const { data, isLoading, error } = useQuery<UserInfoType, Error>({
-    queryKey: ["UserInfo"],
-    queryFn: () => getProfile(),
-  });
+  const { data, isLoading, error } = useUserInfo();
   // const { accessToken } = useAuthStore();
 
   useEffect(() => {
@@ -89,7 +87,7 @@ const Profile = (): JSX.Element => {
         </>
       )}
       {!isLoading && data && isEditMode ? (
-        <ProfileEdit />
+        <ProfileEdit userInfo={data} />
       ) : (
         data && (
           <>
