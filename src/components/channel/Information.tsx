@@ -205,7 +205,9 @@ const Information = (): JSX.Element => {
                         : detail !== null
                           ? index === 6 && newSubLeader.id
                             ? newSubLeader.name
-                            : detail
+                            : detail !== ""
+                              ? detail
+                              : "아직 링크를 등록하지 않았습니다."
                           : "해당 스터디 멤버에게만 공개"}
                       {isEditMode && data?.subLeaderName === detail && (
                         <>
