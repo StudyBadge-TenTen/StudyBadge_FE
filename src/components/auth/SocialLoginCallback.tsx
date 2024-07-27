@@ -17,7 +17,7 @@ const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
 
         setField("accessToken", accessToken);
         if (import.meta.env.DEV) {
-          localStorage.setItem("accessToken", accessToken);
+          sessionStorage.setItem("accessToken", accessToken);
         }
         if (first) {
           navigate("/profile/myInfo", { state: { social: true } });

@@ -16,7 +16,7 @@ export const useSSE = () => {
 
   useEffect(() => {
     if (import.meta.env.DEV) {
-      const storedAccessToken = localStorage.getItem("accessToken");
+      const storedAccessToken = sessionStorage.getItem("accessToken");
       if (storedAccessToken) {
         setField("accessToken", storedAccessToken);
       }
