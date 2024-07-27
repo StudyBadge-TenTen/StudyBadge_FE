@@ -10,11 +10,11 @@ import { useLocation, useNavigate } from "react-router";
 import { MyStudyType } from "../../types/profile-type";
 import { getMyStudy } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
-// import { useAuthStore } from "../../store/auth-store";
 import { Link } from "react-router-dom";
 import { useSelectedDateStore } from "@/store/schedule-store";
 import { motion } from "framer-motion";
 import { useUserInfo } from "@/hooks/useQuery";
+import { useAuthStore } from "@/store/auth-store";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
@@ -24,8 +24,8 @@ const Profile = (): JSX.Element => {
   const [myStudy, setMyStudy] = useState<MyStudyType[]>([]);
   const { isEditMode, setIsEditMode } = useEditModeStore();
   const { selectedDate } = useSelectedDateStore();
-  const { data, isLoading, error } = useUserInfo();
-  // const { accessToken } = useAuthStore();
+  const { accessToken } = useAuthStore();
+  const { data, isLoading, error } = useUserInfo(accessToken);
 
   useEffect(() => {
     // console.log(accessToken); // accessToken 확인용 디버깅 코드

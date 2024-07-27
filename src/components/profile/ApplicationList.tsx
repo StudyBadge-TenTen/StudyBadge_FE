@@ -1,10 +1,12 @@
 import { useApplicationList } from "@/hooks/useQuery";
+import { useAuthStore } from "@/store/auth-store";
 import { useSelectedDateStore } from "@/store/schedule-store";
 import { ParticipateEnToKr, stateToColorClassName } from "@/utils/transform-function";
 import { Link } from "react-router-dom";
 
 const ApplicationList = () => {
-  const { data, error, isLoading } = useApplicationList();
+  const { accessToken } = useAuthStore();
+  const { data, error, isLoading } = useApplicationList(accessToken);
   const { selectedDate } = useSelectedDateStore();
 
   if (isLoading) {

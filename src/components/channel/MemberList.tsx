@@ -6,8 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import { MemberListResponseType, SetNewSubLeaderType } from "../../types/study-channel-type";
 import { getMemberList, postBanish, postSubLeader } from "../../services/channel-api";
 import { useParams } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../common/Modal";
+import { AxiosError } from "axios";
+import { useAuthStore } from "@/store/auth-store";
 
 const banishContent = `해당 멤버를 스터디에서 퇴출시키겠습니까?\n(퇴출 시 총 예치금에서 퇴출 멤버가 지불한 예치금을 전액 제외합니다.)`;
 
@@ -18,17 +20,23 @@ const MemberList = ({
   setNewSubLeader?: SetNewSubLeaderType;
   setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }): JSX.Element => {
+  const { accessToken } = useAuthStore();
   const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
-  const { data, error, isLoading } = useQuery<MemberListResponseType, Error>({
+  const { data, error, isLoading } = useQuery<MemberListResponseType, AxiosError>({
     queryKey: ["memberList", channelId],
     queryFn: () => getMemberList(Number(channelId)),
+    enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
   });
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: "",
     content: "",
   });
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
@@ -73,6 +81,7 @@ const MemberList = ({
     <>
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 멤버</h2>
       <div className="w-full h-[500px] flex flex-wrap justify-center items-center px-10 sm:px-12 py-4 overflow-y-scroll custom-scroll">
+        {!accessToken && <div className="text-center">회원에게만 공개되는 컨텐츠입니다.</div>}
         {isLoading
           ? skeletonList.map((value) => (
               <div
@@ -149,11 +158,14 @@ const MemberList = ({
                 )}
               </div>
             ))}
-        {error && (
-          <div>
-            멤버를 불러오는 데 실패하였습니다. errorName: {error.name} , errorMessage: {error.message}
-          </div>
-        )}
+        {error &&
+          (error.response?.status === 401 ? (
+            <div>회원에게만 공개되는 컨텐츠입니다.</div>
+          ) : (
+            <div className="text-center">
+              멤버를 불러오는 데 실패하였습니다. errorName: {error.name} , errorMessage: {error.message}
+            </div>
+          ))}
       </div>
     </>
   );

@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import {
   AttendanceResponseType,
   MemberListResponseType,
@@ -20,7 +21,7 @@ const getStudyInfo = async (studyChannelId: number) => {
 
 const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
   try {
-    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
+    await fetchCall<AxiosResponse>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
     alert("변경한 스터디 정보가 성공적으로 반영되었습니다.");
   } catch (error) {
     console.log(error);
@@ -37,7 +38,7 @@ const getMemberList = async (studyChannelId: number) => {
 
 const postSubLeader = async (studyChannelId: number, requestBody: { studyMemberId: number }) => {
   try {
-    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}/members/assign-role`, "post", requestBody);
+    await fetchCall<AxiosResponse>(`/api/study-channels/${studyChannelId}/members/assign-role`, "post", requestBody);
   } catch (error) {
     console.log(error);
   }
@@ -76,7 +77,7 @@ const postApprove = async (studyChannelId: number, participationId: number) => {
 
 const postReject = async (studyChannelId: number, participationId: number) => {
   try {
-    await fetchCall<ResponseType>(
+    await fetchCall<AxiosResponse>(
       `/api/study-channels/${studyChannelId}/participation/${participationId}/reject`,
       "post",
     );
@@ -91,7 +92,7 @@ const postReject = async (studyChannelId: number, participationId: number) => {
 
 const postParticipate = async (studyChannelId: number) => {
   try {
-    await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}/participation`, "post");
+    await fetchCall<AxiosResponse>(`/api/study-channels/${studyChannelId}/participation`, "post");
     alert("해당 스터디에 성공적으로 신청이 접수되었습니다");
   } catch (error) {
     console.log(error);

@@ -151,7 +151,7 @@ export const handlers = [
     console.log(`Captured a "GET /api/payments/history?page=${page}&size=${size}" request`);
     return HttpResponse.json(paymentsList);
   }),
-  http.get("/api/my-point", async ({ request }) => {
+  http.get("/api/points/my-point", async ({ request }) => {
     const url = new URL(request.url);
     const page = url.searchParams.get("page");
     const size = url.searchParams.get("size");

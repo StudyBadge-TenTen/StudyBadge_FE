@@ -3,9 +3,11 @@ import { useMemberList } from "../../../hooks/useQuery";
 import { useEditModeStore } from "../../../store/edit-mode-store";
 import { postAttendList } from "../../../services/schedule-api";
 import { AttendScheduleInfoType, PostAttendObjectType } from "../../../types/schedule-type";
+import { useAuthStore } from "@/store/auth-store";
 
 const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleInfo: AttendScheduleInfoType }) => {
-  const { data, error, isLoading } = useMemberList(channelId);
+  const { accessToken } = useAuthStore();
+  const { data, error, isLoading } = useMemberList(channelId, accessToken);
   const [attendList, setAttendList] = useState<PostAttendObjectType[]>([]);
   const { setIsEditMode } = useEditModeStore();
 

@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAttendList } from "../../services/schedule-api";
 import CheckAttend from "../schedule/leader/CheckAttend";
 import { useEditModeStore } from "../../store/edit-mode-store";
+import { useAuthStore } from "@/store/auth-store";
 
 const Schedules = ({
   selectedDateParam,
@@ -18,6 +19,7 @@ const Schedules = ({
   selectedDateParam: string | undefined;
   isLeader: boolean | undefined;
 }): JSX.Element => {
+  const { accessToken } = useAuthStore();
   const { channelId } = useParams();
   const navigate = useNavigate();
 
@@ -77,16 +79,20 @@ const Schedules = ({
       const year = selectedMonth.split("-")[0];
       const month = selectedMonth.split("-")[1];
       // 결과를 받아 상태로 저장
-      scheduleCalculator({ channelId: Number(channelId), year, month }).then((response) => {
-        if (response) {
-          response.scheduleMarks.map((schedule) => {
-            setMarks((marks) => [...marks, ...schedule.marks]);
-          });
-          setScheduleState(() => response);
-        }
-      });
+      if (accessToken && channelId && year && month) {
+        scheduleCalculator(accessToken, { channelId: Number(channelId), year, month }).then((response) => {
+          if (response) {
+            console.log(response);
+
+            response.scheduleMarks.map((schedule) => {
+              setMarks((marks) => [...marks, ...schedule.marks]);
+            });
+            setScheduleState(() => response);
+          }
+        });
+      }
     }
-  }, [channelId, selectedMonth]);
+  }, [channelId, selectedMonth, setMarks, setScheduleState, accessToken]);
 
   // 선택하는 날짜가 바뀔 때마다 날짜에 해당되는 일정정보를 set하기 위해
   useEffect(() => {
@@ -100,7 +106,7 @@ const Schedules = ({
       setAttendList(() => ({ data: undefined, error: undefined, isLoading: false }));
     }
 
-    if (scheduleState) {
+    if (scheduleState && scheduleState.scheduleList.length !== 0) {
       setIsLoadingState(() => true);
       try {
         getScheduleInfo(selectedDate, scheduleState.scheduleList, scheduleState.scheduleMarks).then((response) => {
