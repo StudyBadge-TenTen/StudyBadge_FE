@@ -168,7 +168,7 @@ const CreateStudy: React.FC = () => {
           </select>
           {selectedRegion && (
             <select
-              value={study.region}
+              value={selectedRegion.district}
               onChange={(e) => {
                 setSelectedRegion((origin) => ({ ...origin, district: e.target.value }));
                 study.setField("region", `${selectedRegion.region} ${selectedRegion.district}`);
