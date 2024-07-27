@@ -3,12 +3,14 @@ import CROWN from "../../assets/CROWN_PNG.png";
 import { useEffect, useState } from "react";
 import { useAttendanceList } from "@/hooks/useQuery";
 import { AttendanceResponseType } from "@/types/study-channel-type";
+import { useAuthStore } from "@/store/auth-store";
 
 const KingOfAttendance = () => {
   // todo: params에서 channelId를 가져와 멤버별 출석현황 조회 -> 가장 높은 출석률 값 구하기 -> 해당 출석률인 멤버들 렌더링
+  const { accessToken } = useAuthStore();
   const { channelId } = useParams();
   const [bestMembers, setBestMembers] = useState<AttendanceResponseType[]>();
-  const { data, error, isLoading } = useAttendanceList(Number(channelId));
+  const { data, error, isLoading } = useAttendanceList(Number(channelId), accessToken);
 
   useEffect(() => {
     console.log(data);

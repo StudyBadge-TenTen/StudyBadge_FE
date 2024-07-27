@@ -22,8 +22,12 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
     try {
       const { accessToken, refreshToken } = await postLogin(email, password);
       set({ accessToken, refreshToken });
+
+      // dev 모드 시
       if (import.meta.env.DEV) {
-        localStorage.setItem("accessToken", accessToken);
+        const expirationTime = new Date().getTime() + 7200000; // 2시간
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
       }
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
@@ -113,7 +117,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
     try {
       await postLogout();
       if (import.meta.env.DEV) {
-        localStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessToken");
       }
       setApiToken("");
     } catch (error) {

@@ -12,13 +12,25 @@ import {
 } from "../types/schedule-type";
 import { fetchCall } from "./common";
 
-// todo: react-query로 호출 최소화하는 방법 적용하기
-const getSchedules = async ({ channelId, year, month }: ScheduleParamsType) => {
-  if (!channelId || !year || !month) return [];
+const getAllSchedules = async (accessToken: string | null, channelId: number) => {
+  if (!accessToken || !channelId) {
+    console.log("error: accessToken, channelId 중 없는 요소가 있습니다.");
+    return [];
+  }
+  const allSchedules = await fetchCall<ScheduleType[]>(`/api/study-channels/${channelId}/schedules`, "get");
+  return allSchedules;
+};
+
+const getSchedules = async (accessToken: string | null, { channelId, year, month }: ScheduleParamsType) => {
+  if (!accessToken) {
+    console.log("error: accessToken이 없습니다.");
+    return [];
+  }
   const schedules = await fetchCall<ScheduleType[]>(
     `/api/study-channels/${channelId}/schedules?year=${year}&month=${month}`,
     "get",
   );
+
   return schedules;
 };
 
@@ -126,4 +138,13 @@ const postAttendList = async (studyChannelId: number, requestBody: postAttendReq
   }
 };
 
-export { getSchedules, getPlace, postSchedule, putSchedule, deleteSchedule, getAttendList, postAttendList };
+export {
+  getAllSchedules,
+  getSchedules,
+  getPlace,
+  postSchedule,
+  putSchedule,
+  deleteSchedule,
+  getAttendList,
+  postAttendList,
+};

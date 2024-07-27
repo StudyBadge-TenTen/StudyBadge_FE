@@ -32,7 +32,7 @@ const getPaymentsHistory = async (page: number, size: number) => {
 };
 
 const getPointHistory = async (page: number, size: number) => {
-  const pointHistory = await fetchCall<PointHistoryType[]>(`/api/my-point?page=${page}&size=${size}`, "get");
+  const pointHistory = await fetchCall<PointHistoryType[]>(`/api/points/my-point?page=${page}&size=${size}`, "get");
   return pointHistory;
 };
 
@@ -51,7 +51,7 @@ const postPaymentCancel = async (paymentKey: string) => {
 
 const getApplicationList = async () => {
   const participationList = await fetchCall<ApplicationType[]>(`/api/members/my-apply`, "get");
-  return participationList;
+  return participationList ?? [];
 };
 
 const deleteAccount = async () => {

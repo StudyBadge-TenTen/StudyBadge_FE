@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     if (import.meta.env.DEV) {
-      const storageToken = localStorage.getItem("accessToken");
+      const storageToken = sessionStorage.getItem("accessToken");
       storageToken && setField("accessToken", storageToken);
     }
   }, [setField]);

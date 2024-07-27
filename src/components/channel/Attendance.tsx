@@ -3,19 +3,30 @@ import { useParams } from "react-router";
 import { AttendanceResponseType } from "../../types/study-channel-type";
 import { getAttendance } from "../../services/channel-api";
 import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/auth-store";
+import { AxiosError } from "axios";
+// import { useAllSchedules } from "@/hooks/useQuery";
 
 const Attendance = (): JSX.Element => {
+  const { accessToken } = useAuthStore();
   const skeleton = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
-  const { data, error, isLoading } = useQuery<AttendanceResponseType[], Error>({
+  // const allSchedules = useAllSchedules(Number(channelId), accessToken);
+  const { data, error, isLoading } = useQuery<AttendanceResponseType[], AxiosError>({
     queryKey: ["attendance", channelId],
     queryFn: () => getAttendance(Number(channelId)),
+    enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
   });
 
   return (
     <>
+      {/* 일정을 등록하지 않은 상황에서 - 출석률을 모두 0으로? */}
+      {/* {allSchedules.data && allSchedules.data.length === 0 && (
+
+      )} */}
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 출석 현황</h2>
-      <div className="w-full h-[500px] overflow-y-scroll custom-scroll">
+      <div className="w-full h-[500px] overflow-y-scroll custom-scroll flex flex-col justify-center items-center">
+        {!accessToken && <div className="text-center">회원에게만 공개되는 컨텐츠입니다.</div>}
         {isLoading &&
           skeleton.map((value) => (
             <div
@@ -56,7 +67,7 @@ const Attendance = (): JSX.Element => {
               </div>
             </div>
           ))}
-        {error && <div>출석 그래프를 로딩하는데 실패하였습니다.</div>}
+        {error && <div className="text-center">출석 그래프를 로딩하는데 실패하였습니다.</div>}
       </div>
     </>
   );

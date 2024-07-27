@@ -3,6 +3,8 @@ declare namespace kakao.maps {
 
   class LatLng {
     constructor(lat: number, lng: number);
+    getLat(): number;
+    getLng(): number;
   }
 
   class Map {
@@ -18,7 +20,7 @@ declare namespace kakao.maps {
 
   class Marker {
     constructor(options: MarkerOptions);
-    getPosition(): LatLng; // getPosition 메서드 추가
+    getPosition(): LatLng;
   }
 
   interface MarkerOptions {
@@ -30,7 +32,7 @@ declare namespace kakao.maps {
   class CustomOverlay {
     constructor(options: CustomOverlayOptions);
     setMap(map: Map | null): void;
-    getContent(): HTMLElement; // getContent 메서드 반환 타입을 HTMLElement로 수정
+    getContent(): HTMLElement;
   }
 
   interface CustomOverlayOptions {
@@ -70,6 +72,16 @@ declare namespace kakao.maps {
       OK = "OK",
       ZERO_RESULT = "ZERO_RESULT",
       ERROR = "ERROR",
+    }
+
+    class Geocoder {
+      addressSearch(address: string, callback: (result: GeocoderResult[], status: Status) => void): void;
+    }
+
+    interface GeocoderResult {
+      address_name: string;
+      y: string;
+      x: string;
     }
   }
 }

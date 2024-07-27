@@ -5,13 +5,11 @@ import { koreanRegions } from "../common/KoreanRegions";
 import moment from "moment";
 import { postStudyChannel } from "../../services/channel-api";
 import { PENALTY_SYSTEM } from "../../constants/penalty-system-info";
-import { useSelectedDateStore } from "@/store/schedule-store";
 
 const CreateStudy: React.FC = () => {
   const study = useStudyStore();
-  const [selectedRegion, setSelectedRegion] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState({ region: "", district: "" });
   const navigate = useNavigate();
-  const { selectedDate } = useSelectedDateStore();
 
   useEffect(() => {
     return study.resetForm();
@@ -52,7 +50,7 @@ const CreateStudy: React.FC = () => {
       alert("스터디 종료 날짜는 반드시 시작 날짜보다 이후로 설정해야 합니다.");
       return;
     }
-    if (study.minRecruitmentNumber < 3) {
+    if (study.recruitmentNumber < study.minRecruitmentNumber) {
       alert("스터디의 최소인원은 3명입니다.");
       return;
     }
@@ -62,13 +60,10 @@ const CreateStudy: React.FC = () => {
     }
 
     try {
-      const response = await postStudyChannel(study);
-      // console.log("Study created:", response.studyChannelId); // 디버깅로그
+      await postStudyChannel(study);
       alert("스터디 채널 생성이 완료되었습니다.");
       study.resetForm();
-      if (response) {
-        navigate(`/channel/${response.studyChannelId}/schedule/${selectedDate}`);
-      }
+      navigate(`/`);
     } catch (error) {
       console.error("Failed to create study:", error);
       alert(
@@ -154,8 +149,8 @@ const CreateStudy: React.FC = () => {
         <div className="mb-4">
           <label className="block mb-2 text-Blue-2">지역 *</label>
           <select
-            value={selectedRegion}
-            onChange={(e) => setSelectedRegion(e.target.value)}
+            value={selectedRegion.region}
+            onChange={(e) => setSelectedRegion(() => ({ region: e.target.value, district: "" }))}
             className="w-full p-1 border border-solid border-Gray-2 rounded-[10px]"
             required
           >
@@ -168,14 +163,17 @@ const CreateStudy: React.FC = () => {
           </select>
           {selectedRegion && (
             <select
-              value={study.region}
-              onChange={(e) => study.setField("region", e.target.value)}
+              value={selectedRegion.district}
+              onChange={(e) => {
+                setSelectedRegion((origin) => ({ ...origin, district: e.target.value }));
+                study.setField("region", `${selectedRegion.region} ${e.target.value}`);
+              }}
               className="w-full p-1 border border-solid border-Gray-2 rounded-[10px] mt-2"
               required
             >
               <option value="">구/군 선택</option>
               {koreanRegions
-                .find((region) => region.name === selectedRegion)
+                .find((region) => region.name === selectedRegion.region)
                 ?.districts.map((district) => (
                   <option key={district} value={district}>
                     {district}
@@ -215,8 +213,8 @@ const CreateStudy: React.FC = () => {
           <span className="mr-2 text-Blue-2">모집인원</span>
           <input
             type="number"
-            value={study.minRecruitmentNumber}
-            onChange={(e) => study.setField("minRecruitmentNumber", Math.max(3, parseInt(e.target.value)))}
+            value={study.recruitmentNumber ?? study.minRecruitmentNumber}
+            onChange={(e) => study.setField("recruitmentNumber", Math.max(3, parseInt(e.target.value)))}
             className="input w-24"
             min="3"
             required

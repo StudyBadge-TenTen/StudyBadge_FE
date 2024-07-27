@@ -1,18 +1,24 @@
+import { LocateType } from "@/services/location-api";
+
 interface CustomOverlayProps {
+  studyChannelId: number;
   overlay: kakao.maps.CustomOverlay;
   placeName: string;
   placeAddress: string;
   placeWebsite: string;
   onClose: () => void;
-  handlePlaceSelect: () => Promise<void>;
+  selectedCafe: LocateType | null;
+  handlePlaceSelect: (studyChannelId: number, selectedCafe: LocateType | null) => Promise<void>;
 }
 
 const CustomOverlay = ({
+  studyChannelId,
   overlay,
   placeName,
   placeAddress,
   placeWebsite,
   onClose,
+  selectedCafe,
   handlePlaceSelect,
 }: CustomOverlayProps): JSX.Element => {
   const closeOverlay = () => {
@@ -43,7 +49,7 @@ const CustomOverlay = ({
             </div>
             <button
               onClick={() => {
-                handlePlaceSelect();
+                handlePlaceSelect(studyChannelId, selectedCafe);
                 closeOverlay();
               }}
               className="btn-blue mt-4"

@@ -11,12 +11,14 @@ let API_TOKEN = "";
 const setApiToken = (token: string) => {
   API_TOKEN = token;
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${API_TOKEN}`;
+  console.log("Token set in setApiToken:", API_TOKEN); // 디버깅을 위해 추가
+
+  // dev 모드 시
   if (import.meta.env.DEV) {
     const expirationTime = new Date().getTime() + 7200000; // 2시간
-    localStorage.setItem("accessToken", token);
-    localStorage.setItem("accessTokenExpiration", expirationTime.toString());
+    sessionStorage.setItem("accessToken", token);
+    sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
   }
-  // console.log("Token set:", API_TOKEN); // 디버깅을 위해 추가
 };
 
 const axiosInstance = axios.create({
@@ -30,15 +32,18 @@ const axiosInstance = axios.create({
 // 요청 인터셉터 추가
 axiosInstance.interceptors.request.use(
   async (config) => {
-    // 요청 헤더에 인증 토큰 추가
-    if (import.meta.env.DEV) {
-      // dev 모드 시 스토리지에 토큰 저장
-      const tokenExpiration = localStorage.getItem("accessTokenExpiration");
+    // 요청 헤더에 인증 토큰 추가해야함
 
+    if (import.meta.env.DEV) {
+      console.log("this is dev mode");
+
+      // dev 모드 시 스토리지에 토큰 저장
+      const tokenExpiration = sessionStorage.getItem("accessTokenExpiration");
+
+      // 만료 => 재발급 처리
       if (tokenExpiration) {
         const isTokenExpired = new Date().getTime() > parseInt(tokenExpiration);
         if (isTokenExpired) {
-          console.log("Token expired, refreshing...");
           const refreshToken = getCookie("refreshToken");
           if (refreshToken) {
             try {
@@ -48,23 +53,39 @@ axiosInstance.interceptors.request.use(
                 },
               });
               const newAccessToken = response.headers["authorization"].split(" ")[1];
+
+              // 새로운 토큰 저장 및 요청 헤더에 추가
               setApiToken(newAccessToken);
-              config.headers.Authorization = `Bearer ${newAccessToken}`;
-            } catch (error) {
-              console.error("Token refresh error:", error);
-              await postLogout();
-              return Promise.reject(error);
+              config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+
+              // 반환
+              return config;
+            } catch (refreshError) {
+              console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
+              // 필요에 따라 로그아웃 처리 등 추가 작업 수행
+              try {
+                await postLogout();
+                console.log("Token refresh error - try logout:", refreshError);
+              } catch (error) {
+                console.error("Logout error:", refreshError);
+                return Promise.reject(error);
+              }
             }
           }
+        } else {
+          console.log("토큰 만료 전");
+
+          const storageToken = sessionStorage.getItem("accessToken");
+          config.headers["Authorization"] = `Bearer ${storageToken}`;
+          console.log(storageToken);
+
+          return config;
         }
-      } else {
-        const storageToken = localStorage.getItem("accessToken");
-        config.headers.Authorization = `Bearer ${storageToken}`;
       }
     } else {
-      config.headers.Authorization = `Bearer ${API_TOKEN}`;
+      config.headers["Authorization"] = `Bearer ${API_TOKEN}`;
+      return config;
     }
-    console.log("Request headers:", config.headers); // 디버깅을 위해 추가
     return config;
   },
   (error) => {
@@ -135,6 +156,7 @@ async function fetchCall<T>(
     ...(data && { data }), // data가 있을 경우에만 data 속성 추가
     ...(params && { params }), // params가 있을 경우에만 params 속성 추가
   };
+  console.log("Fetch call config:", config); // 디버깅을 위해 추가
   return axiosInstance(config);
 }
 

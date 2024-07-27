@@ -8,11 +8,13 @@ import { BAN_COUNT } from "../../constants/ban-count";
 import { useState } from "react";
 import Modal from "../common/Modal";
 import { useRecruitment } from "@/hooks/useQuery";
+import { useAuthStore } from "@/store/auth-store";
 
 const Recruitment = (): JSX.Element => {
+  const { accessToken } = useAuthStore();
   const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
-  const { data, error, isLoading } = useRecruitment(Number(channelId));
+  const { data, error, isLoading } = useRecruitment(Number(channelId), accessToken);
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: "",
@@ -124,7 +126,7 @@ const Recruitment = (): JSX.Element => {
                   </div>
                 ))
               ) : (
-                <p>아직 신청한 사람이 없습니다.</p>
+                <div className="text-center">아직 신청한 사람이 없습니다.</div>
               ))}
             {error && (
               <p>

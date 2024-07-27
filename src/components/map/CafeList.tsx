@@ -4,13 +4,22 @@ import CustomOverlay from "./CustomOverlay";
 import ReactDOM from "react-dom/client";
 
 interface CafeListProps {
+  studyChannelId: number;
   map: kakao.maps.Map | null;
+  selectedCafe: LocateType | null;
   onSelectCafe: (cafe: LocateType) => void;
-  handlePlaceSelect: () => Promise<void>;
+  handlePlaceSelect: (studyChannelId: number, selectedCafe: LocateType | null) => Promise<void>;
   originMarker?: kakao.maps.Marker;
 }
 
-const CafeList: React.FC<CafeListProps> = ({ map, onSelectCafe, handlePlaceSelect, originMarker }) => {
+const CafeList: React.FC<CafeListProps> = ({
+  studyChannelId,
+  map,
+  selectedCafe,
+  onSelectCafe,
+  handlePlaceSelect,
+  originMarker,
+}) => {
   useEffect(() => {
     if (!map) return;
 
@@ -35,7 +44,7 @@ const CafeList: React.FC<CafeListProps> = ({ map, onSelectCafe, handlePlaceSelec
               });
 
               kakao.maps.event.addListener(marker, "click", () => {
-                const postCafeInfo = {
+                const postCafeInfo: LocateType = {
                   lat: place.y,
                   lng: place.x,
                   placeName: place.place_name,
@@ -56,6 +65,8 @@ const CafeList: React.FC<CafeListProps> = ({ map, onSelectCafe, handlePlaceSelec
                     placeWebsite={place.place_url || ""}
                     onClose={() => overlay.setMap(null)}
                     handlePlaceSelect={handlePlaceSelect}
+                    studyChannelId={studyChannelId}
+                    selectedCafe={selectedCafe}
                   />
                 );
 

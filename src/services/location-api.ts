@@ -12,12 +12,15 @@ export interface LocateType extends LocatePointType {
 }
 
 export const fetchLocate = async (studyChannelId: number, placeId: number) => {
+  if (!studyChannelId || !placeId) return;
   const locateInfo = await fetchCall<LocateType>(`/api/study-channels/${studyChannelId}/places/${placeId}`, "get");
   return locateInfo;
 };
 
 export const postLocate = async (studyChannelId: number, placeRequestBody: LocateType) => {
-  const placeId = await fetchCall<{ placeId: number }>(
+  console.log(studyChannelId, placeRequestBody);
+
+  const placeId = await fetchCall<{ id: number }>(
     `/api/study-channels/${studyChannelId}/places`,
     "post",
     placeRequestBody,

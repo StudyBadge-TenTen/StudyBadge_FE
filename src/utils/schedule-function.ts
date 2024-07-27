@@ -40,21 +40,29 @@ const repeatFunction = (
 };
 
 // 화면에 보이는 년도/월에 해당하는 일정 객체들과 달력에 마크할 날짜리스트를 반환하는 함수
-const scheduleCalculator = async ({ channelId, year, month }: ScheduleParamsType) => {
+const scheduleCalculator = async (accessToken: string | null, { channelId, year, month }: ScheduleParamsType) => {
   try {
-    const scheduleList: ScheduleType[] = await getSchedules({ channelId, year, month });
+    const scheduleList: ScheduleType[] = await getSchedules(accessToken, { channelId, year, month });
+    console.log(scheduleList);
 
     if (Array.isArray(scheduleList)) {
-      const scheduleMarks = scheduleList.map((schedule: ScheduleType) => {
-        let marks: string[] = [];
+      if (scheduleList.length === 0) {
+        return { scheduleList: [], scheduleMarks: [] };
+      } else {
+        const scheduleMarks = scheduleList.map((schedule: ScheduleType) => {
+          let marks: string[] = [];
 
-        if (schedule.repeated) {
-          marks = repeatFunction(schedule.scheduleDate, schedule.repeatCycle, schedule.repeatEndDate);
-        } else marks = [schedule.scheduleDate];
+          if (schedule.repeated) {
+            marks = repeatFunction(schedule.scheduleDate, schedule.repeatCycle, schedule.repeatEndDate);
+          } else marks = [schedule.scheduleDate];
 
-        return { scheduleId: schedule.id, marks: marks };
-      });
-      return { scheduleList, scheduleMarks };
+          return { scheduleId: schedule.id, marks: marks };
+        });
+        return { scheduleList, scheduleMarks };
+      }
+    } else {
+      console.log("scheduleList가 Array가 아닙니다.");
+      return { scheduleList: [], scheduleMarks: [] };
     }
   } catch (error) {
     console.error("Error fetching or processing schedules:", error);
@@ -70,32 +78,36 @@ const getScheduleInfo = async (
 ) => {
   let scheduleId: ScheduleType["id"], scheduleInfo;
 
-  const result = scheduleMarks.find((schedule) => {
-    if (schedule.marks.find((value) => value === selectedDate)) {
-      scheduleId = schedule.scheduleId;
-      return true;
-    } else return false;
-  });
+  if (scheduleList.length === 0 || scheduleMarks.length === 0) {
+    return { result: undefined, scheduleInfo: undefined };
+  } else {
+    const result = scheduleMarks.find((schedule) => {
+      if (schedule.marks.find((value) => value === selectedDate)) {
+        scheduleId = schedule.scheduleId;
+        return true;
+      } else return false;
+    });
 
-  const scheduleObject = scheduleList.find((schedule) => schedule.id === scheduleId);
+    const scheduleObject = scheduleList.find((schedule) => schedule.id === scheduleId);
 
-  if (scheduleObject) {
-    if (scheduleObject.placeId) {
-      const params = { studyChannelId: scheduleObject.studyChannelId, placeId: scheduleObject.placeId };
-      const placeInfo = await getPlace(params);
-      const placeAddress = placeInfo?.placeAddress ?? "";
-      scheduleInfo = {
-        ...scheduleObject,
-        placeAddress: placeAddress,
-      };
-    } else {
-      scheduleInfo = {
-        ...scheduleObject,
-      };
+    if (scheduleObject) {
+      if (scheduleObject.placeId) {
+        const params = { studyChannelId: scheduleObject.studyChannelId, placeId: scheduleObject.placeId };
+        const placeInfo = await getPlace(params);
+        const placeAddress = placeInfo?.placeAddress ?? "";
+        scheduleInfo = {
+          ...scheduleObject,
+          placeAddress: placeAddress,
+        };
+      } else {
+        scheduleInfo = {
+          ...scheduleObject,
+        };
+      }
     }
-  }
 
-  return { result, scheduleInfo };
+    return { result, scheduleInfo };
+  }
 };
 
 // 숫자로 된 값을 요일로 바꾸는 함수

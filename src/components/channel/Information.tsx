@@ -31,13 +31,17 @@ const Information = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    if (!isEditMode) navigate(`/channel/${channelId}/information`);
+    if (!isEditMode) {
+      navigate(`/channel/${channelId}/information`);
+    }
   }, [isEditMode]);
 
   useEffect(() => {
     //channelId를 이용해 채널 정보 get api호출
     // "정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더", "지역" 이 순서로
     // studyDetailList에 저장
+    console.log(data); // 디버깅 로그
+
     if (data) {
       const detailList = [
         data.capacity,
@@ -100,12 +104,14 @@ const Information = (): JSX.Element => {
             onClick={() => {
               if (isEditMode) {
                 // 수정 데이터 put으로 서버에 전송
+                console.log(newStudyInfo); // 디버깅 로그
+
                 putStudyInfo(Number(channelId), newStudyInfo);
                 if (newSubLeader.id) {
                   postSubLeader(Number(channelId), { studyMemberId: newSubLeader.id });
                 }
                 setIsEditMode(false);
-                // navigate(`/channel/${channelId}/information`);
+                window.location.reload();
               } else {
                 navigate("information_edit", { state: { tab: "정보", edit: true } });
               }
@@ -205,7 +211,9 @@ const Information = (): JSX.Element => {
                         : detail !== null
                           ? index === 6 && newSubLeader.id
                             ? newSubLeader.name
-                            : detail
+                            : detail !== ""
+                              ? detail
+                              : "아직 링크를 등록하지 않았습니다."
                           : "해당 스터디 멤버에게만 공개"}
                       {isEditMode && data?.subLeaderName === detail && (
                         <>
