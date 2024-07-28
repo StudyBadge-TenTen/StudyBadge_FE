@@ -14,6 +14,7 @@ import { useSelectedDateStore } from "@/store/schedule-store";
 import { motion } from "framer-motion";
 import { useMyStudy, useUserInfo } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
+import PageScrollTop from "../common/PageScrollTop";
 
 const Profile = (): JSX.Element => {
   const location = useLocation();
@@ -61,6 +62,7 @@ const Profile = (): JSX.Element => {
 
   return (
     <>
+      <PageScrollTop />
       {isLoading && (
         <>
           <div className="w-full min-h-52 border border-solid border-Gray-3 rounded-t-[30px] p-6 flex flex-col items-center md:flex-row">

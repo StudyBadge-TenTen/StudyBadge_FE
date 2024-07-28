@@ -120,6 +120,9 @@ const postBanish = async (studyChannelId: number, studyMemberId: number) => {
   }
 };
 
+// 화면에서 환급금 보여줄 때 요청할 api
+const endStudyRefunds = () => {};
+
 export {
   getIsMember,
   postStudyChannel,
@@ -133,4 +136,5 @@ export {
   postApprove,
   postParticipate,
   postBanish,
+  endStudyRefunds,
 };

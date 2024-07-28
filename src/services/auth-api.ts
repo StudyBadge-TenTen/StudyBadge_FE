@@ -63,6 +63,14 @@ export const postSignUp = async (userData: SignUpData) => {
   return response;
 };
 
+export const getAuthEmail = async (email: string, code: string) => {
+  try {
+    await fetchCall<AxiosResponse>(`/api/members/auth?email=${email}&code=${code}`, "get");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const postLogout = async () => {
   await fetchCall<AxiosResponse>(`/api/members/logout`, "post");
 };

@@ -3,7 +3,7 @@ import BRONZE_BADGE from "../../assets/BRONZE-BADGE_PNG.png";
 import SILVER_BADGE from "../../assets/SILVER-BADGE_PNG.png";
 import GOLD_BADGE from "../../assets/GOLD-BADGE_PNG.png";
 import { useQuery } from "@tanstack/react-query";
-import { MemberListResponseType, SetNewSubLeaderType } from "../../types/study-channel-type";
+import { MemberListPropsType, MemberListResponseType } from "../../types/study-channel-type";
 import { getMemberList, postBanish, postSubLeader } from "../../services/channel-api";
 import { useParams } from "react-router";
 import { useState } from "react";
@@ -13,13 +13,7 @@ import { useAuthStore } from "@/store/auth-store";
 
 const banishContent = `해당 멤버를 스터디에서 퇴출시키겠습니까?\n(퇴출 시 총 예치금에서 퇴출 멤버가 지불한 예치금을 전액 제외합니다.)`;
 
-const MemberList = ({
-  setNewSubLeader,
-  setModal,
-}: {
-  setNewSubLeader?: SetNewSubLeaderType;
-  setModal?: React.Dispatch<React.SetStateAction<boolean>>;
-}): JSX.Element => {
+const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsType): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
   const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
@@ -93,7 +87,6 @@ const MemberList = ({
                   >
                     <div className="w-28 h-28 bg-Gray-2 rounded-full"></div>
                     <div className="w-1/3 h-4 bg-Gray-2 rounded-[50px]"></div>
-                    {/* 리더에게만 보여질 버튼 */}
                     <div className="w-2/3 h-4 bg-Gray-2 rounded-[50px]"></div>
                     <div className="w-2/3 h-4 bg-Gray-2 rounded-[50px]"></div>
                   </div>
@@ -103,7 +96,7 @@ const MemberList = ({
                 data.studyMembers.map((member) => (
                   <div
                     key={member.memberId}
-                    className={`w-[210px] h-80 border border-solid border-Gray-3 rounded-[50px] flex flex-col ${data.leader ? "justify-between" : "justify-center"} items-center px-4 py-8 m-2 relative`}
+                    className={`w-[210px] h-80 border border-solid border-Gray-3 rounded-[50px] flex flex-col ${!isStudyEnd && data.leader ? "justify-between" : "justify-center"} items-center px-4 py-8 m-2 relative`}
                   >
                     {member.badgeLevel === "NONE" && <img src={NONE_BADGE} className="absolute w-16 right-8" />}
                     {member.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="absolute w-16 right-8" />}
@@ -115,14 +108,16 @@ const MemberList = ({
                         alt="프로필 이미지"
                         className="object-cover w-28 h-28 rounded-full bg-Gray-1"
                       />
-                      <p className={`${data.leader ? "text-xl" : "text-2xl mt-10"} font-bold text-Blue-2`}>
+                      <p
+                        className={`${!isStudyEnd && data.leader ? "text-xl" : "text-2xl mt-10"} font-bold text-Blue-2`}
+                      >
                         {member.name}
                       </p>
                       {member.role === "LEADER" && <p className="font-bold text-Red-2 mt-4">리더</p>}
                       {member.role === "SUB_LEADER" && <p className="font-bold text-Red-2 mt-4">서브리더</p>}
                     </div>
                     {/* 리더에게만 보여질 버튼 */}
-                    {data.leader && (
+                    {!isStudyEnd && data.leader && (
                       <>
                         <button
                           id="subLeaderBtn"

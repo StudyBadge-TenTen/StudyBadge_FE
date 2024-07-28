@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import Calendar from "../schedule/Calendar";
 import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
-import { AttendMemberType, ScheduleCalcResponseType, ScheduleType } from "../../types/schedule-type";
+import {
+  AttendMemberType,
+  ScheduleCalcResponseType,
+  SchedulesPropsType,
+  ScheduleType,
+} from "../../types/schedule-type";
 import { getScheduleInfo, scheduleCalculator } from "../../utils/schedule-function";
 import AddScheduleBtn from "../schedule/leader/AddScheduleBtn";
 import moment from "moment";
@@ -12,13 +17,7 @@ import CheckAttend from "../schedule/leader/CheckAttend";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import { useAuthStore } from "@/store/auth-store";
 
-const Schedules = ({
-  selectedDateParam,
-  isLeader,
-}: {
-  selectedDateParam: string | undefined;
-  isLeader: boolean | undefined;
-}): JSX.Element => {
+const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsType): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
   const { channelId } = useParams();
   const navigate = useNavigate();
@@ -199,8 +198,8 @@ const Schedules = ({
                       <h3 className="text-2xl font-bold text-Blue-2 text-center my-4">
                         {selectedDate.split("-")[1]}.{selectedDate.split("-")[2]} 출석 멤버
                       </h3>
-                      {/* 조건 : 리더, 오늘, 출석체크비활성화 시 버튼 렌더링 */}
-                      {isLeader && checkDay && !isEditMode ? (
+                      {/* 조건 : 미종료스터디, 리더, 오늘, 출석체크비활성화 시 버튼 렌더링 */}
+                      {!isStudyEnd && isLeader && checkDay && !isEditMode ? (
                         <>
                           <div className="flex justify-center items-center">
                             <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
@@ -284,7 +283,9 @@ const Schedules = ({
         )}
       </div>
       {/* 스터디 리더 용 일정등록/변경 버튼 */}
-      {isLeader && new Date(selectedDate) >= new Date(todayString) && <AddScheduleBtn originInfo={scheduleInfo} />}
+      {isLeader && !isStudyEnd && new Date(selectedDate) >= new Date(todayString) && (
+        <AddScheduleBtn originInfo={scheduleInfo} />
+      )}
     </>
   );
 };

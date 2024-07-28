@@ -51,6 +51,12 @@ interface ScheduleType {
   repeated: boolean;
 }
 
+interface SchedulesPropsType {
+  selectedDateParam: string | undefined;
+  isLeader: boolean | undefined;
+  isStudyEnd: boolean;
+}
+
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
@@ -246,6 +252,7 @@ interface PlaceType {
 
 export type {
   ScheduleRepeatType,
+  SchedulesPropsType,
   RepeatCycleType,
   RepeatDailyType,
   RepeatWeeklyType,

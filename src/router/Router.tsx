@@ -18,6 +18,7 @@ import PasswordResetPage from "../pages/PasswordResetPage";
 import PointListPage from "../pages/PointListPage";
 import ApplicationListPage from "@/pages/ApplicationListPage";
 import EmailCodeAuth from "@/components/auth/EmailCodeAuth";
+import MailAuth from "@/components/auth/MailAuth";
 
 const Router = (): JSX.Element => {
   return (
@@ -27,6 +28,7 @@ const Router = (): JSX.Element => {
       <Route path="/:type/:status/:category/:keywordValue/:order/:page" element={<Main />} />
       <Route path="/login" element={<Login />} />
       <Route path="/SignUp" element={<SignUp />} />
+      <Route path="/SignUp/mailAuth" element={<MailAuth />} />
       <Route path="/sendEmail_PasswordReset" element={<PasswordResetPage />} />
       <Route path="/resetPassword" element={<EmailCodeAuth />} />
       <Route path="/oauth2/callback" element={<SocialLoginCallback first={true} />} />
