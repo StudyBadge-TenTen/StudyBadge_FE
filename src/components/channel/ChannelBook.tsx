@@ -34,11 +34,14 @@ const ChannelBook = (): JSX.Element => {
   usePageScrollTop();
 
   useEffect(() => {
+    if (!accessToken) {
+      setIsMember(false);
+    }
     console.log(isMemberData.data);
     if (isMemberData.data) {
       setIsMember(isMemberData.data);
     }
-  }, [isMemberData]);
+  }, [isMemberData, accessToken]);
 
   useEffect(() => {
     if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {

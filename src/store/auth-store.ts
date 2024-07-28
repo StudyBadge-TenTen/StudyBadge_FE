@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   accessToken: null,
   refreshToken: null,
   isLoginFailed: false,
-  isMember: false,
+  isMember: true, // 추후 기본값 false로 수정
   setLoginFailed: (status) => set((state) => ({ ...state, isLoginFailed: status })),
   setIsMember: (isMember) => set({ isMember }),
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
