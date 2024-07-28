@@ -37,11 +37,13 @@ const ChannelBook = (): JSX.Element => {
     if (!accessToken) {
       setIsMember(false);
     }
-    console.log(isMemberData.data);
-    if (isMemberData.data) {
+  }, [accessToken, setIsMember]);
+
+  useEffect(() => {
+    if (isMemberData !== undefined && isMemberData.data && isMember !== isMemberData.data) {
       setIsMember(isMemberData.data);
     }
-  }, [isMemberData, accessToken]);
+  }, [isMemberData, isMember, setIsMember]);
 
   useEffect(() => {
     if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {

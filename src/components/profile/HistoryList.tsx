@@ -75,7 +75,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
           <div className="w-full h-fit min-h-96">
             {paymentQuery.data.map((data) => (
               <div
-                key={new Date(data.createdAt).toDateString()}
+                key={`payment_${new Date(data.createdAt).toDateString()}_${new Date(data.createdAt).getTime()}`}
                 className="h-fit sm:h-16 border-b border-solid border-Gray-2 p-4 flex flex-col sm:flex-row justify-between items-center"
               >
                 <span className="text-sm text-Gray-4 text-center">
