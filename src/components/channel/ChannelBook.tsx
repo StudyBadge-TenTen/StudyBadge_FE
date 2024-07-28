@@ -10,18 +10,35 @@ import { useSelectedDateStore, useSelectedMonthStore } from "@/store/schedule-st
 import moment from "moment";
 import PageScrollTop from "../common/PageScrollTop";
 import usePageScrollTop from "../common/PageScrollTop";
+import { getIsMember } from "@/services/channel-api";
+import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/auth-store";
+import { AxiosError } from "axios";
 
 const ChannelBook = (): JSX.Element => {
   const { selectedDateParam } = useParams();
   const { channelId } = useParams();
   const navigate = useNavigate();
   const state = useLocation().state;
-  const [tabState, setTabState] = useState("일정");
+  const [tabState, setTabState] = useState("정보");
   const memberTab = ["정보", "일정", "멤버", "출석현황"];
+  const { accessToken, isMember, setIsMember } = useAuthStore();
   const { data } = useGetStudyInfo(Number(channelId));
   const { selectedDate, setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
+  const isMemberData = useQuery<boolean, AxiosError>({
+    queryKey: ["isMember", channelId],
+    queryFn: () => getIsMember(Number(channelId)),
+    enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
+  });
   usePageScrollTop();
+
+  useEffect(() => {
+    console.log(isMemberData.data);
+    if (isMemberData.data) {
+      setIsMember(isMemberData.data);
+    }
+  }, [isMemberData]);
 
   useEffect(() => {
     if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {
@@ -105,9 +122,14 @@ const ChannelBook = (): JSX.Element => {
               </button>
             )}
           </div>
-          <div className="w-[400px] md:w-[768px] lg:w-[854px] h-fit flex flex-col px-4 py-8 md:p-8">
-            {tabState === "일정" && <Schedules selectedDateParam={selectedDateParam} isLeader={data.leader} />}
+          <div className="w-[400px] md:w-[768px] lg:w-[854px] h-fit flex flex-col px-4 py-8 md:p-8 relative">
+            {!isMember && tabState !== "정보" && (
+              <div className="w-full h-full absolute top-0 left-0 bg-Gray-2 opacity-60 rounded-b-[50px] flex justify-center items-center">
+                <p className="text-2xl font-bold opacity-100">해당 스터디 멤버에게만 공개되는 컨텐츠입니다.</p>
+              </div>
+            )}
             {tabState === "정보" && <Information />}
+            {tabState === "일정" && <Schedules selectedDateParam={selectedDateParam} isLeader={data.leader} />}
             {tabState === "멤버" && <MemberList />}
             {tabState === "출석현황" && <Attendance />}
             {tabState === "모집" && <Recruitment />}

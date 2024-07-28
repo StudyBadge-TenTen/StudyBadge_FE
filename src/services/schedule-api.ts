@@ -17,8 +17,13 @@ const getAllSchedules = async (accessToken: string | null, channelId: number) =>
     console.log("error: accessToken, channelId 중 없는 요소가 있습니다.");
     return [];
   }
-  const allSchedules = await fetchCall<ScheduleType[]>(`/api/study-channels/${channelId}/schedules`, "get");
-  return allSchedules;
+  try {
+    const allSchedules = await fetchCall<ScheduleType[]>(`/api/study-channels/${channelId}/schedules`, "get");
+    return allSchedules;
+  } catch (error) {
+    console.error("Failed to fetch schedules:", error);
+    return [];
+  }
 };
 
 const getSchedules = async (accessToken: string | null, { channelId, year, month }: ScheduleParamsType) => {

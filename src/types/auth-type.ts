@@ -1,3 +1,5 @@
+import { AxiosResponse } from "axios";
+
 interface LoginResponse {
   accessToken: string;
   refreshToken?: string;
@@ -26,10 +28,12 @@ interface AuthStoreType {
   accessToken: string | null;
   refreshToken: string | null;
   isLoginFailed: boolean;
+  isMember: boolean;
   setLoginFailed: (status: boolean) => void;
+  setIsMember: (isMember: boolean) => void;
   setField: (field: keyof Omit<AuthStoreType, "setField" | "resetForm" | "login" | "signUp">, value: string) => void;
   login: (email: string, password: string) => Promise<void>;
-  signUp: () => Promise<void>;
+  signUp: () => Promise<AxiosResponse>;
   reset: () => void;
   // initiateSocialLogin: (provider: "naver" | "kakao") => void;
   // handleSocialLoginCallback: (provider: "naver" | "kakao") => Promise<void>;

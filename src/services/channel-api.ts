@@ -9,6 +9,12 @@ import {
 } from "../types/study-channel-type";
 import { fetchCall } from "./common";
 
+const getIsMember = async (studyChannelId: number) => {
+  const response = await fetchCall<boolean>(`/api/study-channels/${studyChannelId}/check`, "get");
+
+  return response ?? false;
+};
+
 const postStudyChannel = async (requestBody: postStudyRequestType) => {
   const response = await fetchCall<{ studyChannelId: number }>(`/api/study-channels`, "post", requestBody);
   return response;
@@ -33,7 +39,7 @@ const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRe
 
 const getMemberList = async (studyChannelId: number) => {
   const memberList = await fetchCall<MemberListResponseType>(`/api/study-channels/${studyChannelId}/members`, "get");
-  return memberList;
+  return memberList ?? [];
 };
 
 const postSubLeader = async (studyChannelId: number, requestBody: { studyMemberId: number }) => {
@@ -49,7 +55,7 @@ const getAttendance = async (studyChannelId: number) => {
     `/api/study-channels/${studyChannelId}/attendances`,
     "get",
   );
-  return attendance;
+  return attendance ?? [];
 };
 
 const getRecruitment = async (studyChannelId: number) => {
@@ -57,7 +63,7 @@ const getRecruitment = async (studyChannelId: number) => {
     `/api/study-channels/${studyChannelId}/participation-status`,
     "get",
   );
-  return recruitList;
+  return recruitList ?? [];
 };
 
 const postApprove = async (studyChannelId: number, participationId: number) => {
@@ -115,6 +121,7 @@ const postBanish = async (studyChannelId: number, studyMemberId: number) => {
 };
 
 export {
+  getIsMember,
   postStudyChannel,
   getStudyInfo,
   putStudyInfo,

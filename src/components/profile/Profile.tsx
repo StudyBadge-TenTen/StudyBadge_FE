@@ -8,12 +8,11 @@ import SelectAmount from "../payment/SelectAmount";
 import Checkout from "../payment/Checkout";
 import { useLocation, useNavigate } from "react-router";
 import { MyStudyType } from "../../types/profile-type";
-import { getMyStudy } from "../../services/profile-api";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import { Link } from "react-router-dom";
 import { useSelectedDateStore } from "@/store/schedule-store";
 import { motion } from "framer-motion";
-import { useUserInfo } from "@/hooks/useQuery";
+import { useMyStudy, useUserInfo } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
 
 const Profile = (): JSX.Element => {
@@ -26,6 +25,7 @@ const Profile = (): JSX.Element => {
   const { selectedDate } = useSelectedDateStore();
   const { accessToken } = useAuthStore();
   const { data, isLoading, error } = useUserInfo(accessToken);
+  const myStudyData = useMyStudy(accessToken);
 
   useEffect(() => {
     // console.log(accessToken); // accessToken 확인용 디버깅 코드
@@ -36,17 +36,15 @@ const Profile = (): JSX.Element => {
   useEffect(() => {
     if (data) {
       // console.log(data); // 디버깅 로그
-
-      (async () => {
-        try {
-          const myStudyList = await getMyStudy();
-          setMyStudy(() => myStudyList);
-        } catch (error) {
-          console.log("내 스터디 리스트 로딩에 실패하였습니다." + error);
+      try {
+        if (myStudyData && myStudyData.data) {
+          setMyStudy(() => myStudyData.data ?? []);
         }
-      })();
+      } catch (error) {
+        console.log("내 스터디 리스트 로딩에 실패하였습니다." + error);
+      }
     }
-  }, [data]);
+  }, [data, myStudyData]);
 
   useEffect(() => {
     const element = document.getElementById("root");

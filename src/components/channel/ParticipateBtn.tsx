@@ -1,33 +1,38 @@
 import { useState } from "react";
 import Modal from "../common/Modal";
 import { postParticipate } from "@/services/channel-api";
-import { useParams } from "react-router";
-import { useApplicationList, useGetStudyInfo, useMemberList, useRecruitment } from "@/hooks/useQuery";
+import { useNavigate, useParams } from "react-router";
+import { useApplicationList, useGetStudyInfo, useRecruitment, useUserInfo } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
 
 const ParticipateBtn = (): JSX.Element => {
-  const { accessToken } = useAuthStore();
+  const navigate = useNavigate();
+  const { accessToken, isMember } = useAuthStore();
   const { channelId } = useParams();
   const [modalOpen, setModalInfo] = useState(false);
   const { data } = useGetStudyInfo(Number(channelId));
+  const userInfo = useUserInfo(accessToken);
   const recruitmentData = useRecruitment(Number(channelId), accessToken);
   const applicationData = useApplicationList(accessToken);
-  const memberListData = useMemberList(Number(channelId), accessToken);
 
   const handleClick = async (isModal: boolean) => {
     if (!isModal) {
       setModalInfo(() => true);
       return;
     }
-    if (isModal && channelId) {
-      await postParticipate(Number(channelId));
-      setModalInfo(() => false);
-      return;
+    if (isModal && channelId && userInfo.data && data) {
+      if (userInfo.data.point >= data.deposit) {
+        await postParticipate(Number(channelId));
+        setModalInfo(() => false);
+        return;
+      } else {
+        alert("포인트가 부족합니다.");
+        navigate("/profile/myInfo");
+      }
     }
   };
 
-  // 유저 정보 조회시 멤버 id도 같이 넘겨줄 수 있는지
-  if (!accessToken || memberListData.data?.leader) return <></>;
+  if (!accessToken || (data && data.leader)) return <></>;
 
   if (applicationData.data && Array.isArray(applicationData.data)) {
     if (
@@ -37,15 +42,12 @@ const ParticipateBtn = (): JSX.Element => {
     ) {
       return <div className="btn-blue px-6 py-4 bg-Gray-3 hover:bg-Gray-3">신청 대기중입니다.</div>;
     }
-    if (
-      applicationData.data.find(
-        (channel) => channel.studyChannelId === Number(channelId) && channel.participationStatus === "APPROVED",
-      )
-    ) {
+    if (isMember) {
       return <div className="btn-blue px-6 py-4 bg-Gray-3 hover:bg-Gray-3">소속된 스터디입니다.</div>;
     }
   }
 
+  // 해당 코드 백엔드와 논의 후 스터디 정보에서 데이터를 얻어서 판별하는 것으로 수정
   if (recruitmentData.data && recruitmentData.data.recruitmentStatus === "RECRUITING") {
     return (
       <>

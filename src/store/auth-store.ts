@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { signUp, postLogin, postLogout } from "../services/auth-api";
+import { postLogin, postLogout, postSignUp } from "../services/auth-api";
 import { AuthStoreType, LoginResponse, PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";
 
@@ -16,7 +16,9 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   accessToken: null,
   refreshToken: null,
   isLoginFailed: false,
+  isMember: false,
   setLoginFailed: (status) => set((state) => ({ ...state, isLoginFailed: status })),
+  setIsMember: (isMember) => set({ isMember }),
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
   login: async (email, password) => {
     try {
@@ -38,18 +40,17 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   signUp: async () => {
     const { email, name, nickname, introduction, accountBank, account, password, checkPassword } = get();
     try {
-      await signUp({ email, name, nickname, introduction, accountBank, account, password, checkPassword });
-      set({
-        email: "",
-        name: "",
-        nickname: "",
-        introduction: "",
-        accountBank: "",
-        account: "",
-        password: "",
-        checkPassword: "",
+      const response = await postSignUp({
+        email,
+        name,
+        nickname,
+        introduction,
+        accountBank,
+        account,
+        password,
+        checkPassword,
       });
-      alert("회원가입이 완료되었습니다.");
+      return response;
     } catch (error) {
       alert(
         "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",

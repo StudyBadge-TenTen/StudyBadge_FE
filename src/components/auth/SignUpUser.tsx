@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuthStore } from "../../store/auth-store";
 import { nameToField, nameToType, returnPlaceholder } from "../../utils/transform-function";
 import { BANK_LIST } from "../../constants/bank-list";
@@ -9,9 +9,9 @@ const SignUp: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const authStore = useAuthStore();
 
-  useEffect(() => {
-    console.log(authStore);
-  }, [authStore]);
+  // useEffect(() => {
+  //   console.log(authStore);
+  // }, [authStore]);
 
   const validateForm = (): boolean => {
     let result = true;
@@ -55,10 +55,17 @@ const SignUp: React.FC = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      await authStore.signUp();
-      setIsSubmitted(true);
-    } catch (error) {
+      const result = await authStore.signUp();
+      if (result) {
+        alert("회원가입이 완료되었습니다.");
+        authStore.reset();
+        setIsSubmitted(true);
+      } else {
+        alert("이미 가입되어 있는 이메일 계정입니다.");
+      }
+    } catch (error: any) {
       console.error("회원가입 실패:", error);
+      alert("회원가입에 실패하였습니다. 나중에 다시 시도해 주세요.");
     }
   };
 
