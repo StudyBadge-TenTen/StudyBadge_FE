@@ -117,23 +117,17 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   logout: async () => {
     try {
       await postLogout();
+    } catch (error) {
+      alert("로그아웃에 문제가 발생하였습니다.");
+      console.error("Logout failed:", error);
+      throw error;
+    } finally {
       if (import.meta.env.DEV || import.meta.env.PROD) {
         sessionStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessTokenExpiration");
         window.location.reload();
       }
       setApiToken("");
-    } catch (error) {
-      if (import.meta.env.DEV || import.meta.env.PROD) {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessTokenExpiration");
-        window.location.reload();
-      }
-      alert(
-        "로그아웃에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-      );
-      console.error("Logout failed:", error);
-      throw error;
     }
   },
 }));

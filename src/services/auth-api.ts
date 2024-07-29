@@ -85,11 +85,14 @@ export const postLogout = async () => {
   try {
     await fetchCall<AxiosResponse>(`/api/members/logout`, "post");
   } catch (error) {
+    console.log(error); // 디버깅 로그
+  } finally {
     if (import.meta.env.DEV || import.meta.env.PROD) {
       sessionStorage.removeItem("accessToken");
       sessionStorage.removeItem("accessTokenExpiration");
       window.location.reload();
     }
+    setApiToken("");
   }
 };
 
