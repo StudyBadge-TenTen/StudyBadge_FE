@@ -92,7 +92,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
         { withCredentials: true },
       );
 
-      const accessTokenBearer = response.headers["authorization"] as string;
+      const accessTokenBearer = response.headers["Authorization"] as string;
 
       if (accessTokenBearer) {
         const accessToken = accessTokenBearer.replace("Bearer ", "");

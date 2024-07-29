@@ -52,7 +52,7 @@ axiosInstance.interceptors.request.use(
                   Authorization: `Bearer ${refreshToken}`,
                 },
               });
-              const newAccessToken = response.headers["authorization"].split(" ")[1];
+              const newAccessToken = response.headers["Authorization"].split(" ")[1];
 
               // 새로운 토큰 저장 및 요청 헤더에 추가
               setApiToken(newAccessToken);
@@ -123,7 +123,7 @@ axiosInstance.interceptors.response.use(
               Authorization: `Bearer ${refreshToken}`,
             },
           });
-          const newAccessToken = response.headers["authorization"].split(" ")[1];
+          const newAccessToken = response.headers["Authorization"].split(" ")[1];
 
           // 새로운 토큰 저장 및 요청 헤더에 추가
           setApiToken(newAccessToken);
