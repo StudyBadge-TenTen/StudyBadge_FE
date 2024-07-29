@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../common/Modal";
 import { postParticipate } from "@/services/channel-api";
 import { useNavigate, useParams } from "react-router";
-import { useApplicationList, useGetStudyInfo, useRecruitment, useUserInfo } from "@/hooks/useQuery";
+import { useApplicationList, useGetStudyInfo, useUserInfo } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
 
 const ParticipateBtn = (): JSX.Element => {
@@ -12,7 +12,6 @@ const ParticipateBtn = (): JSX.Element => {
   const [modalOpen, setModalInfo] = useState(false);
   const { data } = useGetStudyInfo(Number(channelId));
   const userInfo = useUserInfo(accessToken);
-  const recruitmentData = useRecruitment(Number(channelId), accessToken);
   const applicationData = useApplicationList(accessToken);
 
   const handleClick = async (isModal: boolean) => {
@@ -48,7 +47,7 @@ const ParticipateBtn = (): JSX.Element => {
   }
 
   // 해당 코드 백엔드와 논의 후 스터디 정보에서 데이터를 얻어서 판별하는 것으로 수정
-  if (recruitmentData.data && recruitmentData.data.recruitmentStatus === "RECRUITING") {
+  if (data && data.recruitmentStatus === "RECRUITING") {
     return (
       <>
         <button onClick={() => handleClick(false)} className="btn-blue px-6 py-4">

@@ -25,6 +25,7 @@ export const useGetStudyInfo = (channelId: number) => {
   const { data, error, isLoading } = useQuery<StudyInfoType, Error>({
     queryKey: ["studyInfo", channelId],
     queryFn: () => getStudyInfo(channelId),
+    enabled: !!channelId,
   });
   return { data, error, isLoading };
 };

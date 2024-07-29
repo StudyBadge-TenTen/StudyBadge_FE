@@ -7,8 +7,6 @@ type OrderType = "RECENT" | "VIEW_COUNT";
 type ApproveType = "APPROVE_WAITING" | string;
 
 interface BasicStudyInfoType {
-  name: string;
-  description: string;
   startDate: "YYYY-MM-DD" | string;
   endDate: "YYYY-MM-DD" | string;
   category: StudyCategoryType | "";
@@ -17,6 +15,8 @@ interface BasicStudyInfoType {
 }
 
 interface postStudyRequestType extends BasicStudyInfoType {
+  name: string;
+  description: string;
   recruitmentNumber: number;
   minRecruitmentNumber: number;
   region: string;
@@ -34,7 +34,14 @@ interface StudyInfoType extends BasicStudyInfoType {
   region: null | string; // ONLINE 일 경우 null, 오프라인일 경우 "서울시 ~~구" 반환
   leaderName: string;
   subLeaderName: string;
+  recruitmentStatus: RecruitmentStatusType;
+  studyEnd: boolean;
+  // 이 아래로는 현재 info를 조회하는 이용자에 대한 정보
+  studyMember: boolean;
   leader: boolean;
+  memberName: string | null;
+  attendanceRatio: number | null;
+  refundsAmount: number;
 }
 
 interface StudyInfoPutRequestType {
