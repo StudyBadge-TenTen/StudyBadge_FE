@@ -8,8 +8,10 @@ import Filter from "./Filter";
 import { useQuery } from "@tanstack/react-query";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { StudyListResponseType } from "../../types/study-channel-type";
+import { useAuthStore } from "@/store/auth-store";
 
 const StudyList = (): JSX.Element => {
+  const { accessToken } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
   const { studyList, setStudyList } = useStudyListStore();
@@ -21,6 +23,10 @@ const StudyList = (): JSX.Element => {
     queryFn: () => getStudyList(filter),
   });
   const skeletonList = [1, 2, 3, 4, 5, 6];
+
+  useEffect(() => {
+    console.log("Current accessToken in state:", accessToken);
+  }, [accessToken]);
 
   // 경로가 바뀔 때마다
   useEffect(() => {

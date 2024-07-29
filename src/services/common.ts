@@ -83,9 +83,12 @@ axiosInstance.interceptors.request.use(
         }
       }
     } else {
+      console.log("this is prod mode"); // 디버깅을 위해 추가
+
       config.headers["Authorization"] = `Bearer ${API_TOKEN}`;
       return config;
     }
+    console.log("Request config:", config); // 디버깅을 위해 추가
     return config;
   },
   (error) => {
