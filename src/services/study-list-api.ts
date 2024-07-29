@@ -13,7 +13,7 @@ const getStudyList = async ({ page, order, type, category, status, keyword }: St
       null,
       filteredParams,
     );
-    return studyChannelListResponse;
+    return studyChannelListResponse ?? {};
   } catch (error) {
     console.error("Failed to fetch study list:", error);
     throw error;
