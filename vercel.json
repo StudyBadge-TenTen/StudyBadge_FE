@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" },
     {
       "source": "/api/:path*",
       "destination": "https://study-badge.shop/:path*"
@@ -7,13 +8,6 @@
     {
       "source": "/api/:path*/",
       "destination": "https://study-badge.shop/:path*/"
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://study-badge.shop/api/$1",
-      "permanent": true
     }
   ]
 }
