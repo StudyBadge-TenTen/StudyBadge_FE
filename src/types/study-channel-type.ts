@@ -51,6 +51,8 @@ interface StudyInfoPutRequestType {
 }
 
 interface StudyListObjectType extends BasicStudyInfoType {
+  name: string;
+  description: string;
   studyChannelId: number;
   recruitmentStatus: RecruitmentStatusType;
   viewCount: number;
