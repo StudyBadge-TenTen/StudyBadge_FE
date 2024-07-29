@@ -64,11 +64,13 @@ export const postSignUp = async (userData: SignUpData) => {
 };
 
 export const getAuthEmail = async (email: string, code: string) => {
-  try {
-    await fetchCall<AxiosResponse>(`/api/members/auth?email=${email}&code=${code}`, "get");
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await fetchCall<AxiosResponse>(`/api/members/auth?email=${email}&code=${code}`, "get");
+  return response;
+};
+
+export const postEmailResend = async (email: string) => {
+  const response = await fetchCall<AxiosResponse>(`/api/members/resend?email=${email}`, "post");
+  return response;
 };
 
 export const postLogout = async () => {
