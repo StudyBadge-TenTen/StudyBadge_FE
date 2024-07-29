@@ -10,6 +10,14 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
       { withCredentials: true }, // withCredentials 옵션 추가
     );
 
+    if (response.status === 500) {
+      if (import.meta.env.DEV || import.meta.env.PROD) {
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessTokenExpiration");
+        window.location.reload();
+      }
+    }
+
     const accessTokenBearer = response.headers["authorization"] as string;
     const accessToken = accessTokenBearer.split(" ")[1];
     // console.log("Access token received:", accessToken); // 디버깅을 위해 추가
@@ -74,7 +82,15 @@ export const postEmailResend = async (email: string) => {
 };
 
 export const postLogout = async () => {
-  await fetchCall<AxiosResponse>(`/api/members/logout`, "post");
+  try {
+    await fetchCall<AxiosResponse>(`/api/members/logout`, "post");
+  } catch (error) {
+    if (import.meta.env.DEV || import.meta.env.PROD) {
+      sessionStorage.removeItem("accessToken");
+      sessionStorage.removeItem("accessTokenExpiration");
+      window.location.reload();
+    }
+  }
 };
 
 export const postVerificationEmail = async (email: string) => {
