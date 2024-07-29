@@ -16,6 +16,7 @@ const Success = (): JSX.Element => {
   const { data, error, isLoading } = useQuery<SuccessResponseType | undefined, Error>({
     queryKey: ["tossSuccess", orderId, amount, paymentKey],
     queryFn: () => postSuccessResponse(paymentKey ?? "", orderId ?? "", Number(amount)),
+    enabled: !!paymentKey && !!orderId && !!amount,
   });
 
   useEffect(() => {

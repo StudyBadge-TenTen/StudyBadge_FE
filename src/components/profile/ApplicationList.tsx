@@ -1,13 +1,11 @@
 import { useApplicationList } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
-import { useSelectedDateStore } from "@/store/schedule-store";
 import { ParticipateEnToKr, stateToColorClassName } from "@/utils/transform-function";
 import { Link } from "react-router-dom";
 
 const ApplicationList = () => {
   const { accessToken } = useAuthStore();
   const { data, error, isLoading } = useApplicationList(accessToken);
-  const { selectedDate } = useSelectedDateStore();
 
   if (isLoading) {
     return (
@@ -31,7 +29,7 @@ const ApplicationList = () => {
         <>
           {data.map((studyChannel) => (
             <Link
-              to={`/channel/${studyChannel.studyChannelId}/schedule/${selectedDate}`}
+              to={`/channel/${studyChannel.studyChannelId}/information`}
               key={studyChannel.studyChannelId}
               className="border border-solid border-Gray-3 w-full h-fit p-6 sm:p-10 rounded-[30px] flex flex-col sm:flex-row justify-center lg:justify-between items-center mt-10 flex-wrap"
             >

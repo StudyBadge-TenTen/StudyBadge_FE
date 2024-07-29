@@ -68,7 +68,14 @@ interface StudyListResponseType {
   studyChannels: StudyListObjectType[];
 }
 
+// 멤버
 type StudyRoleType = "LEADER" | "SUB_LEADER" | "STUDY_MEMBER";
+
+interface MemberListPropsType {
+  setNewSubLeader?: SetNewSubLeaderType;
+  setModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  isStudyEnd: boolean;
+}
 
 interface StudyMemberType {
   memberId: number;
@@ -154,6 +161,7 @@ export type {
   StudyListRequestType,
   StudyListResponseType,
   StudyRoleType,
+  MemberListPropsType,
   StudyMemberType,
   MemberListResponseType,
   AttendanceResponseType,

@@ -6,8 +6,9 @@ import { useEditModeStore } from "../../store/edit-mode-store";
 import Modal from "../common/Modal";
 import MemberList from "./MemberList";
 import { useGetStudyInfo } from "../../hooks/useQuery";
+import { useAuthStore } from "@/store/auth-store";
 
-const Information = (): JSX.Element => {
+const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
   const { channelId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,6 +26,7 @@ const Information = (): JSX.Element => {
     id: undefined,
   });
   const [modal, setModal] = useState(false);
+  const { isMember } = useAuthStore();
 
   useEffect(() => {
     return () => setIsEditMode(false);
@@ -99,7 +101,7 @@ const Information = (): JSX.Element => {
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 정보</h2>
       <div className="flex justify-end">
         {/* 리더에게만 보일 수정 버튼 */}
-        {data?.leader && (
+        {isMember && data?.leader && !isStudyEnd && (
           <button
             onClick={() => {
               if (isEditMode) {
@@ -225,7 +227,11 @@ const Information = (): JSX.Element => {
                           </button>
                           {modal && (
                             <Modal>
-                              <MemberList setNewSubLeader={setNewSubLeader} setModal={setModal} />
+                              <MemberList
+                                isStudyEnd={isStudyEnd}
+                                setNewSubLeader={setNewSubLeader}
+                                setModal={setModal}
+                              />
                               <button
                                 onClick={() => {
                                   setNewSubLeader(() => ({ name: "", id: undefined }));

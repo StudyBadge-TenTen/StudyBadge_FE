@@ -20,7 +20,7 @@ const putProfile = async (profileObj: ProfilePutType) => {
 
 const getMyStudy = async () => {
   const myStudy = await fetchCall<MyStudyType[]>(`/api/members/my-study`, "get");
-  return myStudy;
+  return myStudy ?? [];
 };
 
 const getPaymentsHistory = async (page: number, size: number) => {
@@ -28,12 +28,12 @@ const getPaymentsHistory = async (page: number, size: number) => {
     `/api/payments/history?page=${page}&size=${size}`,
     "get",
   );
-  return paymentsHistory;
+  return paymentsHistory ?? [];
 };
 
 const getPointHistory = async (page: number, size: number) => {
   const pointHistory = await fetchCall<PointHistoryType[]>(`/api/points/my-point?page=${page}&size=${size}`, "get");
-  return pointHistory;
+  return pointHistory ?? [];
 };
 
 const postPaymentCancel = async (paymentKey: string) => {

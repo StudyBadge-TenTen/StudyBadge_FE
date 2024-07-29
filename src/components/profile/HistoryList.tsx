@@ -29,6 +29,11 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     }
   }, []);
 
+  useEffect(() => {
+    console.log(paymentQuery.data);
+    console.log(pointQuery.data);
+  }, [paymentQuery.data, pointQuery.data]);
+
   const isPossibleCancel = (data: PaymentHistoryType) => {
     const paymentDate = new Date(data.createdAt);
 
@@ -73,42 +78,48 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
       return (
         <>
           <div className="w-full h-fit min-h-96">
-            {paymentQuery.data.map((data) => (
-              <div
-                key={new Date(data.createdAt).toDateString()}
-                className="h-fit sm:h-16 border-b border-solid border-Gray-2 p-4 flex flex-col sm:flex-row justify-between items-center"
-              >
-                <span className="text-sm text-Gray-4 text-center">
-                  결제날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간:{" "}
-                  {moment(data.createdAt).format("hh:mm")}
-                </span>
-                <div className="flex items-center">
-                  {isPossibleCancel(data) ? (
-                    <>
-                      <button className="btn-red px-2 py-1 mr-4" onClick={() => handleCancelClick(false)}>
-                        결제취소
-                      </button>
-                      {modalOpen && (
-                        <Modal>
-                          해당 결제를 취소하시겠습니까?
-                          <div className="flex justify-center items-center mt-4">
-                            <button onClick={() => handleCancelClick(true, data.paymentKey)} className="btn-blue w-10">
-                              예
-                            </button>
-                            <button onClick={() => setModalOpen(() => false)} className="btn-blue w-10 ml-2">
-                              아니오
-                            </button>
-                          </div>
-                        </Modal>
+            {paymentQuery.data.map(
+              (data) =>
+                data.paymentKey && (
+                  <div
+                    key={data.paymentKey}
+                    className="h-fit sm:h-16 border-b border-solid border-Gray-2 p-4 flex flex-col sm:flex-row justify-between items-center"
+                  >
+                    <span className="text-sm text-Gray-4 text-center">
+                      결제날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간:{" "}
+                      {moment(data.createdAt).format("hh:mm")}
+                    </span>
+                    <div className="flex items-center">
+                      {isPossibleCancel(data) ? (
+                        <>
+                          <button className="btn-red px-2 py-1 mr-4" onClick={() => handleCancelClick(false)}>
+                            결제취소
+                          </button>
+                          {modalOpen && (
+                            <Modal>
+                              해당 결제를 취소하시겠습니까?
+                              <div className="flex justify-center items-center mt-4">
+                                <button
+                                  onClick={() => handleCancelClick(true, data.paymentKey)}
+                                  className="btn-blue w-10"
+                                >
+                                  예
+                                </button>
+                                <button onClick={() => setModalOpen(() => false)} className="btn-blue w-10 ml-2">
+                                  아니오
+                                </button>
+                              </div>
+                            </Modal>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-sm text-Gray-3 px-2 py-1 mr-4">결제완료</span>
                       )}
-                    </>
-                  ) : (
-                    <span className="text-sm text-Gray-3 px-2 py-1 mr-4">결제완료</span>
-                  )}
-                  <span>{data.amount.toLocaleString()}원</span>
-                </div>
-              </div>
-            ))}
+                      <span>{data.amount.toLocaleString()}원</span>
+                    </div>
+                  </div>
+                ),
+            )}
           </div>
           <Pagination
             type="HISTORY"

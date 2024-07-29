@@ -58,8 +58,17 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
 //   return response.data;
 // };
 
-export const signUp = async (userData: SignUpData): Promise<void> => {
-  await fetchCall<AxiosResponse>(`/api/members/sign-up`, "post", userData);
+export const postSignUp = async (userData: SignUpData) => {
+  const response = await fetchCall<AxiosResponse>(`/api/members/sign-up`, "post", userData);
+  return response;
+};
+
+export const getAuthEmail = async (email: string, code: string) => {
+  try {
+    await fetchCall<AxiosResponse>(`/api/members/auth?email=${email}&code=${code}`, "get");
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const postLogout = async () => {

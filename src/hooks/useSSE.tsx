@@ -12,7 +12,7 @@ export const useSSE = () => {
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
   const { notificationList, setNewNotification } = useNotificationStore();
 
-  console.log("useSSE hook"); // useSSE 작동 테스트
+  // console.log("useSSE hook"); // useSSE 작동 테스트
 
   useEffect(() => {
     if (import.meta.env.DEV) {
@@ -24,15 +24,9 @@ export const useSSE = () => {
   }, [setField]);
 
   useEffect(() => {
-    // 로그인 실패 시, 재연결하지 않음
-    if (isLoginFailed) {
-      console.log("로그인 실패 상태입니다. SSE 연결을 시도하지 않습니다.");
-      return;
-    }
-
-    // accessToken이 없을 경우 sse연결을 하지 않는 코드입니다
-    if (!accessToken) {
-      console.log("저장된 accessToken이 없습니다");
+    // 로그인 상태가 아닐 경우, 재연결하지 않음
+    if (isLoginFailed || !accessToken) {
+      console.log("현재 로그인상태가 아닙니다.");
       return;
     }
 
@@ -107,7 +101,7 @@ export const useSSE = () => {
         clearTimeout(retryTimeout); // 클리어하는 코드 추가
       }
     };
-  }, [accessToken, API_BASE_URL, setNewNotification]);
+  }, [accessToken, API_BASE_URL, notificationList, setNewNotification, isLoginFailed]);
 
   return null;
 };

@@ -1,6 +1,7 @@
 import { usePasswordResetStore } from "../../store/auth-store";
 import { postVerificationEmail } from "@/services/auth-api";
 import { useLocation } from "react-router-dom";
+import PageScrollTop from "../common/PageScrollTop";
 
 const PasswordReset: React.FC = () => {
   const { email, setEmail } = usePasswordResetStore();
@@ -25,33 +26,36 @@ const PasswordReset: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-[50px] shadow-card p-20 py-24">
-        <div>
-          <h2 className="text-2xl font-bold text-Blue-2 mb-4 text-center">비밀번호 초기화</h2>
-          <form onSubmit={sendVerificationCode} className="flex flex-col">
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-Blue-2 text-sm font-bold mb-2">
-                이메일:
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input"
-              />
-            </div>
-            <button
-              type="submit"
-              className="btn-blue bg-blue-500 hover:btn-blue bg-blue-700 text-white font-bold focus:outline-none focus:shadow-outline mt-4"
-            >
-              인증 코드 전송
-            </button>
-          </form>
+    <>
+      <PageScrollTop />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <div className="w-full max-w-md bg-white rounded-[50px] shadow-card p-20 py-24">
+          <div>
+            <h2 className="text-2xl font-bold text-Blue-2 mb-4 text-center">비밀번호 초기화</h2>
+            <form onSubmit={sendVerificationCode} className="flex flex-col">
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-Blue-2 text-sm font-bold mb-2">
+                  이메일:
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="input"
+                />
+              </div>
+              <button
+                type="submit"
+                className="btn-blue bg-blue-500 hover:btn-blue bg-blue-700 text-white font-bold focus:outline-none focus:shadow-outline mt-4"
+              >
+                인증 코드 전송
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
