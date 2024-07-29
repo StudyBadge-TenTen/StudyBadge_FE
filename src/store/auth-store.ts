@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       set({ accessToken: accessToken, refreshToken: refreshToken });
 
       // dev 모드 시
-      if (import.meta.env.DEV) {
+      if (import.meta.env.DEV || import.meta.env.PROD) {
         const expirationTime = new Date().getTime() + 7200000; // 2시간
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
@@ -92,7 +92,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
         { withCredentials: true },
       );
 
-      const accessTokenBearer = response.headers["authorization"] as string;
+      const accessTokenBearer = response.headers["Authorization"] as string;
 
       if (accessTokenBearer) {
         const accessToken = accessTokenBearer.replace("Bearer ", "");
@@ -112,7 +112,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   logout: async () => {
     try {
       await postLogout();
-      if (import.meta.env.DEV) {
+      if (import.meta.env.DEV || import.meta.env.PROD) {
         sessionStorage.removeItem("accessToken");
       }
       setApiToken("");
