@@ -144,6 +144,7 @@ axiosInstance.interceptors.response.use(
       }
       return Promise.reject(axiosError);
     }
+    return axiosError.response?.data;
   },
 );
 

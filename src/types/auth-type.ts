@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import { CustomErrorType } from "./common";
 
 interface LoginResponse {
   accessToken: string;
@@ -33,7 +34,7 @@ interface AuthStoreType {
   setIsMember: (isMember: boolean) => void;
   setField: (field: keyof Omit<AuthStoreType, "setField" | "resetForm" | "login" | "signUp">, value: string) => void;
   login: (email: string, password: string) => Promise<void>;
-  signUp: () => Promise<AxiosResponse>;
+  signUp: () => Promise<AxiosResponse | CustomErrorType>;
   reset: () => void;
   // initiateSocialLogin: (provider: "naver" | "kakao") => void;
   // handleSocialLoginCallback: (provider: "naver" | "kakao") => Promise<void>;
