@@ -3,6 +3,7 @@ import { useAuthStore } from "../../store/auth-store";
 import { nameToField, nameToType, returnPlaceholder } from "../../utils/transform-function";
 import { BANK_LIST } from "../../constants/bank-list";
 import PageScrollTop from "../common/PageScrollTop";
+import { CustomErrorType } from "@/types/common";
 
 const SignUp: React.FC = () => {
   const formListFirst = ["이메일", "이름", "비밀번호", "비밀번호확인"];
@@ -58,13 +59,15 @@ const SignUp: React.FC = () => {
     try {
       const response = await authStore.signUp();
       console.log("signUp()호출 결과 : " + response); // 서버 응답 체크 로그
-
-      if (response.status === 400) {
-        alert("이미 가입되어 있는 이메일 계정입니다.");
-      } else {
+      if (!response) {
         alert("회원가입이 완료되었습니다.");
         authStore.reset();
         setIsSubmitted(true);
+      } else {
+        const error = response as CustomErrorType;
+        if (error.errorCode === "ALREADY_EXIST_EMAIL") {
+          alert("이미 가입되어 있는 이메일 계정입니다.");
+        }
       }
     } catch (error: any) {
       console.error("회원가입 실패:", error);

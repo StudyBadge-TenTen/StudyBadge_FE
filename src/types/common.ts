@@ -3,4 +3,9 @@ interface EditModeType {
   setIsEditMode: (isEditMode: boolean) => void;
 }
 
-export type { EditModeType };
+interface CustomErrorType {
+  errorCode: string;
+  message: string;
+}
+
+export type { EditModeType, CustomErrorType };
