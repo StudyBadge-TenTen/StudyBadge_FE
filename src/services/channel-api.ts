@@ -120,8 +120,15 @@ const postBanish = async (studyChannelId: number, studyMemberId: number) => {
   }
 };
 
-// 화면에서 환급금 보여줄 때 요청할 api
-const endStudyRefunds = () => {};
+const postRecruitStart = async (studyChannelId: number) => {
+  const response = await fetchCall(`/api/study-channels/${studyChannelId}/recruitment/start`, "post");
+  return response;
+};
+
+const postRecruitEnd = async (studyChannelId: number) => {
+  const response = await fetchCall(`/api/study-channels/${studyChannelId}/recruitment/close`, "post");
+  return response;
+};
 
 export {
   getIsMember,
@@ -136,5 +143,6 @@ export {
   postApprove,
   postParticipate,
   postBanish,
-  endStudyRefunds,
+  postRecruitStart,
+  postRecruitEnd,
 };
