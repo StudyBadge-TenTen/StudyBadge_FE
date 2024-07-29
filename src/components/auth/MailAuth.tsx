@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Modal from "../common/Modal";
-import { getAuthEmail } from "@/services/auth-api";
+import { getAuthEmail, postEmailResend } from "@/services/auth-api";
 
 const MailAuth = (): JSX.Element => {
   const navigate = useNavigate();
@@ -11,8 +11,12 @@ const MailAuth = (): JSX.Element => {
   const handleClick = async () => {
     if (email && code) {
       try {
-        await getAuthEmail(email, code);
-        navigate("/login");
+        const response = await getAuthEmail(email, code);
+        if (response.status === 400) {
+          postEmailResend(email);
+        } else {
+          navigate("/login");
+        }
       } catch (error) {
         alert("이메일 인증에 실패하였습니다.");
         navigate("/");

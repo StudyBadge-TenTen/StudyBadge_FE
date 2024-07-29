@@ -56,19 +56,21 @@ const SignUp: React.FC = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      const result = await authStore.signUp();
-      console.log("signUp()호출 결과 : " + result); // 서버 응답 체크 로그
+      const response = await authStore.signUp();
+      console.log("signUp()호출 결과 : " + response); // 서버 응답 체크 로그
 
-      if (result) {
+      if (response.status === 400) {
+        alert("이미 가입되어 있는 이메일 계정입니다.");
+      } else {
         alert("회원가입이 완료되었습니다.");
         authStore.reset();
         setIsSubmitted(true);
-      } else {
-        alert("이미 가입되어 있는 이메일 계정입니다.");
       }
     } catch (error: any) {
       console.error("회원가입 실패:", error);
-      alert("회원가입에 실패하였습니다. 나중에 다시 시도해 주세요.");
+      alert(
+        "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      );
     }
   };
 

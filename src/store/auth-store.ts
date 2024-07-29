@@ -41,26 +41,18 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   },
   signUp: async () => {
     const { email, name, nickname, introduction, accountBank, account, password, checkPassword } = get();
-    try {
-      const response = await postSignUp({
-        email,
-        name,
-        nickname,
-        introduction,
-        accountBank,
-        account,
-        password,
-        checkPassword,
-      });
-      console.log("postSignUp 응답 : " + response); // 서버 응답 체크 로그
-      return response;
-    } catch (error: any) {
-      alert(
-        "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-      );
-      console.error("Sign up failed:", error);
-      throw error;
-    }
+    const response = await postSignUp({
+      email,
+      name,
+      nickname,
+      introduction,
+      accountBank,
+      account,
+      password,
+      checkPassword,
+    });
+    console.log("postSignUp 응답 : " + response); // 서버 응답 체크 로그
+    return response;
   },
   reset: () =>
     set({
