@@ -10,7 +10,7 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
       { withCredentials: true }, // withCredentials 옵션 추가
     );
 
-    const accessTokenBearer = response.headers["Authorization"] as string;
+    const accessTokenBearer = response.headers["authorization"] as string;
     const accessToken = accessTokenBearer.split(" ")[1];
     // console.log("Access token received:", accessToken); // 디버깅을 위해 추가
 

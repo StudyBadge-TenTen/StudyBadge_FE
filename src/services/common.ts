@@ -10,7 +10,7 @@ let API_TOKEN = "";
 
 const setApiToken = (token: string) => {
   API_TOKEN = token;
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${API_TOKEN}`;
+  axiosInstance.defaults.headers.common["authorization"] = `Bearer ${API_TOKEN}`;
   console.log("Token set in setApiToken:", API_TOKEN); // 디버깅을 위해 추가
 
   // dev 모드 시
@@ -52,11 +52,11 @@ axiosInstance.interceptors.request.use(
                   Authorization: `Bearer ${refreshToken}`,
                 },
               });
-              const newAccessToken = response.headers["Authorization"].split(" ")[1];
+              const newAccessToken = response.headers["authorization"].split(" ")[1];
 
               // 새로운 토큰 저장 및 요청 헤더에 추가
               setApiToken(newAccessToken);
-              config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+              config.headers["authorization"] = `Bearer ${newAccessToken}`;
 
               // 반환
               return config;
@@ -76,7 +76,7 @@ axiosInstance.interceptors.request.use(
           console.log("토큰 만료 전");
 
           const storageToken = sessionStorage.getItem("accessToken");
-          config.headers["Authorization"] = `Bearer ${storageToken}`;
+          config.headers["authorization"] = `Bearer ${storageToken}`;
           console.log(storageToken);
 
           return config;
@@ -85,7 +85,7 @@ axiosInstance.interceptors.request.use(
     } else {
       console.log("this is prod mode"); // 디버깅을 위해 추가
 
-      config.headers["Authorization"] = `Bearer ${API_TOKEN}`;
+      config.headers["authorization"] = `Bearer ${API_TOKEN}`;
       return config;
     }
     console.log("Request config:", config); // 디버깅을 위해 추가
@@ -123,11 +123,11 @@ axiosInstance.interceptors.response.use(
               Authorization: `Bearer ${refreshToken}`,
             },
           });
-          const newAccessToken = response.headers["Authorization"].split(" ")[1];
+          const newAccessToken = response.headers["authorization"].split(" ")[1];
 
           // 새로운 토큰 저장 및 요청 헤더에 추가
           setApiToken(newAccessToken);
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          originalRequest.headers["authorization"] = `Bearer ${newAccessToken}`;
 
           // 원래 요청을 다시 시도
           return axiosInstance(originalRequest);
