@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 import KingOfAttendance from "../components/channel/KingOfAttendance";
 import ParticipateBtn from "@/components/channel/ParticipateBtn";
+import GoBack from "@/components/common/GoBack";
 
 const ChannelPage = (): JSX.Element => {
   // 함수 작성 금지
@@ -12,6 +13,7 @@ const ChannelPage = (): JSX.Element => {
           <KingOfAttendance />
         </div>
       </div>
+      <GoBack />
       <ParticipateBtn />
       <div className="w-full h-fit mt-12 mb-24 flex justify-center items-center">
         <Outlet />
