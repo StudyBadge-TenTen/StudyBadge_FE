@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
       }
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      axios.defaults.headers.common["authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -92,7 +92,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
         { withCredentials: true },
       );
 
-      const accessTokenBearer = response.headers["Authorization"] as string;
+      const accessTokenBearer = response.headers["authorization"] as string;
 
       if (accessTokenBearer) {
         const accessToken = accessTokenBearer.replace("Bearer ", "");
