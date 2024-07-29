@@ -23,7 +23,9 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   login: async (email, password) => {
     try {
       const { accessToken, refreshToken } = await postLogin(email, password);
-      set({ accessToken, refreshToken });
+      console.log("postLogin token:", accessToken);
+
+      set({ accessToken: accessToken, refreshToken: refreshToken });
 
       // dev 모드 시
       if (import.meta.env.DEV) {
@@ -107,7 +109,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
         setApiToken(accessToken);
 
         // 새로운 accessToken을 저장, refreshToken은 쿠키에 있고 App컴포넌트에 새로고침 시 받아오는 코드 있음
-        set({ accessToken });
+        set({ accessToken: accessToken });
       }
     } catch (error) {
       console.error("Error refreshing access token:", error);
