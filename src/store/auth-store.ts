@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   accessToken: null,
   refreshToken: null,
   isLoginFailed: false,
-  isMember: true, // 추후 기본값 false로 수정
+  isMember: false,
   setLoginFailed: (status) => set((state) => ({ ...state, isLoginFailed: status })),
   setIsMember: (isMember) => set({ isMember }),
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
@@ -50,8 +50,9 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
         password,
         checkPassword,
       });
+      console.log("postSignUp 응답 : " + response); // 서버 응답 체크 로그
       return response;
-    } catch (error) {
+    } catch (error: any) {
       alert(
         "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
       );
