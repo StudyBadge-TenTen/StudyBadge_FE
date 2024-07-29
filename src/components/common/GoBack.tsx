@@ -1,6 +1,13 @@
+import { useNavigate } from "react-router";
+
 const GoBack = (): JSX.Element => {
+  const navigate = useNavigate();
+
   return (
-    <button className="text-Blue-2 font-bold flex justify-center items-center self-start ml-10 sm:ml-20">
+    <button
+      onClick={() => navigate("/")}
+      className="text-Blue-2 font-bold flex justify-center items-center self-start ml-10 sm:ml-20"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="28"
