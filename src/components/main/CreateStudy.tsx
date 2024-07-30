@@ -13,10 +13,25 @@ const CreateStudy: React.FC = () => {
   const study = useStudyStore();
   const [selectedRegion, setSelectedRegion] = useState({ region: "", district: "" });
   const navigate = useNavigate();
+  const today = moment(new Date()).format("YYYY-MM-DD");
 
   useEffect(() => {
     return study.resetForm();
   }, []);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.id === "createStartDate") {
+      if (!moment(e.target.value).isAfter(today)) {
+        alert("스터디 시작 날짜는 현재 날짜 이후로 지정할 수 있습니다.");
+        study.setField("startDate", today);
+      }
+    } else if (e.target.id === "createEndDate") {
+      if (!moment(study.startDate).isBefore(e.target.value)) {
+        alert("스터디 종료 날짜는 반드시 시작 날짜보다 이후로 설정해야 합니다.");
+        study.setField("endDate", moment(new Date()).add(1, "days").format("YYYY-MM-DD"));
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,10 +54,6 @@ const CreateStudy: React.FC = () => {
     }
     if (!study.startDate) {
       alert("스터디의 시작 날짜를 선택해주세요");
-      return;
-    }
-    if (!study.endDate) {
-      alert("스터디의 종료 날짜를 선택해주세요");
       return;
     }
     if (!study.endDate) {
@@ -199,8 +210,10 @@ const CreateStudy: React.FC = () => {
             <label className="block mb-2 text-Blue-2">시작 *</label>
             <input
               type="date"
+              id="createStartDate"
+              name="startDate"
               value={study.startDate}
-              onChange={(e) => study.setField("startDate", e.target.value)}
+              onChange={(e) => handleDateChange(e)}
               className="input"
               required
             />
@@ -209,8 +222,10 @@ const CreateStudy: React.FC = () => {
             <label className="block mb-2 text-Blue-2">종료 *</label>
             <input
               type="date"
+              id="createEndDate"
+              name="endDate"
               value={study.endDate}
-              onChange={(e) => study.setField("endDate", e.target.value)}
+              onChange={(e) => handleDateChange(e)}
               className="input"
               required
             />
