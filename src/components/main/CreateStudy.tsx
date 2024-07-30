@@ -143,7 +143,7 @@ const CreateStudy: React.FC = () => {
             <option value="IT">컴퓨터/IT/개발</option>
             <option value="LANGUAGE">언어/어학</option>
             <option value="EMPLOYMENT">취업/이직</option>
-            <option value="SELF_SELF_DEVELOPMENT">자기계발</option>
+            <option value="SELF_DEVELOPMENT">자기계발</option>
           </select>
         </div>
 
