@@ -4,6 +4,7 @@ import { useNotificationStore } from "../store/notification-store";
 import { Event, EventSourcePolyfill, MessageEvent } from "event-source-polyfill";
 import { NotificationType } from "../types/notification-type";
 import { LAST_EVENT_ID } from "../constants/local-storage";
+import { NEW_NOTIFICATION } from "@/constants/session-storage";
 
 export const useSSE = () => {
   const { accessToken, setField, isLoginFailed } = useAuthStore();
@@ -63,12 +64,12 @@ export const useSSE = () => {
           const newNotification: NotificationType = parsedData;
           // console.log("Parsed notification: ", newNotification); // 디버깅 로그 추가
 
+          sessionStorage.setItem(NEW_NOTIFICATION, JSON.stringify(newNotification));
+          localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
           // 중복 알림 필터링
-          const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
-          if (!isDuplicate) {
-            setNewNotification(newNotification); // 토스트에 넣을 새로운 알림
-            localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
-          }
+          // const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
+          // if (!isDuplicate) {
+          // }
         }
       } catch (error) {
         console.error("Failed to parse event data: ", error);

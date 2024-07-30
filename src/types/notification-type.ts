@@ -1,9 +1,7 @@
-type NotificationCategoryType = "SCHEDULE_CREATE" | "SCHEDULE_UPDATE" | "SCHEDULE_DELETE" | "SCHEDULE_REMINDER";
-
 interface NotificationType {
   notificationId: number;
   receiverId: number;
-  notificationType: NotificationCategoryType;
+  notificationType: string;
   content: string;
   url: string;
   isRead: boolean;
@@ -17,4 +15,4 @@ interface NotificationStoreType {
   setNotificationList: (newNotiList: NotificationType[]) => void;
 }
 
-export type { NotificationCategoryType, NotificationType, NotificationStoreType };
+export type { NotificationType, NotificationStoreType };

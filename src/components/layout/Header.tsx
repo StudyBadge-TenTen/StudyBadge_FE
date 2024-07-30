@@ -111,7 +111,7 @@ const Header = (): JSX.Element => {
                 <div
                   className={`new-icon ${(!accessToken || !newIcon) && "hidden"} w-2 h-2 rounded-full bg-Red-2 absolute top-0 right-0`}
                 ></div>
-                <Toast setNewIcon={setNewIcon} />
+                <Toast newIcon={newIcon} setNewIcon={setNewIcon} />
               </button>
             </div>
             {accessToken ? (
