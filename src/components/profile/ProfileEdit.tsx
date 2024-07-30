@@ -141,19 +141,22 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
       formData.append("file", imageFile);
     }
     try {
-      // 서버로 FormData 전송
       const URL = import.meta.env.DEV
         ? import.meta.env.VITE_APP_LOCAL_BASE_URL
         : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
-      const response = await axios.put(`${URL}/api/members/my-info/update`, formData, {
-        withCredentials: true,
+
+      const response = await axios({
+        method: "put",
+        url: `${URL}/api/members/my-info/update`,
+        data: formData,
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
       });
-      // 서버 응답 출력
-      console.log(response.data); // 디버깅 로그
+
+      console.log(response.data);
       navigate("/profile/myInfo");
       window.location.reload();
     } catch (error) {
