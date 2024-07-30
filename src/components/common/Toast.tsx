@@ -21,8 +21,14 @@ const Toast = ({
       const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
       if (newNotificationJSON) {
         const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
-        setNewToast(() => true);
-        setNewMessage(() => newNotification.content);
+        setNewMessage(newNotification.content);
+        setNewToast(true);
+
+        const timeoutId = setTimeout(() => {
+          setNewToast(false);
+        }, 5000);
+
+        return () => clearTimeout(timeoutId);
       }
     }
   }, [newIcon]);
@@ -55,6 +61,7 @@ const Toast = ({
   const handleClick = () => {
     if (newNotification) {
       setNewIcon(() => false);
+      setNewToast(false);
       navigate(`/profile/notification`);
     }
   };
