@@ -29,7 +29,7 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
       className="w-72 h-[22rem] border border-solid border-Gray-3 rounded-[50px] p-6 m-4 cursor-pointer"
     >
       <div className="badge flex justify-between items-center mb-2">
-        <div className="badge-basic bg-Red-1 text-white">
+        <div className={`badge-basic ${studyInfo.meetingType === "ONLINE" ? "bg-Green-1" : "bg-Red-1"} text-white`}>
           {studyInfo.meetingType === "ONLINE" ? "온라인" : "오프라인"}
         </div>
         <div className="badge-basic bg-Blue-2 text-white">
@@ -40,7 +40,9 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
         스터디 기간 | {studyInfo.startDate} ~ {studyInfo.endDate}
       </div>
       <div className="study-content flex flex-col justify-center items-center mt-6">
-        <h3 className="text-xl font-bold mb-4 text-ellipsis overflow-hidden whitespace-nowrap">{studyInfo.name}</h3>
+        <h3 className="w-full text-xl font-bold mb-4 text-ellipsis overflow-hidden whitespace-nowrap">
+          {studyInfo.name}
+        </h3>
         <p className="w-full h-24 line-clamp-4 overflow-y-hidden">{studyInfo.description}</p>
         <div className="w-28 h-8 bg-Gray-1 font-bold rounded-[30px] mt-4 flex justify-center items-center">
           {studyInfo.deposit.toLocaleString()}원

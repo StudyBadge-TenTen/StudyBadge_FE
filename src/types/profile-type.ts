@@ -26,7 +26,7 @@ interface UserInfoType {
   nickname: string;
   badgeLevel: BadgeType;
   account: string;
-  accountBank?: string;
+  accountBank: string;
   introduction: string;
   imgUrl: string;
   point: number;

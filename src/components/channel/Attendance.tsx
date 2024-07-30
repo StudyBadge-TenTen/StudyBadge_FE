@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/auth-store";
 import { useAttendanceList } from "@/hooks/useQuery";
+import PersonIcon from "../common/PersonIcon";
 // import { useAllSchedules } from "@/hooks/useQuery";
 
 const Attendance = (): JSX.Element => {
@@ -42,11 +43,17 @@ const Attendance = (): JSX.Element => {
               data.map((member) => (
                 <div key={member.studyMemberId} className="w-full h-fit px-2 py-4 flex justify-center items-center">
                   <div className="flex flex-col justify-center items-center mr-10">
-                    <img
-                      src={member.imageUrl}
-                      alt="프로필 이미지"
-                      className="object-cover w-28 h-28 rounded-full bg-Gray-1"
-                    />
+                    {member.imageUrl ? (
+                      <img
+                        src={member.imageUrl}
+                        alt="프로필 이미지"
+                        className="object-cover w-28 h-28 rounded-full bg-Gray-1"
+                      />
+                    ) : (
+                      <div className="w-28 h-28 rounded-full bg-white flex justify-center items-center">
+                        <PersonIcon color="text-Gray-3" size={[60, 60]} />
+                      </div>
+                    )}
                     <p className="text-lg text-Blue-2 font-bold">{member.name}</p>
                   </div>
                   <div className="w-full flex flex-col sm:flex-row pr-6">

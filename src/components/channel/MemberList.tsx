@@ -10,6 +10,7 @@ import { useState } from "react";
 import Modal from "../common/Modal";
 import { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth-store";
+import PersonIcon from "../common/PersonIcon";
 
 const banishContent = `해당 멤버를 스터디에서 퇴출시키겠습니까?\n(퇴출 시 총 예치금에서 퇴출 멤버가 지불한 예치금을 전액 제외합니다.)`;
 
@@ -103,11 +104,17 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                     {member.badgeLevel === "SILVER" && <img src={SILVER_BADGE} className="absolute w-16 right-8" />}
                     {member.badgeLevel === "GOLD" && <img src={GOLD_BADGE} className="absolute w-16 right-8" />}
                     <div className="flex flex-col justify-center items-center">
-                      <img
-                        src={member.imageUrl}
-                        alt="프로필 이미지"
-                        className="object-cover w-28 h-28 rounded-full bg-Gray-1"
-                      />
+                      {member.imageUrl ? (
+                        <img
+                          src={member.imageUrl}
+                          alt="프로필 이미지"
+                          className="object-cover w-28 h-28 rounded-full bg-Gray-1"
+                        />
+                      ) : (
+                        <div className="w-28 h-28 rounded-full bg-Gray-3 flex justify-center items-center">
+                          <PersonIcon color="text-white" size={[60, 60]} />
+                        </div>
+                      )}
                       <p
                         className={`${!isStudyEnd && data.leader ? "text-xl" : "text-2xl mt-10"} font-bold text-Blue-2`}
                       >

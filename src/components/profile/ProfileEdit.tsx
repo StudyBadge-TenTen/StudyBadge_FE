@@ -30,7 +30,7 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         nickname: userInfo.nickname,
         introduction: userInfo.introduction,
         account: userInfo.account,
-        accountBank: userInfo.accountBank ?? "",
+        accountBank: userInfo.accountBank,
         imgUrl: userInfo.imgUrl,
       }));
     }
@@ -98,7 +98,13 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   };
 
   // 프로필 수정을 저장할 때 반영하도록 하는 함수
-  const handleSaveClick = async (profileInfo: ProfileInfoType, imageFile: ProfilePutType["file"]) => {
+  const handleSaveClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    profileInfo: ProfileInfoType,
+    imageFile: ProfilePutType["file"],
+  ) => {
+    e.preventDefault();
+
     // 계좌정보 값 필수 체크
     if (accountRef.current) {
       if (!accountRef.current.value) {
@@ -151,7 +157,6 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         data: formData,
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
@@ -255,7 +260,10 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
               </option>
             ))}
           </select>
-          <button onClick={() => handleSaveClick(profileInfo, imageFile)} className="btn-blue w-fit self-center mt-10">
+          <button
+            onClick={(e) => handleSaveClick(e, profileInfo, imageFile)}
+            className="btn-blue w-fit self-center mt-10"
+          >
             저장하기
           </button>
         </div>

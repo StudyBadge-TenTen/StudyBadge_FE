@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Modal from "../common/Modal";
 import { useGetStudyInfo, useRecruitment } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
+import PersonIcon from "../common/PersonIcon";
 
 const Recruitment = (): JSX.Element => {
   const { accessToken } = useAuthStore();
@@ -124,11 +125,17 @@ const Recruitment = (): JSX.Element => {
                       className="w-full sm:h-40 border border-solid border-Gray-3 rounded-[30px] flex flex-col sm:flex-row justify-between items-center py-4 sm:py-2 px-4 sm:px-10 mb-2"
                     >
                       <div className="flex justify-center items-center">
-                        <img
-                          src={""}
-                          alt="프로필 이미지"
-                          className="object-cover w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-Gray-1 mr-6"
-                        />
+                        {participant.imageUrl ? (
+                          <img
+                            src={participant.imageUrl}
+                            alt="프로필 이미지"
+                            className="object-cover w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-Gray-1 mr-6"
+                          />
+                        ) : (
+                          <div className="w-20 h-20 rounded-full bg-Gray-3 flex justify-center items-center">
+                            <PersonIcon color="text-white" size={[60, 60]} />
+                          </div>
+                        )}
                         <div className="w-fit h-full flex flex-col justify-center items-center">
                           {participant.badgeLevel === "NONE" && <img src={NONE_BADGE} className="w-16" />}
                           {participant.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="w-16" />}
@@ -183,9 +190,11 @@ const Recruitment = (): JSX.Element => {
                   신청 리스트를 불러오는데 실패하였습니다. errorName: {error.name}. errorMessage: {error.message}
                 </p>
               )}
-              <button onClick={() => handleRecruitEnd()} className="btn-blue w-24 mt-8">
-                모집마감
-              </button>
+              <div className="w-full flex justify-center items-center">
+                <button onClick={() => handleRecruitEnd()} className="btn-blue w-24 mt-8">
+                  모집마감
+                </button>
+              </div>
             </div>
           </div>
         </div>
