@@ -14,11 +14,11 @@ const setApiToken = (token: string) => {
   console.log("Token set in setApiToken:", API_TOKEN); // 디버깅을 위해 추가
 
   // dev 모드 시
-  if (import.meta.env.DEV) {
-    const expirationTime = new Date().getTime() + 7200000; // 2시간
-    sessionStorage.setItem("accessToken", token);
-    sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
-  }
+  // if (import.meta.env.DEV) {
+  //   const expirationTime = new Date().getTime() + 7200000; // 2시간
+  //   sessionStorage.setItem("accessToken", token);
+  //   sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
+  // }
 };
 
 const axiosInstance = axios.create({
@@ -35,53 +35,47 @@ axiosInstance.interceptors.request.use(
     // 요청 헤더에 인증 토큰 추가해야함
 
     if (import.meta.env.DEV) {
-      console.log("this is dev mode");
-
-      // dev 모드 시 스토리지에 토큰 저장
-      const tokenExpiration = sessionStorage.getItem("accessTokenExpiration");
-
-      // 만료 => 재발급 처리
-      if (tokenExpiration) {
-        const isTokenExpired = new Date().getTime() > parseInt(tokenExpiration);
-        if (isTokenExpired) {
-          const refreshToken = getCookie("refreshToken");
-          if (refreshToken) {
-            try {
-              const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
-                headers: {
-                  Authorization: `Bearer ${refreshToken}`,
-                },
-              });
-              const newAccessToken = response.headers["authorization"].split(" ")[1];
-
-              // 새로운 토큰 저장 및 요청 헤더에 추가
-              setApiToken(newAccessToken);
-              config.headers["authorization"] = `Bearer ${newAccessToken}`;
-
-              // 반환
-              return config;
-            } catch (refreshError) {
-              console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
-              // 필요에 따라 로그아웃 처리 등 추가 작업 수행
-              try {
-                await postLogout();
-                console.log("Token refresh error - try logout:", refreshError);
-              } catch (error) {
-                console.error("Logout error:", refreshError);
-                return Promise.reject(error);
-              }
-            }
-          }
-        } else {
-          console.log("토큰 만료 전");
-
-          const storageToken = sessionStorage.getItem("accessToken");
-          config.headers["authorization"] = `Bearer ${storageToken}`;
-          console.log(storageToken);
-
-          return config;
-        }
-      }
+      //   console.log("this is dev mode");
+      //   // dev 모드 시 스토리지에 토큰 저장
+      //   const tokenExpiration = sessionStorage.getItem("accessTokenExpiration");
+      //   // 만료 => 재발급 처리
+      // if (tokenExpiration) {
+      //     const isTokenExpired = new Date().getTime() > parseInt(tokenExpiration);
+      //     if (isTokenExpired) {
+      //       const refreshToken = getCookie("refreshToken");
+      //       if (refreshToken) {
+      //         try {
+      //           const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
+      //             headers: {
+      //               Authorization: `Bearer ${refreshToken}`,
+      //             },
+      //           });
+      //           const newAccessToken = response.headers["authorization"].split(" ")[1];
+      //           // 새로운 토큰 저장 및 요청 헤더에 추가
+      //           setApiToken(newAccessToken);
+      //           config.headers["authorization"] = `Bearer ${newAccessToken}`;
+      //           // 반환
+      //           return config;
+      //         } catch (refreshError) {
+      //           console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
+      //           // 필요에 따라 로그아웃 처리 등 추가 작업 수행
+      //           try {
+      //             await postLogout();
+      //             console.log("Token refresh error - try logout:", refreshError);
+      //           } catch (error) {
+      //             console.error("Logout error:", refreshError);
+      //             return Promise.reject(error);
+      //           }
+      //         }
+      //       }
+      //     } else {
+      //       console.log("토큰 만료 전");
+      //       const storageToken = sessionStorage.getItem("accessToken");
+      //       config.headers["authorization"] = `Bearer ${storageToken}`;
+      //       console.log(storageToken);
+      //       return config;
+      //     }
+      //   }
     } else {
       console.log("this is prod mode"); // 디버깅을 위해 추가
 

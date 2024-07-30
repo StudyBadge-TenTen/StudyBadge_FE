@@ -11,11 +11,11 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
     );
 
     if (response.status === 500) {
-      if (import.meta.env.DEV) {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessTokenExpiration");
-        window.location.reload();
-      }
+      // if (import.meta.env.DEV) {
+      //   sessionStorage.removeItem("accessToken");
+      //   sessionStorage.removeItem("accessTokenExpiration");
+      //   window.location.reload();
+      // }
     }
 
     const accessTokenBearer = response.headers["authorization"] as string;
@@ -88,11 +88,11 @@ export const postLogout = async () => {
   } catch (error) {
     console.log(error); // 디버깅 로그
   } finally {
-    if (import.meta.env.DEV) {
-      sessionStorage.removeItem("accessToken");
-      sessionStorage.removeItem("accessTokenExpiration");
-      window.location.reload();
-    }
+    // if (import.meta.env.DEV) {
+    //   sessionStorage.removeItem("accessToken");
+    //   sessionStorage.removeItem("accessTokenExpiration");
+    //   window.location.reload();
+    // }
     setApiToken("");
   }
 };

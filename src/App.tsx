@@ -9,13 +9,13 @@ import useLoginFailed from "./hooks/useLoginFailed";
 import { getCookie } from "./utils/get-cookie";
 
 function App() {
-  const refreshToken = getCookie("refreshToken");
   const { refreshAccessToken, setField } = useAuthStore();
 
   useEffect(() => {
-    if (refreshToken) {
-      console.log("refreshToken:", refreshToken);
+    const refreshToken = getCookie("refreshToken");
 
+    console.log("refreshToken: ", refreshToken);
+    if (refreshToken) {
       const initAuth = async () => {
         try {
           await refreshAccessToken();
@@ -26,13 +26,15 @@ function App() {
 
       initAuth();
     }
-  }, []);
+  }, [refreshAccessToken]);
 
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      const storageToken = sessionStorage.getItem("accessToken");
-      storageToken && setField("accessToken", storageToken);
-    }
+    // if (import.meta.env.DEV) {
+    //   const storageToken = sessionStorage.getItem("accessToken");
+    //   if (storageToken) {
+    //     setField("accessToken", storageToken);
+    //   }
+    // }
   }, [setField]);
 
   useLoginFailed();
