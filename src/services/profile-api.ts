@@ -80,7 +80,7 @@ const getPointHistory = async (page: number, size: number) => {
 };
 
 const postPaymentCancel = async (paymentKey: string) => {
-  const requestBody = { paymentKey: paymentKey, cancelReason: "" };
+  const requestBody = { paymentKey: paymentKey, cancelReason: "포인트 충전 취소" };
   try {
     const response = await fetchCall<AxiosResponse | AxiosError>(`/api/payments/cancel`, "post", requestBody);
     if (axios.isAxiosError(response)) {

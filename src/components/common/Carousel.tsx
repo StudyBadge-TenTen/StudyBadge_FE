@@ -28,13 +28,13 @@ const MainCarousel = (): JSX.Element => {
 
   return (
     <>
-      <div className="w-full h-80 md:h-[520px] mt-10">
+      <div className="w-full h-52 md:h-[520px] mt-6 md:mt-10">
         <Carousel
           autoPlay={true}
           infiniteLoop={true}
           showStatus={false}
           showThumbs={false}
-          interval={6000}
+          interval={4000}
           onChange={handleChange}
         >
           {carouselList.map((item, index) => (
