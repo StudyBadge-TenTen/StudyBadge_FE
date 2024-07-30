@@ -23,8 +23,8 @@ const ScheduleEdit = (): JSX.Element => {
   const { selectedDate } = useSelectedDateStore();
   const [selector, setSelector] = useState<SelectorType>("");
   const [inputValue, setInputValue] = useState({
-    name: originInfo ? originInfo.scheduleName : "",
-    content: originInfo ? originInfo.scheduleContent : "",
+    name: "",
+    content: "",
   });
   const [time, setTime] = useState({
     start: ["00", "00"],
@@ -78,6 +78,7 @@ const ScheduleEdit = (): JSX.Element => {
 
   useEffect(() => {
     if (originInfo) {
+      setInputValue(() => ({ name: originInfo.scheduleName, content: originInfo.scheduleContent }));
       setTime({
         start: [originInfo.scheduleStartTime.split(":")[0], originInfo.scheduleStartTime.split(":")[1]],
         end: [originInfo.scheduleEndTime.split(":")[0], originInfo.scheduleEndTime.split(":")[1]],
@@ -247,7 +248,6 @@ const ScheduleEdit = (): JSX.Element => {
                 id="scheduleName"
                 type="text"
                 placeholder="일정 이름 (*최대 한글 기준 20자)"
-                defaultValue={originInfo ? originInfo.scheduleName : undefined}
                 value={inputValue.name}
                 onChange={(e) => handleChange(e)}
                 className="w-full p-4 px-6 bg-Gray-1 border-b border-solid border-Gray-3 rounded-t-[30px]"
@@ -258,7 +258,6 @@ const ScheduleEdit = (): JSX.Element => {
                 id="scheduleContent"
                 type="text"
                 placeholder="내용 (*최대 한글 기준 70자)"
-                defaultValue={originInfo ? originInfo.scheduleContent : undefined}
                 value={inputValue.content}
                 onChange={(e) => handleChange(e)}
                 className="w-full p-4 px-6 bg-Gray-1 rounded-b-[30px]"

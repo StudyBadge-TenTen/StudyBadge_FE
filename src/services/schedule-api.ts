@@ -55,7 +55,6 @@ const postSchedule = async (
   scheduleInfo: NewScheduleType,
   repeatState: RepeatCycleType | "NONE",
 ) => {
-  if (!studyChannelId || !scheduleInfo || !repeatState) return;
   let response;
 
   if (repeatState === "NONE") {
@@ -76,7 +75,6 @@ const postSchedule = async (
 };
 
 const putSchedule = async (studyChannelId: number, newScheduleInfo: NewScheduleType, isAfterEvent?: boolean) => {
-  if (!studyChannelId || !newScheduleInfo || !isAfterEvent) return;
   let response;
 
   if (isAfterEvent === undefined) {
@@ -97,7 +95,6 @@ const deleteSchedule = async (
   deleteRequestBody: DeleteRequestBodyType,
   isAfterEvent?: boolean,
 ) => {
-  if (!studyChannelId || !deleteRequestBody || !isAfterEvent) return;
   let response;
 
   if (isAfterEvent === undefined) {
