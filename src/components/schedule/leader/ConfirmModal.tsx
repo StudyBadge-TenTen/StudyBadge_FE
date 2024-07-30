@@ -3,6 +3,8 @@ import Modal from "../../common/Modal";
 import { useSelectedDateStore } from "../../../store/schedule-store";
 import { deleteSchedule, postSchedule, putSchedule } from "../../../services/schedule-api";
 import { ConfirmModalPropsType } from "../../../types/schedule-type";
+import { useUserInfo } from "@/hooks/useQuery";
+import { useAuthStore } from "@/store/auth-store";
 
 const ConfirmModal = ({
   channelId,
@@ -13,7 +15,9 @@ const ConfirmModal = ({
   repeatState,
 }: ConfirmModalPropsType): JSX.Element => {
   const navigate = useNavigate();
+  const { accessToken } = useAuthStore();
   const { selectedDate } = useSelectedDateStore();
+  const userInfo = useUserInfo(accessToken);
 
   const handleModalBtnClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
@@ -74,9 +78,9 @@ const ConfirmModal = ({
           }
         }
       } else if (modalInfo.modalFor === "DELETE") {
-        if (originInfo) {
+        if (originInfo && userInfo.data) {
           const deleteRequestBody = {
-            memberId: 1, // memberId 필요
+            memberId: userInfo.data.memberId,
             scheduleId: originInfo.id,
             selectedDate: selectedDate,
           };
