@@ -11,7 +11,7 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
     );
 
     if (response.status === 500) {
-      if (import.meta.env.DEV || import.meta.env.PROD) {
+      if (import.meta.env.DEV) {
         sessionStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessTokenExpiration");
         window.location.reload();
@@ -88,7 +88,7 @@ export const postLogout = async () => {
   } catch (error) {
     console.log(error); // 디버깅 로그
   } finally {
-    if (import.meta.env.DEV || import.meta.env.PROD) {
+    if (import.meta.env.DEV) {
       sessionStorage.removeItem("accessToken");
       sessionStorage.removeItem("accessTokenExpiration");
       window.location.reload();

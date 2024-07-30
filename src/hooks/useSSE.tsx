@@ -16,7 +16,7 @@ export const useSSE = () => {
   // console.log("useSSE hook"); // useSSE 작동 테스트
 
   useEffect(() => {
-    if (import.meta.env.DEV || import.meta.env.PROD) {
+    if (import.meta.env.DEV) {
       const storedAccessToken = sessionStorage.getItem("accessToken");
       if (storedAccessToken) {
         setField("accessToken", storedAccessToken);

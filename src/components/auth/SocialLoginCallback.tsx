@@ -16,7 +16,7 @@ const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
         // console.log(accessToken); // 디버깅 로그 추가
 
         setField("accessToken", accessToken);
-        if (import.meta.env.DEV || import.meta.env.PROD) {
+        if (import.meta.env.DEV) {
           sessionStorage.setItem("accessToken", accessToken);
         }
         if (first) {

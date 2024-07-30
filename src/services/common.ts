@@ -14,7 +14,7 @@ const setApiToken = (token: string) => {
   console.log("Token set in setApiToken:", API_TOKEN); // 디버깅을 위해 추가
 
   // dev 모드 시
-  if (import.meta.env.DEV || import.meta.env.PROD) {
+  if (import.meta.env.DEV) {
     const expirationTime = new Date().getTime() + 7200000; // 2시간
     sessionStorage.setItem("accessToken", token);
     sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
@@ -34,7 +34,7 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     // 요청 헤더에 인증 토큰 추가해야함
 
-    if (import.meta.env.DEV || import.meta.env.PROD) {
+    if (import.meta.env.DEV) {
       console.log("this is dev mode");
 
       // dev 모드 시 스토리지에 토큰 저장

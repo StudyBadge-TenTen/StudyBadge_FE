@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (import.meta.env.DEV || import.meta.env.PROD) {
+    if (import.meta.env.DEV) {
       const storageToken = sessionStorage.getItem("accessToken");
       storageToken && setField("accessToken", storageToken);
     }
