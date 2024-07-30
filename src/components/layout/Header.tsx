@@ -20,7 +20,9 @@ const Header = (): JSX.Element => {
   const [isSearchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
-    setNewIcon(() => true);
+    if (newNotification) {
+      setNewIcon(() => true);
+    }
   }, [newNotification]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

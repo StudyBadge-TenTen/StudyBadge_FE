@@ -24,11 +24,20 @@ const CreateStudy: React.FC = () => {
       if (!moment(e.target.value).isAfter(today)) {
         alert("스터디 시작 날짜는 현재 날짜 이후로 지정할 수 있습니다.");
         study.setField("startDate", today);
+      } else {
+        study.setField("startDate", e.target.value);
       }
     } else if (e.target.id === "createEndDate") {
       if (!moment(study.startDate).isBefore(e.target.value)) {
-        alert("스터디 종료 날짜는 반드시 시작 날짜보다 이후로 설정해야 합니다.");
-        study.setField("endDate", moment(new Date()).add(1, "days").format("YYYY-MM-DD"));
+        if (moment(new Date()).add(1, "days").isBefore(study.startDate)) {
+          alert("스터디 종료 날짜는 반드시 시작 날짜보다 이후로 설정해야 합니다.");
+          study.setField("endDate", moment(study.startDate).add(1, "days").format("YYYY-MM-DD"));
+        } else {
+          alert("스터디 종료 날짜는 반드시 시작 날짜보다 이후로 설정해야 합니다.");
+          study.setField("endDate", moment(new Date()).add(1, "days").format("YYYY-MM-DD"));
+        }
+      } else {
+        study.setField("endDate", e.target.value);
       }
     }
   };

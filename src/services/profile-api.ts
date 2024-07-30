@@ -86,17 +86,22 @@ const postPaymentCancel = async (paymentKey: string) => {
 };
 
 const getApplicationList = async () => {
-  const participationList = await fetchCall<ApplicationType[] | AxiosError>(`/api/members/my-apply`, "get");
-  if (axios.isAxiosError(participationList)) {
-    const error = participationList.response?.data as CustomErrorType;
-    if (error.errorCode === "NOT_FOUND_PARTICIPATION") {
-      return [];
+  try {
+    const participationList = await fetchCall<ApplicationType[] | AxiosError>(`/api/members/my-apply`, "get");
+    if (axios.isAxiosError(participationList)) {
+      const error = participationList.response?.data as CustomErrorType;
+      if (error.errorCode === "NOT_FOUND_PARTICIPATION") {
+        return [];
+      } else {
+        alert(error.message);
+        return [];
+      }
     } else {
-      alert(error.message);
-      return [];
+      return participationList ?? [];
     }
-  } else {
-    return participationList ?? [];
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 };
 

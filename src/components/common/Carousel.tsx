@@ -30,7 +30,6 @@ const MainCarousel = (): JSX.Element => {
     <>
       <div className="w-full h-80 md:h-[520px] mt-10">
         <Carousel
-          showArrows={false}
           autoPlay={true}
           infiniteLoop={true}
           showStatus={false}
