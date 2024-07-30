@@ -55,7 +55,7 @@ interface StudyListObjectType extends BasicStudyInfoType {
   description: string;
   studyChannelId: number;
   recruitmentStatus: RecruitmentStatusType;
-  viewCount: number;
+  viewCnt: number;
   memberId: number;
   memberName: string;
 }

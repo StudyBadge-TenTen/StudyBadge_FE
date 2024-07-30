@@ -18,7 +18,7 @@ const ProfileTab = (): JSX.Element => {
   usePageScrollTop();
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuthStore();
+  const { accessToken, logout } = useAuthStore();
   const { setIsEditMode } = useEditModeStore();
   const [profileState, setProfileState] = useState("myInfo");
   const [modalOpen, setModalOpen] = useState(false);
@@ -58,12 +58,16 @@ const ProfileTab = (): JSX.Element => {
         ))}
       </div>
       <div className="w-full flex justify-between mt-8">
-        <button onClick={() => setModalOpen(() => true)} className="w-24 md:w-full text-center text-Red-2 py-2">
-          회원 탈퇴하기
-        </button>
-        <button onClick={() => setLogoutModal(() => true)} className={`w-20 btn-blue w-10 md:hidden`}>
-          로그아웃
-        </button>
+        {accessToken && (
+          <>
+            <button onClick={() => setModalOpen(() => true)} className="w-24 md:w-full text-center text-Red-2 py-2">
+              회원 탈퇴하기
+            </button>
+            <button onClick={() => setLogoutModal(() => true)} className={`w-20 btn-blue w-10 md:hidden`}>
+              로그아웃
+            </button>
+          </>
+        )}
         {logoutModal && (
           <Modal>
             <div className="flex flex-col justify-center items-center">

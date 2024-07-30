@@ -77,7 +77,7 @@ const Recruitment = (): JSX.Element => {
     window.location.reload();
   };
 
-  if (studyInfo.data && studyInfo.data.recruitmentStatus === "RECRUIT_COMPLETED") {
+  if (data && data.recruitmentStatus === "RECRUIT_COMPLETED") {
     return (
       <>
         <div className="w-full h-[600px] border border-solid border-Gray-3 rounded-[50px]">

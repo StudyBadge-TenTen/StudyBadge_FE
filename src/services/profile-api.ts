@@ -23,9 +23,13 @@ const getProfile = async () => {
 const getMyStudy = async () => {
   const myStudy = await fetchCall<MyStudyType[] | AxiosError>(`/api/members/my-study`, "get");
   if (axios.isAxiosError(myStudy)) {
-    const error = myStudy.response?.data as CustomErrorType;
-    alert(error.message);
-    return [];
+    if (myStudy.response?.status === 404) {
+      return [];
+    } else {
+      const error = myStudy.response?.data as CustomErrorType;
+      console.log(error.message);
+      return [];
+    }
   } else {
     return myStudy ?? [];
   }
@@ -37,12 +41,16 @@ const getPaymentsHistory = async (page: number, size: number) => {
     "get",
   );
   if (axios.isAxiosError(paymentsHistory)) {
-    const error = paymentsHistory.response?.data as CustomErrorType;
-    if (error.errorCode === "NOT_FOUND_PAYMENT") {
+    if (paymentsHistory.response?.status === 404) {
       return [];
     } else {
-      console.log(error.message);
-      return [];
+      const error = paymentsHistory.response?.data as CustomErrorType;
+      if (error.errorCode === "NOT_FOUND_PAYMENT") {
+        return [];
+      } else {
+        console.log(error.message);
+        return [];
+      }
     }
   } else {
     return paymentsHistory ?? [];
@@ -55,12 +63,16 @@ const getPointHistory = async (page: number, size: number) => {
     "get",
   );
   if (axios.isAxiosError(pointHistory)) {
-    const error = pointHistory.response?.data as CustomErrorType;
-    if (error.errorCode === "NOT_FOUND_POINT") {
+    if (pointHistory.response?.status === 404) {
       return [];
     } else {
-      console.log(error.message);
-      return [];
+      const error = pointHistory.response?.data as CustomErrorType;
+      if (error.errorCode === "NOT_FOUND_POINT") {
+        return [];
+      } else {
+        console.log(error.message);
+        return [];
+      }
     }
   } else {
     return pointHistory ?? [];
@@ -89,12 +101,16 @@ const getApplicationList = async () => {
   try {
     const participationList = await fetchCall<ApplicationType[] | AxiosError>(`/api/members/my-apply`, "get");
     if (axios.isAxiosError(participationList)) {
-      const error = participationList.response?.data as CustomErrorType;
-      if (error.errorCode === "NOT_FOUND_PARTICIPATION") {
+      if (participationList.response?.status === 404) {
         return [];
       } else {
-        alert(error.message);
-        return [];
+        const error = participationList.response?.data as CustomErrorType;
+        if (error.errorCode === "NOT_FOUND_PARTICIPATION") {
+          return [];
+        } else {
+          console.log(error.message);
+          return [];
+        }
       }
     } else {
       return participationList ?? [];
