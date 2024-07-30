@@ -61,13 +61,13 @@ const ConfirmModal = ({
             // const response = await putSchedule(Number(channelId), newSchedule, false);
             // console.log(response); // 디버깅로그
           }
-          navigate(`/channel/${channelId}`);
+          navigate(`/channel/${channelId}/schedule/${selectedDate}`);
         } else {
           if (target.classList.contains("yes")) {
             await putSchedule(Number(channelId), newSchedule);
             // const response = await putSchedule(Number(channelId), newSchedule);
             // console.log(response); // 디버깅로그
-            navigate(`/channel/${channelId}`);
+            navigate(`/channel/${channelId}/schedule/${selectedDate}`);
           } else if (target.classList.contains("no")) {
             setModalInfo(() => ({
               isOpen: false,
@@ -95,13 +95,13 @@ const ConfirmModal = ({
               // const response = await deleteSchedule(Number(channelId), deleteRequestBody, false);
               // console.log(response); // 디버깅로그
             }
-            navigate(`/channel/${channelId}`);
+            navigate(`/channel/${channelId}/schedule/${selectedDate}`);
           } else {
             if (target.classList.contains("yes")) {
               await deleteSchedule(Number(channelId), deleteRequestBody);
               // const response = await deleteSchedule(Number(channelId), deleteRequestBody);
               // console.log(response); // 디버깅로그
-              navigate(`/channel/${channelId}`);
+              navigate(`/channel/${channelId}/schedule/${selectedDate}`);
             } else if (target.classList.contains("no")) {
               setModalInfo(() => ({
                 isOpen: false,
