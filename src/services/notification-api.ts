@@ -1,5 +1,6 @@
 import { NotificationType } from "@/types/notification-type";
 import { fetchCall } from "./common";
+import { AxiosResponse } from "axios";
 
 const getNotifications = async () => {
   try {
@@ -13,7 +14,7 @@ const getNotifications = async () => {
 
 const patchReadNoti = async (notificationId: number) => {
   try {
-    await fetchCall<ResponseType>(`/api/notifications`, "patch", notificationId);
+    await fetchCall<AxiosResponse>(`/api/notifications`, "patch", { notificationId });
   } catch (error) {
     console.log(error);
   }
