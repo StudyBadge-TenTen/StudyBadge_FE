@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNotificationStore } from "../../store/notification-store";
 import { useNavigate } from "react-router";
+import { NEW_NOTIFICATION } from "@/constants/session-storage";
 
 const Toast = ({
   setNewIcon,
@@ -13,7 +14,7 @@ const Toast = ({
 }) => {
   const navigate = useNavigate();
   const [toast, setToast] = useState(false);
-  const { newNotification } = useNotificationStore();
+  const { newNotification, setNewNotification } = useNotificationStore();
 
   useEffect(() => {
     setToast(() => true);
@@ -23,6 +24,8 @@ const Toast = ({
     if (newNotification) {
       setNewIcon(() => false);
       setNewToast(false);
+      setNewNotification(null);
+      sessionStorage.removeItem(NEW_NOTIFICATION);
       navigate(`/profile/notification`);
     }
   };
