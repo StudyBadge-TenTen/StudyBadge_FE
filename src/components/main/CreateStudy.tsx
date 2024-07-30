@@ -6,6 +6,8 @@ import moment from "moment";
 import { postStudyChannel } from "../../services/channel-api";
 import { PENALTY_SYSTEM } from "../../constants/penalty-system-info";
 import PageScrollTop from "../common/PageScrollTop";
+import axios from "axios";
+import { CustomErrorType } from "@/types/common";
 
 const CreateStudy: React.FC = () => {
   const study = useStudyStore();
@@ -61,10 +63,15 @@ const CreateStudy: React.FC = () => {
     }
 
     try {
-      await postStudyChannel(study);
-      alert("스터디 채널 생성이 완료되었습니다.");
-      study.resetForm();
-      navigate(`/`);
+      const response = await postStudyChannel(study);
+      if (axios.isAxiosError(response)) {
+        const error = response.response?.data as CustomErrorType;
+        alert(error.message);
+      } else {
+        alert("스터디 채널 생성이 완료되었습니다.");
+        study.resetForm();
+        navigate(`/`);
+      }
     } catch (error) {
       console.error("Failed to create study:", error);
       alert(

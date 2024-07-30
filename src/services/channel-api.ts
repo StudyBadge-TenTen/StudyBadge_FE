@@ -17,7 +17,7 @@ const getIsMember = async (studyChannelId: number) => {
 };
 
 const postStudyChannel = async (requestBody: postStudyRequestType) => {
-  const response = await fetchCall<{ studyChannelId: number }>(`/api/study-channels`, "post", requestBody);
+  const response = await fetchCall<{ studyChannelId: number } | AxiosError>(`/api/study-channels`, "post", requestBody);
   return response;
 };
 
