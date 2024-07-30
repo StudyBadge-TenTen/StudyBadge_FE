@@ -8,6 +8,8 @@ import { useNotificationStore } from "../../store/notification-store";
 import { useAuthStore } from "../../store/auth-store";
 import Modal from "../common/Modal";
 import MobileSearchBar from "./header_contents/MobileSearchBar";
+import { NEW_NOTIFICATION } from "@/constants/session-storage";
+import { NotificationType } from "@/types/notification-type";
 
 const Header = (): JSX.Element => {
   const navigate = useNavigate();
@@ -15,9 +17,27 @@ const Header = (): JSX.Element => {
   const { filter, setFilter } = useFilterStore();
   const { newNotification } = useNotificationStore();
   const [newIcon, setNewIcon] = useState(false);
+  const [newToast, setNewToast] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
   const { accessToken, logout, reset } = useAuthStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    if (newIcon) {
+      const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
+      if (newNotificationJSON) {
+        const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
+        setNewMessage(newNotification.content);
+        setNewToast(true);
+
+        setTimeout(() => {
+          setNewToast(false);
+          setNewMessage("");
+        }, 5000);
+      }
+    }
+  }, [newIcon]);
 
   useEffect(() => {
     if (newNotification) {
@@ -111,7 +131,7 @@ const Header = (): JSX.Element => {
                 <div
                   className={`new-icon ${(!accessToken || !newIcon) && "hidden"} w-2 h-2 rounded-full bg-Red-2 absolute top-0 right-0`}
                 ></div>
-                <Toast newIcon={newIcon} setNewIcon={setNewIcon} />
+                {newToast && <Toast setNewIcon={setNewIcon} setNewToast={setNewToast} newMessage={newMessage} />}
               </button>
             </div>
             {accessToken ? (
