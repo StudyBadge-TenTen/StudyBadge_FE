@@ -66,6 +66,7 @@ export const useSSE = () => {
 
           sessionStorage.setItem(NEW_NOTIFICATION, JSON.stringify(newNotification));
           localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
+          setNewNotification(newNotification);
           // 중복 알림 필터링
           // const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
           // if (!isDuplicate) {
