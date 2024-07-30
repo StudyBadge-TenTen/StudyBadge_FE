@@ -45,13 +45,10 @@ const Recruitment = (): JSX.Element => {
 
   const handleRecruitStart = async () => {
     if (channelId) {
-      const response = await postRecruitStart(Number(channelId));
-
-      // todo response를 error로 선언하고 error.errorCode로 에러처리
-      if (!response) {
-        alert("스터디 채널 모집을 오픈했습니다.");
-      } else {
-        console.log(response);
+      try {
+        await postRecruitStart(Number(channelId));
+      } catch (error) {
+        console.log(error);
         alert("모집 오픈에 문제가 발생하였습니다.");
       }
     }
@@ -59,12 +56,10 @@ const Recruitment = (): JSX.Element => {
 
   const handleRecruitEnd = async () => {
     if (channelId) {
-      const response = await postRecruitEnd(Number(channelId));
-
-      if (!response) {
-        alert("스터디 채널 모집을 마감했습니다.");
-      } else {
-        console.log(response);
+      try {
+        await postRecruitEnd(Number(channelId));
+      } catch (error) {
+        console.log(error);
         alert("모집 마감에 문제가 발생하였습니다.");
       }
     }
@@ -121,6 +116,7 @@ const Recruitment = (): JSX.Element => {
                 ))}
               {!isLoading &&
                 data &&
+                data.participants &&
                 (data.participants.length !== 0 ? (
                   data.participants.map((participant) => (
                     <div

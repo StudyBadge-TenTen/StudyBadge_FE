@@ -3,6 +3,7 @@ import axios from "axios";
 import { postLogin, postLogout, postSignUp } from "../services/auth-api";
 import { AuthStoreType, LoginResponse, PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";
+import { CustomErrorType } from "@/types/common";
 
 export const useAuthStore = create<AuthStoreType>((set, get) => ({
   email: "",
@@ -35,6 +36,10 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       }
       axios.defaults.headers.common["authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data as CustomErrorType;
+        alert(errorData.message);
+      }
       if (import.meta.env.DEV || import.meta.env.PROD) {
         sessionStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessTokenExpiration");
@@ -116,7 +121,11 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
 
   logout: async () => {
     try {
-      await postLogout();
+      const response = await postLogout();
+      if (axios.isAxiosError(response)) {
+        const error = response.response?.data as CustomErrorType;
+        alert(error.message);
+      }
     } catch (error) {
       alert("로그아웃에 문제가 발생하였습니다.");
       console.error("Logout failed:", error);

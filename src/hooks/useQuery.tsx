@@ -40,7 +40,7 @@ export const useMemberList = (channelId: number, accessToken: string | null) => 
 };
 
 export const useRecruitment = (channelId: number, accessToken: string | null) => {
-  const { data, error, isLoading } = useQuery<RecruitmentInfoType, Error>({
+  const { data, error, isLoading } = useQuery<RecruitmentInfoType | undefined, Error>({
     queryKey: ["recruitmentList", channelId],
     queryFn: () => getRecruitment(Number(channelId)),
     enabled: !!accessToken && !!channelId, // accessToken이 있는 경우에만 쿼리 실행

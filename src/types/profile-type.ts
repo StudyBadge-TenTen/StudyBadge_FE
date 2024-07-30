@@ -20,6 +20,7 @@ interface ProfilePutType {
 }
 
 interface UserInfoType {
+  memberId: number;
   email: string;
   name: string;
   nickname: string;

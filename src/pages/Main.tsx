@@ -1,8 +1,8 @@
 import CREATE_STUDY_SVG from "../assets/image/CREATE_STUDY_SVG.svg";
-import Carousel from "../components/common/Carousel";
 import StudyList from "../components/main/StudyList";
 import { Link } from "react-router-dom";
 import usePageScrollTop from "@/components/common/PageScrollTop";
+import MainCarousel from "../components/common/Carousel";
 
 const Main = (): JSX.Element => {
   usePageScrollTop();
@@ -10,7 +10,7 @@ const Main = (): JSX.Element => {
 
   return (
     <div className="w-full h-fit flex flex-col justify-center items-center">
-      <Carousel />
+      <MainCarousel />
       <div className="create-study w-full h-96 flex flex-col sm:flex-row px-8">
         <div className="w-full sm:w-1/2 h-full flex flex-col justify-center items-center sm:items-start text-Blue-2">
           <p className="text-2xl sm:text-3xl font-bold mb-4">스터디 그룹을 생성하세요!</p>
