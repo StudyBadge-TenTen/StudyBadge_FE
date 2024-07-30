@@ -29,22 +29,22 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       set({ accessToken: accessToken, refreshToken: refreshToken });
 
       // dev 모드 시
-      if (import.meta.env.DEV) {
-        const expirationTime = new Date().getTime() + 7200000; // 2시간
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
-      }
+      // if (import.meta.env.DEV) {
+      //   const expirationTime = new Date().getTime() + 7200000; // 2시간
+      //   sessionStorage.setItem("accessToken", accessToken);
+      //   sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
+      // }
       axios.defaults.headers.common["authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorData = error.response?.data as CustomErrorType;
         alert(errorData.message);
       }
-      if (import.meta.env.DEV) {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessTokenExpiration");
-        window.location.reload();
-      }
+      // if (import.meta.env.DEV) {
+      //   sessionStorage.removeItem("accessToken");
+      //   sessionStorage.removeItem("accessTokenExpiration");
+      //   window.location.reload();
+      // }
       console.error("Login failed:", error);
       throw error;
     }
@@ -131,11 +131,11 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       console.error("Logout failed:", error);
       throw error;
     } finally {
-      if (import.meta.env.DEV) {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessTokenExpiration");
-        window.location.reload();
-      }
+      // if (import.meta.env.DEV) {
+      //   sessionStorage.removeItem("accessToken");
+      //   sessionStorage.removeItem("accessTokenExpiration");
+      //   window.location.reload();
+      // }
       setApiToken("");
     }
   },
