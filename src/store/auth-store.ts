@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       set({ accessToken: accessToken, refreshToken: refreshToken });
 
       // dev 모드 시
-      if (import.meta.env.DEV || import.meta.env.PROD) {
+      if (import.meta.env.DEV) {
         const expirationTime = new Date().getTime() + 7200000; // 2시간
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
@@ -40,7 +40,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
         const errorData = error.response?.data as CustomErrorType;
         alert(errorData.message);
       }
-      if (import.meta.env.DEV || import.meta.env.PROD) {
+      if (import.meta.env.DEV) {
         sessionStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessTokenExpiration");
         window.location.reload();
@@ -131,7 +131,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       console.error("Logout failed:", error);
       throw error;
     } finally {
-      if (import.meta.env.DEV || import.meta.env.PROD) {
+      if (import.meta.env.DEV) {
         sessionStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessTokenExpiration");
         window.location.reload();
