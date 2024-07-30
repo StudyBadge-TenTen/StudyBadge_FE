@@ -142,7 +142,10 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
     }
     try {
       // 서버로 FormData 전송
-      const response = await axios.put("/api/members/my-info/update", formData, {
+      const URL = import.meta.env.DEV
+        ? import.meta.env.VITE_APP_LOCAL_BASE_URL
+        : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
+      const response = await axios.put(`${URL}/api/members/my-info/update`, formData, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${accessToken}`,

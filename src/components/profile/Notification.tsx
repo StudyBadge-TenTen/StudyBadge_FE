@@ -2,15 +2,26 @@
 import { useNotificationStore } from "../../store/notification-store";
 // import { notificationList } from "../../mocks/data"; // 프론트용 msw 알림
 import { Link } from "react-router-dom";
-import { patchReadNoti } from "../../services/notification-api";
+import { getNotifications, patchReadNoti } from "../../services/notification-api";
 import PageScrollTop from "../common/PageScrollTop";
+import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/auth-store";
+import { useEffect } from "react";
 
 const Notification = (): JSX.Element => {
-  const { notificationList } = useNotificationStore();
+  const { accessToken } = useAuthStore();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["notifications", accessToken],
+    queryFn: () => getNotifications(),
+    enabled: !!accessToken,
+  });
+  const { notificationList, setNotificationList } = useNotificationStore();
 
-  // useEffect(() => {
-  //   console.log(notificationList); // 디버깅로그
-  // }, [notificationList]);
+  useEffect(() => {
+    if (data) {
+      setNotificationList(data);
+    }
+  }, [accessToken]);
 
   const handleClick = (notificationId: number) => {
     if (notificationId) {
@@ -21,6 +32,8 @@ const Notification = (): JSX.Element => {
   return (
     <>
       <PageScrollTop />
+      {isLoading && <div>is Loading...</div>}
+      {error && <div>알림 내역을 불러오는 데 실패하였습니다.</div>}
       <div className="w-full min-h-52 border border-solid border-Gray-3 rounded-[30px] p-6 flex flex-col items-center">
         {notificationList.map((noti) => (
           <Link
