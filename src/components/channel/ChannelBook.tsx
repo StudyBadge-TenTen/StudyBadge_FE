@@ -11,9 +11,7 @@ import moment from "moment";
 import PageScrollTop from "../common/PageScrollTop";
 import usePageScrollTop from "../common/PageScrollTop";
 import { getIsMember } from "@/services/channel-api";
-import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth-store";
-import { AxiosError } from "axios";
 import Modal from "../common/Modal";
 
 const ChannelBook = (): JSX.Element => {
@@ -31,17 +29,19 @@ const ChannelBook = (): JSX.Element => {
   const { data } = useGetStudyInfo(Number(channelId));
   const { selectedDate, setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
-  const isMemberData = useQuery<boolean, AxiosError>({
-    queryKey: ["isMember", channelId],
-    queryFn: () => getIsMember(Number(channelId)),
-    enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
-  });
+  // const isMemberData = useQuery<boolean, AxiosError>({
+  //   queryKey: ["isMember", channelId],
+  //   queryFn: () => getIsMember(Number(channelId)),
+  //   enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
+  // });
   usePageScrollTop();
 
   const today = moment(new Date()).format("YYYY-MM-DD");
 
   useEffect(() => {
     if (channelId && data) {
+      getIsMember(Number(channelId)).then((isMemberData) => setIsMember(isMemberData));
+
       if (new Date(data.endDate) < new Date(today)) {
         // 개인 출석률과 환급금 정산내역 api 호출
         setIsStudyEnd(() => true);
@@ -56,11 +56,11 @@ const ChannelBook = (): JSX.Element => {
     }
   }, [accessToken, setIsMember]);
 
-  useEffect(() => {
-    if (isMemberData !== undefined && isMemberData.data && isMember !== isMemberData.data) {
-      setIsMember(isMemberData.data);
-    }
-  }, [isMemberData, isMember, setIsMember]);
+  // useEffect(() => {
+  //   if (isMemberData !== undefined && isMemberData.data && isMember !== isMemberData.data) {
+  //     setIsMember(isMemberData.data);
+  //   }
+  // }, [data, channelId, isMemberData, isMember, setIsMember]);
 
   useEffect(() => {
     if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {

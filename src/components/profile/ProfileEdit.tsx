@@ -30,7 +30,7 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         nickname: userInfo.nickname,
         introduction: userInfo.introduction,
         account: userInfo.account,
-        accountBank: userInfo.accountBank ?? "",
+        accountBank: userInfo.accountBank,
         imgUrl: userInfo.imgUrl,
       }));
     }
@@ -98,7 +98,13 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   };
 
   // 프로필 수정을 저장할 때 반영하도록 하는 함수
-  const handleSaveClick = async (profileInfo: ProfileInfoType, imageFile: ProfilePutType["file"]) => {
+  const handleSaveClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    profileInfo: ProfileInfoType,
+    imageFile: ProfilePutType["file"],
+  ) => {
+    e.preventDefault();
+
     // 계좌정보 값 필수 체크
     if (accountRef.current) {
       if (!accountRef.current.value) {
@@ -141,19 +147,21 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
       formData.append("file", imageFile);
     }
     try {
-      // 서버로 FormData 전송
       const URL = import.meta.env.DEV
         ? import.meta.env.VITE_APP_LOCAL_BASE_URL
         : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
-      const response = await axios.put(`${URL}/api/members/my-info/update`, formData, {
-        withCredentials: true,
+
+      const response = await axios({
+        method: "put",
+        url: `${URL}/api/members/my-info/update`,
+        data: formData,
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
       });
-      // 서버 응답 출력
-      console.log(response.data); // 디버깅 로그
+
+      console.log(response.data);
       navigate("/profile/myInfo");
       window.location.reload();
     } catch (error) {
@@ -252,7 +260,10 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
               </option>
             ))}
           </select>
-          <button onClick={() => handleSaveClick(profileInfo, imageFile)} className="btn-blue w-fit self-center mt-10">
+          <button
+            onClick={(e) => handleSaveClick(e, profileInfo, imageFile)}
+            className="btn-blue w-fit self-center mt-10"
+          >
             저장하기
           </button>
         </div>
