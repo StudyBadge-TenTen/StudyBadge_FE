@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   AttendanceResponseType,
   MemberListResponseType,
@@ -8,6 +8,7 @@ import {
   StudyInfoType,
 } from "../types/study-channel-type";
 import { fetchCall } from "./common";
+import { CustomErrorType } from "@/types/common";
 
 const getIsMember = async (studyChannelId: number) => {
   const response = await fetchCall<boolean>(`/api/study-channels/${studyChannelId}/check`, "get");
@@ -21,14 +22,30 @@ const postStudyChannel = async (requestBody: postStudyRequestType) => {
 };
 
 const getStudyInfo = async (studyChannelId: number) => {
-  const studyInfoResponse = await fetchCall<StudyInfoType>(`/api/study-channels/${studyChannelId}`, "get");
-  return studyInfoResponse;
+  const studyInfoResponse = await fetchCall<StudyInfoType | AxiosError>(`/api/study-channels/${studyChannelId}`, "get");
+  if (axios.isAxiosError(studyInfoResponse)) {
+    const error = studyInfoResponse.response?.data as CustomErrorType;
+    alert(error.message);
+    throw new Error();
+  } else {
+    return studyInfoResponse;
+  }
 };
 
 const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
   try {
-    await fetchCall<AxiosResponse>(`/api/study-channels/${studyChannelId}`, "put", newStudyInfo);
-    alert("변경한 스터디 정보가 성공적으로 반영되었습니다.");
+    const response = await fetchCall<AxiosResponse | AxiosError>(
+      `/api/study-channels/${studyChannelId}`,
+      "put",
+      newStudyInfo,
+    );
+    if (axios.isAxiosError(response)) {
+      const error = response.response?.data as CustomErrorType;
+      alert(error.message);
+      throw new Error();
+    } else {
+      alert("변경한 스터디 정보가 성공적으로 반영되었습니다.");
+    }
   } catch (error) {
     console.log(error);
     alert(
@@ -38,41 +55,74 @@ const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRe
 };
 
 const getMemberList = async (studyChannelId: number) => {
-  const memberList = await fetchCall<MemberListResponseType>(`/api/study-channels/${studyChannelId}/members`, "get");
-  return memberList ?? [];
+  const memberList = await fetchCall<MemberListResponseType | AxiosError>(
+    `/api/study-channels/${studyChannelId}/members`,
+    "get",
+  );
+  if (axios.isAxiosError(memberList)) {
+    const error = memberList.response?.data as CustomErrorType;
+    console.log(error);
+    return { studyMembers: [], leader: false };
+  } else {
+    return memberList ?? {};
+  }
 };
 
 const postSubLeader = async (studyChannelId: number, requestBody: { studyMemberId: number }) => {
   try {
-    await fetchCall<AxiosResponse>(`/api/study-channels/${studyChannelId}/members/assign-role`, "post", requestBody);
+    const response = await fetchCall<AxiosResponse | AxiosError>(
+      `/api/study-channels/${studyChannelId}/members/assign-role`,
+      "post",
+      requestBody,
+    );
+    if (axios.isAxiosError(response)) {
+      const error = response.response?.data as CustomErrorType;
+      alert(error.message);
+    }
   } catch (error) {
     console.log(error);
   }
 };
 
 const getAttendance = async (studyChannelId: number) => {
-  const attendance = await fetchCall<AttendanceResponseType[]>(
+  const attendance = await fetchCall<AttendanceResponseType[] | AxiosError>(
     `/api/study-channels/${studyChannelId}/attendances`,
     "get",
   );
-  return attendance ?? [];
+  if (axios.isAxiosError(attendance)) {
+    const error = attendance.response?.data as CustomErrorType;
+    console.log(error);
+    return [];
+  } else {
+    return attendance ?? [];
+  }
 };
 
 const getRecruitment = async (studyChannelId: number) => {
-  const recruitList = await fetchCall<RecruitmentInfoType>(
+  const recruitList = await fetchCall<RecruitmentInfoType | AxiosError>(
     `/api/study-channels/${studyChannelId}/participation-status`,
     "get",
   );
-  return recruitList ?? [];
+  if (axios.isAxiosError(recruitList)) {
+    const error = recruitList.response?.data as CustomErrorType;
+    console.log(error);
+  } else {
+    return recruitList ?? {};
+  }
 };
 
 const postApprove = async (studyChannelId: number, participationId: number) => {
   try {
-    await fetchCall<ResponseType>(
+    const response = await fetchCall<AxiosResponse | AxiosError>(
       `/api/study-channels/${studyChannelId}/participation/${participationId}/approve`,
       "post",
     );
-    alert("해당 멤버의 신청 수락이 성공적으로 완료되었습니다.");
+    if (axios.isAxiosError(response)) {
+      const error = response.response?.data as CustomErrorType;
+      alert(error.message);
+    } else {
+      alert("해당 멤버의 신청 수락이 성공적으로 완료되었습니다.");
+    }
   } catch (error) {
     console.log(error);
     alert(
@@ -83,11 +133,16 @@ const postApprove = async (studyChannelId: number, participationId: number) => {
 
 const postReject = async (studyChannelId: number, participationId: number) => {
   try {
-    await fetchCall<AxiosResponse>(
+    const response = await fetchCall<AxiosResponse | AxiosError>(
       `/api/study-channels/${studyChannelId}/participation/${participationId}/reject`,
       "post",
     );
-    alert("해당 멤버의 신청 거절이 성공적으로 완료되었습니다.");
+    if (axios.isAxiosError(response)) {
+      const error = response.response?.data as CustomErrorType;
+      alert(error.message);
+    } else {
+      alert("해당 멤버의 신청 거절이 성공적으로 완료되었습니다.");
+    }
   } catch (error) {
     console.log(error);
     alert(
@@ -98,8 +153,16 @@ const postReject = async (studyChannelId: number, participationId: number) => {
 
 const postParticipate = async (studyChannelId: number) => {
   try {
-    await fetchCall<AxiosResponse>(`/api/study-channels/${studyChannelId}/participation`, "post");
-    alert("해당 스터디에 성공적으로 신청이 접수되었습니다");
+    const response = await fetchCall<AxiosResponse | AxiosError>(
+      `/api/study-channels/${studyChannelId}/participation`,
+      "post",
+    );
+    if (axios.isAxiosError(response)) {
+      const error = response.response?.data as CustomErrorType;
+      alert(error.message);
+    } else {
+      alert("해당 스터디에 성공적으로 신청이 접수되었습니다");
+    }
   } catch (error) {
     console.log(error);
     alert(
@@ -110,8 +173,16 @@ const postParticipate = async (studyChannelId: number) => {
 
 const postBanish = async (studyChannelId: number, studyMemberId: number) => {
   try {
-    await fetchCall(`/api/study-channels/${studyChannelId}/members/${studyMemberId}/ban`, "post");
-    alert("해당 멤버가 퇴출되었습니다.");
+    const response = await fetchCall<AxiosResponse | AxiosError>(
+      `/api/study-channels/${studyChannelId}/members/${studyMemberId}/ban`,
+      "post",
+    );
+    if (axios.isAxiosError(response)) {
+      const error = response.response?.data as CustomErrorType;
+      alert(error.message);
+    } else {
+      alert("해당 멤버가 퇴출되었습니다.");
+    }
   } catch (error) {
     console.log(error);
     alert(
@@ -121,12 +192,27 @@ const postBanish = async (studyChannelId: number, studyMemberId: number) => {
 };
 
 const postRecruitStart = async (studyChannelId: number) => {
-  const response = await fetchCall(`/api/study-channels/${studyChannelId}/recruitment/start`, "post");
+  const response = await fetchCall<AxiosResponse | AxiosError>(
+    `/api/study-channels/${studyChannelId}/recruitment/start`,
+    "post",
+  );
+  if (axios.isAxiosError(response)) {
+    const error = response.response?.data as CustomErrorType;
+    alert(error.message);
+  } else {
+    alert("스터디 채널 모집을 오픈했습니다.");
+  }
   return response;
 };
 
 const postRecruitEnd = async (studyChannelId: number) => {
   const response = await fetchCall(`/api/study-channels/${studyChannelId}/recruitment/close`, "post");
+  if (axios.isAxiosError(response)) {
+    const error = response.response?.data as CustomErrorType;
+    alert(error.message);
+  } else {
+    alert("스터디 채널 모집을 마감했습니다.");
+  }
   return response;
 };
 

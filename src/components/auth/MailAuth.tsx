@@ -1,6 +1,8 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Modal from "../common/Modal";
 import { getAuthEmail, postEmailResend } from "@/services/auth-api";
+import axios from "axios";
+import { CustomErrorType } from "@/types/common";
 
 const MailAuth = (): JSX.Element => {
   const navigate = useNavigate();
@@ -12,7 +14,9 @@ const MailAuth = (): JSX.Element => {
     if (email && code) {
       try {
         const response = await getAuthEmail(email, code);
-        if (response.status === 400) {
+        if (axios.isAxiosError(response)) {
+          const error = response.response?.data as CustomErrorType;
+          alert(error.message + "재전송된 이메일을 확인해주세요.");
           postEmailResend(email);
         } else {
           navigate("/login");

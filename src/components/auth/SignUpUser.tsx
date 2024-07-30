@@ -4,6 +4,7 @@ import { nameToField, nameToType, returnPlaceholder } from "../../utils/transfor
 import { BANK_LIST } from "../../constants/bank-list";
 import PageScrollTop from "../common/PageScrollTop";
 import { CustomErrorType } from "@/types/common";
+import axios from "axios";
 
 const SignUp: React.FC = () => {
   const formListFirst = ["이메일", "이름", "비밀번호", "비밀번호확인"];
@@ -63,11 +64,10 @@ const SignUp: React.FC = () => {
         alert("회원가입이 완료되었습니다.");
         authStore.reset();
         setIsSubmitted(true);
-      } else {
-        const error = response as CustomErrorType;
-        if (error.errorCode === "ALREADY_EXIST_EMAIL") {
-          alert("이미 가입되어 있는 이메일 계정입니다.");
-        }
+      }
+      if (axios.isAxiosError(response)) {
+        const error = response.response?.data as CustomErrorType;
+        alert(error.message);
       }
     } catch (error: any) {
       console.error("회원가입 실패:", error);

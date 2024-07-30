@@ -1,7 +1,6 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { fetchCall, setApiToken } from "./common";
 import { LoginResponse, SignUpData } from "../types/auth-type";
-import { CustomErrorType } from "@/types/common";
 
 export const postLogin = async (email: string, password: string): Promise<LoginResponse> => {
   try {
@@ -68,23 +67,24 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
 // };
 
 export const postSignUp = async (userData: SignUpData) => {
-  const response = await fetchCall<AxiosResponse | CustomErrorType>(`/api/members/sign-up`, "post", userData);
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/sign-up`, "post", userData);
   return response;
 };
 
 export const getAuthEmail = async (email: string, code: string) => {
-  const response = await fetchCall<AxiosResponse>(`/api/members/auth?email=${email}&code=${code}`, "get");
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/auth?email=${email}&code=${code}`, "get");
   return response;
 };
 
 export const postEmailResend = async (email: string) => {
-  const response = await fetchCall<AxiosResponse>(`/api/members/resend?email=${email}`, "post");
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/resend?email=${email}`, "post");
   return response;
 };
 
 export const postLogout = async () => {
   try {
-    await fetchCall<AxiosResponse>(`/api/members/logout`, "post");
+    const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/logout`, "post");
+    return response;
   } catch (error) {
     console.log(error); // 디버깅 로그
   } finally {
@@ -98,14 +98,14 @@ export const postLogout = async () => {
 };
 
 export const postVerificationEmail = async (email: string) => {
-  const response = await fetchCall<AxiosResponse | CustomErrorType>(`/api/members/password`, "post", null, {
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/password`, "post", null, {
     email,
   });
   return response;
 };
 
 export const getCodeVerification = async (email: string, code: string) => {
-  const response = await fetchCall<AxiosResponse>(`/api/members/auth/password`, "get", null, {
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/auth/password`, "get", null, {
     email,
     code,
   });
@@ -113,7 +113,7 @@ export const getCodeVerification = async (email: string, code: string) => {
 };
 
 export const patchResetPassword = async (email: string, newPassword: string) => {
-  const response = await fetchCall<AxiosResponse>(`/api/members/password/reset`, "patch", null, {
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/password/reset`, "patch", null, {
     email,
     newPassword,
   });

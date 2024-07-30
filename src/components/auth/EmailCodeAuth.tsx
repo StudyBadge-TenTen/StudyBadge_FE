@@ -1,6 +1,8 @@
 import { usePasswordResetStore } from "@/store/auth-store";
 import { getCodeVerification, patchResetPassword } from "@/services/auth-api";
 import { useLocation } from "react-router";
+import axios from "axios";
+import { CustomErrorType } from "@/types/common";
 
 const EmailCodeAuth = () => {
   const location = useLocation();
@@ -23,10 +25,11 @@ const EmailCodeAuth = () => {
     e.preventDefault();
     try {
       const response = await getCodeVerification(userEmail ?? email, verificationCode);
-      if (response.status === 200) {
-        setShowNewPasswordForm(true);
+      if (axios.isAxiosError(response)) {
+        const error = response.response?.data as CustomErrorType;
+        alert(error.message);
       } else {
-        alert(response.data.message || "인증 코드가 올바르지 않습니다.");
+        setShowNewPasswordForm(true);
       }
     } catch (error) {
       alert(
@@ -43,11 +46,12 @@ const EmailCodeAuth = () => {
     }
     try {
       const response = await patchResetPassword(userEmail ?? email, newPassword);
-      if (response.status === 200) {
+      if (axios.isAxiosError(response)) {
+        const error = response.response?.data as CustomErrorType;
+        alert(error.message);
+      } else {
         alert("비밀번호가 성공적으로 변경되었습니다.");
         window.location.href = "/login";
-      } else {
-        alert(response.data.message || "비밀번호 재설정에 실패했습니다.");
       }
     } catch (error) {
       alert(

@@ -127,7 +127,7 @@ interface SettersPropsType {
 }
 
 interface SingleSchedulePostType {
-  memberId: 1;
+  memberId: number;
   scheduleName: string;
   scheduleContent: string;
   scheduleDate: "YYYY-MM-DD" | string;
@@ -135,7 +135,7 @@ interface SingleSchedulePostType {
   scheduleEndTime: "00:00:00" | string;
 }
 interface RepeatSchedulePostType {
-  memberId: 1;
+  memberId: number;
   scheduleName: string;
   scheduleContent: string;
   scheduleDate: "YYYY-MM-DD" | string;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Modal from "../common/Modal";
 import { deleteAccount } from "@/services/profile-api";
 import usePageScrollTop from "../common/PageScrollTop";
-import { postLogout } from "@/services/auth-api";
+import { useAuthStore } from "@/store/auth-store";
 
 const PROFILE_TAB_LIST = [
   { kr: "내 정보", en: "myInfo" },
@@ -18,6 +18,7 @@ const ProfileTab = (): JSX.Element => {
   usePageScrollTop();
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuthStore();
   const { setIsEditMode } = useEditModeStore();
   const [profileState, setProfileState] = useState("myInfo");
   const [modalOpen, setModalOpen] = useState(false);
@@ -68,7 +69,7 @@ const ProfileTab = (): JSX.Element => {
             <div className="flex flex-col justify-center items-center">
               <p>로그아웃 하시겠습니까?</p>
               <div className="flex mt-6">
-                <button onClick={() => postLogout()} className="w-10 btn-blue">
+                <button onClick={() => logout()} className="w-10 btn-blue">
                   예
                 </button>
                 <button onClick={() => setLogoutModal(() => false)} className="w-10 btn-blue ml-2">

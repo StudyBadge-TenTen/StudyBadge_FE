@@ -6,17 +6,20 @@ import { useNewScheduleStore, useSelectedDateStore } from "../../store/schedule-
 import { situationCalculator } from "../../utils/schedule-function";
 import ConfirmModal from "./leader/ConfirmModal";
 import Setters from "./leader/Setters";
-import { useGetStudyInfo } from "../../hooks/useQuery";
+import { useGetStudyInfo, useUserInfo } from "../../hooks/useQuery";
 import usePageScrollTop from "../common/PageScrollTop";
+import { useAuthStore } from "@/store/auth-store";
 
 const ScheduleEdit = (): JSX.Element => {
   usePageScrollTop();
-  const { channelId } = useParams();
+  const { channelId, selectedDateParam } = useParams();
   const { data } = useGetStudyInfo(Number(channelId));
   const navigate = useNavigate();
   const {
     state: { originInfo },
   }: { state: { originInfo: false | ScheduleType | undefined } } = useLocation();
+  const { accessToken } = useAuthStore();
+  const userInfoData = useUserInfo(accessToken);
   const { selectedDate } = useSelectedDateStore();
   const [selector, setSelector] = useState<SelectorType>("");
   const [inputValue, setInputValue] = useState({
@@ -69,69 +72,83 @@ const ScheduleEdit = (): JSX.Element => {
 
   useEffect(() => {
     if (repeatState === "NONE") {
-      setRepeatEndDate(() => selectedDate);
+      setRepeatEndDate(() => selectedDate ?? selectedDateParam);
     }
   }, [repeatState]);
 
   useEffect(() => {
     if (originInfo) {
-      if (repeatState === "NONE") {
-        setNewSchedule({
-          memberId: 1, // 유저 아이디 필요
-          scheduleId: originInfo.id,
-          scheduleName: inputValue.name,
-          scheduleContent: inputValue.content,
-          originType: originInfo.repeated ? "repeat" : "single",
-          editType: "single",
-          selectedDate: selectedDate,
-          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
-          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
-          placeId: placeId ? placeId : null,
-        });
-      } else {
-        setNewSchedule({
-          memberId: 1, // 유저 아이디 필요
-          scheduleId: originInfo.id,
-          scheduleName: inputValue.name,
-          scheduleContent: inputValue.content,
-          originType: originInfo.repeated ? "repeat" : "single",
-          editType: "repeat",
-          selectedDate: selectedDate,
-          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
-          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
-          repeatCycle: repeatState,
-          repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
-          repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
-          placeId: placeId ? placeId : null,
-        });
+      setTime({
+        start: [originInfo.scheduleStartTime.split(":")[0], originInfo.scheduleStartTime.split(":")[1]],
+        end: [originInfo.scheduleEndTime.split(":")[0], originInfo.scheduleEndTime.split(":")[1]],
+      });
+      if (originInfo.repeated && originInfo.repeatCycle && originInfo.repeatEndDate) {
+        setRepeatState(originInfo.repeatCycle);
+        setRepeatEndDate(originInfo.repeatEndDate);
       }
-    } else {
-      if (repeatState === "NONE") {
-        setNewSchedule({
-          memberId: 1, // 유저 아이디 필요
-          scheduleDate: selectedDate,
-          scheduleName: inputValue.name,
-          scheduleContent: inputValue.content,
-          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
-          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
-          placeId: placeId ? placeId : null,
-        });
-      } else {
-        setNewSchedule({
-          memberId: 1, // 유저 아이디 필요
-          scheduleDate: selectedDate,
-          scheduleName: inputValue.name,
-          scheduleContent: inputValue.content,
-          scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
-          scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
-          repeatCycle: repeatState,
-          repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
-          repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
-          placeId: placeId ? placeId : null,
-        });
+      if (originInfo.placeId) {
+        setPlaceId(originInfo.placeId);
       }
     }
-  }, [selectedDate, inputValue, repeatState, repeatEndDate, placeId, time]);
+  }, [originInfo]);
+
+  useEffect(() => {
+    if (repeatState === "NONE") {
+      setRepeatEndDate(selectedDate ?? selectedDateParam);
+    }
+  }, [repeatState, selectedDate, selectedDateParam]);
+
+  useEffect(() => {
+    if (userInfoData.data) {
+      const scheduleData = {
+        memberId: userInfoData.data.memberId,
+        scheduleName: inputValue.name,
+        scheduleContent: inputValue.content,
+        scheduleStartTime: `${time.start[0]}:${time.start[1]}:00`,
+        scheduleEndTime: `${time.end[0]}:${time.end[1]}:00`,
+        placeId: placeId ?? null,
+      };
+
+      if (originInfo) {
+        if (repeatState === "NONE") {
+          setNewSchedule({
+            ...scheduleData,
+            scheduleId: originInfo.id,
+            originType: originInfo.repeated ? "repeat" : "single",
+            editType: "single",
+            selectedDate: selectedDate,
+          });
+        } else {
+          setNewSchedule({
+            ...scheduleData,
+            scheduleId: originInfo.id,
+            originType: originInfo.repeated ? "repeat" : "single",
+            editType: "repeat",
+            repeatCycle: repeatState,
+            repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
+            repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
+          });
+        }
+      } else {
+        if (repeatState === "NONE") {
+          setNewSchedule({
+            ...scheduleData,
+            scheduleDate: selectedDate,
+          });
+        } else {
+          setNewSchedule({
+            ...scheduleData,
+            scheduleDate: selectedDate,
+            repeatCycle: repeatState,
+            repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
+            repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
+          });
+        }
+      }
+    } else {
+      alert("유저 정보가 존재하지 않습니다.");
+    }
+  }, [userInfoData.data, selectedDate, inputValue, repeatState, repeatEndDate, placeId, time, originInfo]);
 
   // 일정 이름, 내용 input의 handler함수
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

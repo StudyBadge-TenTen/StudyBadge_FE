@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-// import { putProfile } from "../../services/profile-api";
 import { ProfileInfoType, ProfilePutType, UserInfoType } from "../../types/profile-type";
 import { BANK_LIST } from "../../constants/bank-list";
 import axios from "axios";
