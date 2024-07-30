@@ -1,37 +1,56 @@
 import { useEffect, useState } from "react";
 import { useNotificationStore } from "../../store/notification-store";
 import { useNavigate } from "react-router";
+import { NEW_NOTIFICATION } from "@/constants/session-storage";
+import { NotificationType } from "@/types/notification-type";
 
-const Toast = ({ setNewIcon }: { setNewIcon: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const Toast = ({
+  newIcon,
+  setNewIcon,
+}: {
+  newIcon: boolean;
+  setNewIcon: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const navigate = useNavigate();
   const [newToast, setNewToast] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const { newNotification, notificationList, setNewNotification, setNotificationList } = useNotificationStore();
+  const { newNotification } = useNotificationStore();
 
   useEffect(() => {
-    if (newNotification) {
-      // 중복 렌더링을 피하기 위해 한 번 거름
-      const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
-      if (!isDuplicate) {
-        setNotificationList([newNotification, ...notificationList]);
+    if (newIcon) {
+      const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
+      if (newNotificationJSON) {
+        const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
+        setNewToast(() => true);
+        setNewMessage(() => newNotification.content);
       }
-      (async () => {
-        await makeToast();
-        if (newNotification) {
-          setNewMessage(() => newNotification.content);
-        }
-        setTimeout(() => {
-          // 5초 후에 초기화
-          setNewToast(() => false);
-          setNewNotification(null);
-        }, 5000);
-      })();
     }
-  }, [newNotification, notificationList, setNewNotification, setNotificationList]);
+  }, [newIcon]);
 
-  const makeToast = async () => {
-    setNewToast(() => true);
-  };
+  // useEffect(() => {
+  //   if (newNotification) {
+  //     // 중복 렌더링을 피하기 위해 한 번 거름
+  //     const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
+  //     if (!isDuplicate) {
+  //       setNotificationList([newNotification, ...notificationList]);
+  //     }
+  //     (async () => {
+  //       await makeToast();
+  //       if (newNotification) {
+  //         setNewMessage(() => newNotification.content);
+  //       }
+  //       setTimeout(() => {
+  //         // 5초 후에 초기화
+  //         setNewToast(() => false);
+  //         setNewNotification(null);
+  //       }, 5000);
+  //     })();
+  //   }
+  // }, [newNotification, notificationList, setNewNotification, setNotificationList]);
+
+  // const makeToast = async () => {
+  //   setNewToast(() => true);
+  // };
 
   const handleClick = () => {
     if (newNotification) {

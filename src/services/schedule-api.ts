@@ -1,3 +1,4 @@
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   DeleteRequestBodyType,
   PlaceParamsType,
@@ -11,6 +12,7 @@ import {
   postAttendRequestType,
 } from "../types/schedule-type";
 import { fetchCall } from "./common";
+import { CustomErrorType } from "@/types/common";
 
 const getAllSchedules = async (accessToken: string | null, channelId: number) => {
   if (!accessToken || !channelId) {
@@ -122,24 +124,36 @@ const getAttendList = async (
   date: string,
 ) => {
   if (!channelId || !scheduleId || !scheduleType || !date) return [];
-  const response = await fetchCall<AttendMemberType[]>(
+  const response = await fetchCall<AttendMemberType[] | AxiosError>(
     `/api/study-channels/${channelId}/${scheduleType}-schedules/${scheduleId}/members?date=${date}`,
     "get",
   );
-
-  return response;
+  if (axios.isAxiosError(response)) {
+    const error = response.response?.data as CustomErrorType;
+    alert(error.message);
+    return [];
+  } else {
+    return response ?? [];
+  }
 };
 
 const postAttendList = async (studyChannelId: number, requestBody: postAttendRequestType) => {
   if (!requestBody) return;
   try {
-    await fetchCall(`/api/study-channels/${studyChannelId}/check-attendance`, "post", requestBody);
-    console.log("출석 정보가 변경되었습니다.");
-  } catch (error) {
-    console.log(error);
-    console.log(
-      "출석체크에 문제가 발생하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+    await fetchCall<AxiosResponse | AxiosError>(
+      `/api/study-channels/${studyChannelId}/check-attendance`,
+      "post",
+      requestBody,
     );
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      alert(`${error.response?.data.errorCode}: ${error.response?.data.message}`);
+    } else {
+      console.log(error);
+      alert(
+        "출석체크에 문제가 발생하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      );
+    }
   }
 };
 
