@@ -33,16 +33,15 @@ const ParticipateBtn = (): JSX.Element => {
 
   if (!accessToken || (data && data.leader)) return <></>;
 
-  if (applicationData.data && Array.isArray(applicationData.data)) {
+  if (isMember) {
+    return <div className="btn-blue px-6 py-4 bg-Gray-3 hover:bg-Gray-3">소속된 스터디입니다.</div>;
+  } else if (applicationData.data && Array.isArray(applicationData.data)) {
     if (
       applicationData.data.find(
         (channel) => channel.studyChannelId === Number(channelId) && channel.participationStatus === "APPROVE_WAITING",
       )
     ) {
       return <div className="btn-blue px-6 py-4 bg-Gray-3 hover:bg-Gray-3">신청 대기중입니다.</div>;
-    }
-    if (isMember) {
-      return <div className="btn-blue px-6 py-4 bg-Gray-3 hover:bg-Gray-3">소속된 스터디입니다.</div>;
     }
   }
 
