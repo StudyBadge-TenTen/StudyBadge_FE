@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import useLoginFailed from "./hooks/useLoginFailed";
 
 function App() {
-  const { refreshAccessToken, setField } = useAuthStore();
+  const { setField } = useAuthStore();
 
   // useEffect(() => {
   //   const refreshToken = sessionStorage.getItem("refreshToken");
