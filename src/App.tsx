@@ -6,32 +6,24 @@ import { useSSE } from "./hooks/useSSE";
 import { useAuthStore } from "./store/auth-store";
 import { useEffect } from "react";
 import useLoginFailed from "./hooks/useLoginFailed";
+import { getRefreshToken } from "./utils/cookie";
 
 function App() {
-  const { setField } = useAuthStore();
-
-  // useEffect(() => {
-  //   const refreshToken = sessionStorage.getItem("refreshToken");
-  //   const reAuth = async (refreshToken: string) => {
-  //     try {
-  //       await refreshAccessToken(refreshToken);
-  //     } catch (error) {
-  //       console.error("Failed to refresh access token on load:", error);
-  //     }
-  //   };
-  //   if (refreshToken) {
-  //     reAuth(refreshToken);
-  //   }
-  // }, []);
+  const { refreshAccessToken } = useAuthStore();
+  const refreshToken = getRefreshToken();
 
   useEffect(() => {
-    if (import.meta.env.DEV || import.meta.env.PROD) {
-      const storageToken = sessionStorage.getItem("accessToken");
-      if (storageToken) {
-        setField("accessToken", storageToken);
-      }
+    if (refreshToken) {
+      const reAuth = async () => {
+        try {
+          await refreshAccessToken();
+        } catch (error) {
+          console.error("Failed to refresh access token on load:", error);
+        }
+      };
+      reAuth();
     }
-  }, [setField]);
+  }, [refreshAccessToken]);
 
   useLoginFailed();
   useSSE();

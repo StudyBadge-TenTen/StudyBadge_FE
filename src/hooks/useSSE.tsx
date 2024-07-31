@@ -5,6 +5,7 @@ import { Event, EventSourcePolyfill, MessageEvent } from "event-source-polyfill"
 import { NotificationType } from "../types/notification-type";
 import { LAST_EVENT_ID } from "../constants/local-storage";
 import { NEW_NOTIFICATION } from "@/constants/session-storage";
+import { getAccessToken } from "@/utils/cookie";
 
 export const useSSE = () => {
   const { accessToken, setField, isLoginFailed } = useAuthStore();
@@ -16,11 +17,9 @@ export const useSSE = () => {
   // console.log("useSSE hook"); // useSSE 작동 테스트
 
   useEffect(() => {
-    if (import.meta.env.DEV || import.meta.env.PROD) {
-      const storedAccessToken = sessionStorage.getItem("accessToken");
-      if (storedAccessToken) {
-        setField("accessToken", storedAccessToken);
-      }
+    const storageAccessToken = getAccessToken();
+    if (storageAccessToken) {
+      setField("accessToken", storageAccessToken);
     }
   }, [setField]);
 

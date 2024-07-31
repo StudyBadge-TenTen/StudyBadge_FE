@@ -4,22 +4,24 @@ import { getNotifications, patchReadNoti } from "../../services/notification-api
 import PageScrollTop from "../common/PageScrollTop";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth-store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Pagination from "../common/Pagination";
 
 const Notification = (): JSX.Element => {
   const { accessToken } = useAuthStore();
+  const [page, setPage] = useState(1);
   const { setNotificationList } = useNotificationStore();
   const { data, isLoading, error } = useQuery({
-    queryKey: ["notifications", accessToken],
-    queryFn: () => getNotifications(),
+    queryKey: ["notifications", accessToken, page],
+    queryFn: () => getNotifications(page, 10),
     enabled: !!accessToken,
   });
 
   useEffect(() => {
-    if (data) {
-      setNotificationList(data);
+    if (data && data.content) {
+      setNotificationList(data.content);
     }
-  }, [accessToken]);
+  }, [data, page, accessToken]);
 
   const handleClick = (notificationId: number) => {
     if (notificationId) {
@@ -34,8 +36,9 @@ const Notification = (): JSX.Element => {
       {error && <div>알림 내역을 불러오는 데 실패하였습니다.</div>}
       <div className="w-full min-h-52 border border-solid border-Gray-3 rounded-[30px] p-6 flex flex-col items-center">
         {data &&
-          Array.isArray(data) &&
-          data.map((noti) => (
+          data.content &&
+          Array.isArray(data.content) &&
+          data.content.map((noti) => (
             <Link
               to={noti.url}
               key={noti.notificationId}
@@ -62,6 +65,9 @@ const Notification = (): JSX.Element => {
             </Link>
           ))}
       </div>
+      {data && (
+        <Pagination type={"NOTIFICATION"} dataListLength={data.totalElements} pageState={page} setPage={setPage} />
+      )}
     </>
   );
 };
