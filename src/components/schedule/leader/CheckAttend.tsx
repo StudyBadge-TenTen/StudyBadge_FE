@@ -21,6 +21,8 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
         return { studyMemberId: member.memberId, isAttendance: false };
       });
       setAttendList(() => [...attendList]);
+      console.log(data);
+      console.log(attendList);
     } else {
       console.log("멤버 리스트 데이터가 없습니다");
     }
@@ -66,42 +68,46 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
     return (
       <div className="flex flex-col justify-center items-center mt-2">
         <div className="h-28 flex flex-wrap">
-          {data?.studyMembers.map((member) => (
-            <button
-              key={member.memberId}
-              onClick={() => handleCheckClick(member.memberId)}
-              className="member w-fit h-fit flex flex-col justify-center items-center mx-2 relative"
-            >
-              {member.imageUrl ? (
-                <img
-                  src={member.imageUrl}
-                  alt="프로필이미지"
-                  className="w-16 h-16 object-cover rounded-full bg-Gray-2"
-                />
-              ) : (
-                <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
-              )}
-              <span>{member.name}</span>
-              {attendList.map(
-                (attendObj) =>
-                  attendObj.studyMemberId === member.memberId &&
-                  attendObj.isAttendance && (
-                    <svg
-                      key={`check_${attendObj.studyMemberId}`}
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="60"
-                      height="60"
-                      fill="currentColor"
-                      className="bi bi-check2-circle text-Green-1 absolute top-0 z-30"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
-                      <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
-                    </svg>
-                  ),
-              )}
-            </button>
-          ))}
+          {data &&
+            Array.isArray(data.studyMembers) &&
+            data.studyMembers.map((member) => (
+              <button
+                key={member.memberId}
+                onClick={() => handleCheckClick(member.memberId)}
+                className="member w-fit h-fit flex flex-col justify-center items-center mx-2 relative"
+              >
+                {member.imageUrl ? (
+                  <img
+                    src={member.imageUrl}
+                    alt="프로필이미지"
+                    className="w-16 h-16 object-cover rounded-full bg-Gray-2"
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
+                )}
+                <span>{member.name}</span>
+                {attendList &&
+                  Array.isArray(attendList) &&
+                  attendList.map(
+                    (attendObj) =>
+                      attendObj.studyMemberId === member.memberId &&
+                      attendObj.isAttendance && (
+                        <svg
+                          key={`check_${attendObj.studyMemberId}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="60"
+                          height="60"
+                          fill="currentColor"
+                          className="bi bi-check2-circle text-Green-1 absolute top-0 z-30"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
+                          <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
+                        </svg>
+                      ),
+                  )}
+              </button>
+            ))}
         </div>
         <button onClick={() => handleSubmitClick()} className="btn-blue self-center">
           체크완료

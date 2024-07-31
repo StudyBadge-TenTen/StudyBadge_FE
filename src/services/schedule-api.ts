@@ -120,7 +120,7 @@ const getAttendList = async (
   scheduleType: ScheduleRepeatType,
   date: string,
 ) => {
-  if (!channelId || !scheduleId || !scheduleType || !date) return [];
+  // if (!channelId || !scheduleId || !scheduleType || !date) return [];
   const response = await fetchCall<AttendMemberType[] | AxiosError>(
     `/api/study-channels/${channelId}/${scheduleType}-schedules/${scheduleId}/members?date=${date}`,
     "get",
