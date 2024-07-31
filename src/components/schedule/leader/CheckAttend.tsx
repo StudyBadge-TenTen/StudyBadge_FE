@@ -2,11 +2,19 @@ import { useEffect, useState } from "react";
 import { useMemberList } from "../../../hooks/useQuery";
 import { useEditModeStore } from "../../../store/edit-mode-store";
 import { postAttendList } from "../../../services/schedule-api";
-import { AttendScheduleInfoType, PostAttendObjectType } from "../../../types/schedule-type";
+import { AttendMemberType, AttendScheduleInfoType, PostAttendObjectType } from "../../../types/schedule-type";
 import { useAuthStore } from "@/store/auth-store";
 
-const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleInfo: AttendScheduleInfoType }) => {
-  console.log("CheckAttend props:", { channelId, scheduleInfo }); // 디버깅 로그
+const CheckAttend = ({
+  channelId,
+  scheduleInfo,
+  originAttendList,
+}: {
+  channelId: number;
+  scheduleInfo: AttendScheduleInfoType;
+  originAttendList: AttendMemberType[] | undefined;
+}) => {
+  // console.log("CheckAttend props:", { channelId, scheduleInfo }); // 디버깅 로그
   const { accessToken } = useAuthStore();
   const { data, error, isLoading } = useMemberList(channelId, accessToken);
   const [attendList, setAttendList] = useState<PostAttendObjectType[]>([]);
@@ -17,6 +25,10 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
   }, []);
 
   useEffect(() => {
+    console.log("attendList: ", attendList);
+  }, [attendList]);
+
+  useEffect(() => {
     console.log("CheckAttend 렌더링", channelId, scheduleInfo);
   }, [channelId, scheduleInfo]);
 
@@ -24,23 +36,31 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
     if (error) {
       console.error("멤버 리스트를 불러오는 데 실패하였습니다.", error);
     } else {
-      console.log(data); // 디버깅 로그
+      // console.log(data); // 디버깅 로그
     }
   }, [data, error]);
 
   useEffect(() => {
-    console.log("CheckAttend useEffect", { data, error, isLoading }); // 디버깅 로그
-    if (data) {
-      const attendList = data.studyMembers.map((member) => {
-        return { studyMemberId: member.memberId, isAttendance: false };
+    // console.log("CheckAttend useEffect", { data, error, isLoading }); // 디버깅 로그
+    // 기존에 출석리스트가 있다면 셋
+    if (originAttendList) {
+      const attendList = originAttendList.map((member) => {
+        return { studyMemberId: member.studyMemberId, isAttendance: member.attendance };
       });
       setAttendList(() => [...attendList]);
-      console.log("멤버 데이터:", data); // 디버깅 로그
-      console.log("초기 출석 리스트:", attendList); // 디버깅 로그
+      return;
+    }
+    if (data) {
+      const attendList = data.studyMembers.map((member) => {
+        return { studyMemberId: member.studyMemberId, isAttendance: false };
+      });
+      setAttendList(() => [...attendList]);
+      // console.log("멤버 데이터:", data); // 디버깅 로그
+      // console.log("초기 출석 리스트:", attendList); // 디버깅 로그
     } else {
       console.log("멤버 리스트 데이터가 없습니다");
     }
-  }, [channelId, data]);
+  }, [channelId, data, originAttendList]);
 
   // useEffect(() => {
   //   console.log(attendList); // 디버깅로그
@@ -58,10 +78,10 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
   }
 
   if (!isLoading && data) {
-    const handleCheckClick = (memberId: number) => {
+    const handleCheckClick = (studyMemberId: number) => {
       const newPostAttendList = attendList.map((attendObj) => {
-        if (attendObj.studyMemberId === memberId) {
-          return { studyMemberId: memberId, isAttendance: !attendObj.isAttendance };
+        if (attendObj.studyMemberId === studyMemberId) {
+          return { studyMemberId: studyMemberId, isAttendance: !attendObj.isAttendance };
         } else {
           return { studyMemberId: attendObj.studyMemberId, isAttendance: attendObj.isAttendance };
         }
@@ -87,8 +107,8 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
             Array.isArray(data.studyMembers) &&
             data.studyMembers.map((member) => (
               <button
-                key={member.memberId}
-                onClick={() => handleCheckClick(member.memberId)}
+                key={member.studyMemberId}
+                onClick={() => handleCheckClick(member.studyMemberId)}
                 className="member w-fit h-fit flex flex-col justify-center items-center mx-2 relative"
               >
                 {member.imageUrl ? (
@@ -105,7 +125,7 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
                   Array.isArray(attendList) &&
                   attendList.map(
                     (attendObj) =>
-                      attendObj.studyMemberId === member.memberId &&
+                      attendObj.studyMemberId === member.studyMemberId &&
                       attendObj.isAttendance && (
                         <svg
                           key={`check_${attendObj.studyMemberId}`}
