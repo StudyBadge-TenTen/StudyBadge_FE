@@ -10,6 +10,7 @@ import Modal from "../common/Modal";
 import MobileSearchBar from "./header_contents/MobileSearchBar";
 import { NEW_NOTIFICATION } from "@/constants/session-storage";
 import { NotificationType } from "@/types/notification-type";
+import { NEW_NOTI_ICON } from "@/constants/local-storage";
 
 const Header = (): JSX.Element => {
   const navigate = useNavigate();
@@ -24,7 +25,15 @@ const Header = (): JSX.Element => {
   const [isSearchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
+    const storedNewIcon = localStorage.getItem(NEW_NOTI_ICON);
+    if (storedNewIcon) {
+      setNewIcon(() => true);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     if (newIcon) {
+      localStorage.setItem(NEW_NOTI_ICON, "true");
       const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
       if (newNotificationJSON) {
         const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
@@ -60,6 +69,7 @@ const Header = (): JSX.Element => {
   const handleBellBtnClick = (accessToken: string | null) => {
     if (accessToken) {
       setNewIcon(() => false);
+      localStorage.removeItem(NEW_NOTI_ICON);
       navigate("/profile/notification");
     } else {
       alert("로그인 후 이용하실 수 있습니다.");
