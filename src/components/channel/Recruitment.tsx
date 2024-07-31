@@ -17,7 +17,7 @@ const Recruitment = (): JSX.Element => {
   const { channelId } = useParams();
   const studyInfo = useGetStudyInfo(Number(channelId));
   const { data, error, isLoading } = useRecruitment(Number(channelId), accessToken);
-  // const [participateId, setParticipateId] = useState<number>();
+  const [participateId, setParticipateId] = useState<number>();
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: "",
@@ -30,7 +30,7 @@ const Recruitment = (): JSX.Element => {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
-    console.log(target.id);
+    setParticipateId(() => Number(target.id.split("-")[0]));
 
     if (target.classList.contains("yes-btn")) {
       setModalState(() => ({
@@ -72,17 +72,16 @@ const Recruitment = (): JSX.Element => {
   const handleConfirm = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     channelId: number,
-    participationId: number,
+    participateId: number,
   ) => {
     const target = e.target as HTMLButtonElement;
     e.stopPropagation();
-    console.log(target.id);
     // if (studyInfo.data?.capacity === studyInfo.data.)
 
     if (modalState.type === "YES") {
       if (target.classList.contains("yes-btn")) {
         try {
-          await postApprove(Number(channelId), participationId);
+          await postApprove(Number(channelId), participateId);
         } catch (error) {
           console.log("승인 에러");
           console.log(error);
@@ -92,7 +91,7 @@ const Recruitment = (): JSX.Element => {
     if (modalState.type === "NO") {
       if (target.classList.contains("yes-btn")) {
         try {
-          await postReject(Number(channelId), participationId);
+          await postReject(Number(channelId), participateId);
         } catch (error) {
           console.log("거절 에러");
           console.log(error);
@@ -191,7 +190,7 @@ const Recruitment = (): JSX.Element => {
                         ) : (
                           <p className="text-sm text-Gray-3">이미 처리된 신청입니다.</p>
                         )}
-                        {modalState.isOpen && channelId && participant.participationId && (
+                        {modalState.isOpen && channelId && participateId && (
                           <Modal>
                             <div className="w-60 px-6 flex flex-col justify-center items-center text-center whitespace-pre-wrap">
                               {modalState.content}
@@ -199,14 +198,14 @@ const Recruitment = (): JSX.Element => {
                                 <button
                                   id={`${participant.participationId}-modal-yes`}
                                   className="yes-btn btn-blue w-10 mr-4"
-                                  onClick={(e) => handleConfirm(e, Number(channelId), participant.participationId)}
+                                  onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
                                 >
                                   예
                                 </button>
                                 <button
                                   id={`${participant.participationId}-modal-no`}
                                   className="no-btn btn-blue"
-                                  onClick={(e) => handleConfirm(e, Number(channelId), participant.participationId)}
+                                  onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
                                 >
                                   아니요
                                 </button>
