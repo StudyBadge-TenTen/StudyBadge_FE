@@ -39,3 +39,4 @@ jobs:
             echo "VITE_APP_KAKAO_LOGIN_CLIENT_KEY=${{ secrets.VITE_APP_KAKAO_LOGIN_CLIENT_KEY }} >> .env"
             echo "VITE_APP_NAVER_LOGIN_CLIENT_KEY=${{ secrets.VITE_APP_NAVER_LOGIN_CLIENT_KEY }} >> .env"
             echo "VITE_APP_TOSS_TEST_CLIENT_KEY=${{ secrets.VITE_APP_TOSS_TEST_CLIENT_KEY }} >> .env"
+            echo "VITE_APP_SOCIAL_BASE_URL=${{ secrets.VITE_APP_SOCIAL_BASE_URL }} >> .env"
