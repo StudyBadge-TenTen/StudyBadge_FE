@@ -18,13 +18,15 @@ const Toast = ({
   const { newNotification, setNewNotification } = useNotificationStore();
 
   useEffect(() => {
-    setToast(() => true);
-  }, [setNewToast]);
+    if (newMessage) {
+      setToast(() => true);
+    }
+  }, [newMessage]);
 
   const handleClick = () => {
     if (newNotification) {
       setNewIcon(() => false);
-      setNewToast(false);
+      setNewToast(() => false);
       setNewNotification(null);
       sessionStorage.removeItem(NEW_NOTI_ICON);
       sessionStorage.removeItem(NEW_NOTIFICATION);
