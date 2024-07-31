@@ -15,8 +15,7 @@ import { useAuthStore } from "@/store/auth-store";
 import Modal from "../common/Modal";
 
 const ChannelBook = (): JSX.Element => {
-  const { selectedDateParam } = useParams();
-  const { channelId } = useParams();
+  const { channelId, selectedDateParam } = useParams();
   const navigate = useNavigate();
   const state = useLocation().state;
 
