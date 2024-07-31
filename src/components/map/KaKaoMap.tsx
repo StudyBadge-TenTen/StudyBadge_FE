@@ -16,6 +16,10 @@ const KakaoMap = ({ originPlaceId, studyChannelId, setPlaceId }: KakaoMapProps):
   const [selectedCafe, setSelectedCafe] = useState<LocateType | null>(null);
 
   useEffect(() => {
+    console.log(selectedCafe);
+  }, [selectedCafe]);
+
+  useEffect(() => {
     if (typeof kakao === "undefined" || !kakao.maps) {
       console.error("Kakao maps API is not loaded");
       return;
@@ -72,9 +76,14 @@ const KakaoMap = ({ originPlaceId, studyChannelId, setPlaceId }: KakaoMapProps):
         initializeMap(37.5665, 126.978);
       }
     });
-  }, [originPlaceId, studyChannelId, studyInfo, isStudyInfoLoading, selectedCafe]);
+  }, [originPlaceId, studyChannelId, studyInfo, isStudyInfoLoading]);
 
-  const handlePlaceSelect = async (studyChannelId: number, selectedCafe: LocateType) => {
+  const handlePlaceSelect = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    studyChannelId: number,
+    selectedCafe: LocateType,
+  ) => {
+    e.preventDefault();
     // await handleCafeSelect(cafe);
     console.log("장소 선택");
 
@@ -82,6 +91,7 @@ const KakaoMap = ({ originPlaceId, studyChannelId, setPlaceId }: KakaoMapProps):
       const response = await postLocate(studyChannelId, selectedCafe);
       if (response) {
         const placeId = response.id;
+        sessionStorage.setItem("placeId", String(placeId));
         setPlaceId(() => placeId);
         console.log("Selected place ID:", placeId); // 디버깅로그
       }

@@ -15,9 +15,12 @@ const ScheduleEdit = (): JSX.Element => {
   const { channelId, selectedDateParam } = useParams();
   const { data } = useGetStudyInfo(Number(channelId));
   const navigate = useNavigate();
-  const {
-    state: { originInfo },
-  }: { state: { originInfo: false | ScheduleType | undefined } } = useLocation();
+  const location = useLocation();
+  const { state } = location;
+  const originInfo: ScheduleType = state?.originInfo ?? null;
+  // const {
+  //   state: { originInfo },
+  // }: { state: { originInfo: false | ScheduleType | undefined } } = useLocation();
   const { accessToken } = useAuthStore();
   const userInfoData = useUserInfo(accessToken);
   const { selectedDate } = useSelectedDateStore();
@@ -130,6 +133,7 @@ const ScheduleEdit = (): JSX.Element => {
             repeatCycle: repeatState,
             repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
             repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
+            selectedDate: selectedDate,
           });
         }
       } else {
@@ -148,9 +152,11 @@ const ScheduleEdit = (): JSX.Element => {
           });
         }
       }
-    } else {
-      alert("유저 정보가 존재하지 않습니다.");
     }
+    // else {
+    //   console.log(accessToken);
+    //   alert("유저 정보가 존재하지 않습니다.");
+    // }
   }, [userInfoData.data, selectedDate, inputValue, repeatState, repeatEndDate, placeId, time, originInfo]);
 
   // 일정 이름, 내용 input의 handler함수
@@ -251,7 +257,7 @@ const ScheduleEdit = (): JSX.Element => {
         <div className="text-white h-20 bg-Blue-2 rounded-t-[50px] flex justify-center items-center text-lg">
           일정 등록
         </div>
-        <form className="h-fit flex flex-col px-4 py-8 md:p-8">
+        <form onSubmit={(e) => e.preventDefault()} className="h-fit flex flex-col px-4 py-8 md:p-8">
           <div className="schedule w-96 border border-solid border-Gray-3 rounded-[50px] p-8">
             <div className="bg-Gray-1 w-full h-fit rounded-[30px] mb-6">
               <input
