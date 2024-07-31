@@ -39,6 +39,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     queryKey: ["attendList", channelId, scheduleInfo?.id, selectedDate],
     queryFn: () =>
       getAttendList(Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated ? "repeat" : "single", selectedDate),
+    enabled: !!channelId && !!scheduleInfo && !!selectedDate,
   });
 
   const [attendList, setAttendList] = useState<{
