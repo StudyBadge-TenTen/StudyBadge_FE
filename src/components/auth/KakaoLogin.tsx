@@ -9,14 +9,16 @@ const KakaoLogin: React.FC = () => {
   //   ? import.meta.env.VITE_APP_KAKAO_REDIRECT_URL_DEV
   //   : import.meta.env.VITE_APP_KAKAO_REDIRECT_URL_PROD;
 
-  const URL = import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_URL;
+  const URL = import.meta.env.DEV
+    ? import.meta.env.VITE_APP_LOCAL_BASE_URL
+    : import.meta.env.VITE_APP_LOCAL_PRODUCTION_URL;
 
   const handleKakaoLogin = () => {
     // 서버 없을 시
     // const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}&response_type=code`;
     // window.location.href = kakaoAuthUrl;
 
-    window.location.href = `${URL}/oauth2/authorization/naver`;
+    window.location.href = `${URL}/oauth2/authorization/kakao`;
   };
 
   return (
