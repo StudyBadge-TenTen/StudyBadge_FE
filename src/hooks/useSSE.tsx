@@ -8,7 +8,7 @@ import { NEW_NOTIFICATION } from "@/constants/session-storage";
 import { getAccessToken } from "@/utils/cookie";
 
 export const useSSE = () => {
-  const { setField, isLoginFailed } = useAuthStore();
+  const { setField, isLoginFailed, accessToken } = useAuthStore();
   const API_BASE_URL = import.meta.env.DEV
     ? import.meta.env.VITE_APP_LOCAL_BASE_URL
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
@@ -25,7 +25,7 @@ export const useSSE = () => {
 
   useEffect(() => {
     // 로그인 상태가 아닐 경우, 재연결하지 않음
-    if (isLoginFailed || !storageAccessToken) {
+    if (isLoginFailed || !accessToken) {
       console.log("useSSE - 현재 로그인상태가 아닙니다. 로그인 상태가 아닐 경우, 재연결하지 않음");
       return;
     }
@@ -38,7 +38,7 @@ export const useSSE = () => {
       eventSource = new EventSourcePolyfill(`${API_BASE_URL}/api/notifications/subscribe`, {
         headers: {
           "Last-Event-ID": localStorage.getItem(LAST_EVENT_ID) ?? "",
-          Authorization: `Bearer ${storageAccessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         heartbeatTimeout: 3600000, // 서버와 동일하게 설정하는 것이 맞다고 함
         withCredentials: true,
@@ -50,7 +50,7 @@ export const useSSE = () => {
     };
 
     const onMessage = (ev: MessageEvent) => {
-      if (!storageAccessToken) return;
+      if (!accessToken) return;
 
       // console.log("Event received: ", ev.data); // 디버깅 로그 추가
       try {
@@ -106,7 +106,7 @@ export const useSSE = () => {
         console.log("기존 timeout clear");
       }
     };
-  }, [storageAccessToken, API_BASE_URL, notificationList, setNewNotification, isLoginFailed]);
+  }, [accessToken, API_BASE_URL, notificationList, setNewNotification, isLoginFailed]);
 
   return null;
 };
