@@ -63,12 +63,14 @@ const ScheduleEdit = (): JSX.Element => {
       }
     }
 
-    return window.removeEventListener("click", (e) => handleSelectorReset(e));
+    return () => {
+      window.removeEventListener("click", (e) => handleSelectorReset(e));
+    };
   }, []);
 
-  // useEffect(() => {
-  //   console.log(placeId); // placeId 디버깅 로그
-  // }, [placeId]);
+  useEffect(() => {
+    console.log(placeId); // placeId 디버깅 로그
+  }, [placeId]);
 
   useEffect(() => {
     if (repeatState === "NONE") {
@@ -186,7 +188,9 @@ const ScheduleEdit = (): JSX.Element => {
     }
   };
   // 일정 저장을 클릭 시, 확인 모달 띄우기
-  const handleSubmitClick = async () => {
+  const handleSubmitClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+
     if (
       new Date(selectedDate + " " + `${time.start[0]}:${time.start[1]}:00`) >=
       new Date(selectedDate + " " + `${time.end[0]}:${time.end[1]}:00`)
@@ -196,7 +200,9 @@ const ScheduleEdit = (): JSX.Element => {
     } else if (repeatEndDate < selectedDate) {
       alert("반복 종료일은 반드시 선택한 날짜 이후여야 합니다.");
       return;
-    } else if (originInfo) {
+    }
+
+    if (originInfo) {
       // 일정 수정
       if (originInfo.repeated && repeatState === "NONE") {
         // 반복 -> 단일 수정 시
@@ -213,13 +219,17 @@ const ScheduleEdit = (): JSX.Element => {
           isAfterCheck: false,
         }));
       }
+      return;
     } else {
       // 일정 생성
+      console.log("일정생성모달");
+
       setModalInfo(() => ({
         isOpen: true,
         modalFor: "EDIT",
         isAfterCheck: false,
       }));
+      return;
     }
   };
   // 일정 삭제 클릭 시, 확인 모달 띄우기
@@ -296,7 +306,13 @@ const ScheduleEdit = (): JSX.Element => {
             >
               취소
             </button>
-            <button type="button" onClick={() => handleSubmitClick()} className="btn-blue w-24">
+            <button
+              type="submit"
+              onClick={async (e) => {
+                await handleSubmitClick(e);
+              }}
+              className="btn-blue w-24"
+            >
               일정저장
             </button>
           </div>

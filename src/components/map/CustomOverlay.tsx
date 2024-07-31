@@ -1,29 +1,29 @@
 import { LocateType } from "@/services/location-api";
 
 interface CustomOverlayProps {
-  studyChannelId: number;
-  overlay: kakao.maps.CustomOverlay;
   placeName: string;
   placeAddress: string;
   placeWebsite: string;
   onClose: () => void;
-  selectedCafe: LocateType | null;
-  handlePlaceSelect: (studyChannelId: number, selectedCafe: LocateType | null) => Promise<void>;
+  studyChannelId: number;
+  handlePlaceSelect: (studyChannelId: number, cafe: LocateType) => Promise<void>;
+  selectedCafe: LocateType | undefined;
 }
 
 const CustomOverlay = ({
-  studyChannelId,
-  overlay,
   placeName,
   placeAddress,
   placeWebsite,
   onClose,
-  selectedCafe,
+  studyChannelId,
   handlePlaceSelect,
+  selectedCafe,
 }: CustomOverlayProps): JSX.Element => {
-  const closeOverlay = () => {
-    overlay.setMap(null);
-    onClose();
+  const handleButtonClick = async (selectedCafe: LocateType) => {
+    if (selectedCafe) {
+      await handlePlaceSelect(studyChannelId, selectedCafe);
+      onClose();
+    }
   };
 
   return (
@@ -32,7 +32,7 @@ const CustomOverlay = ({
         <div className="title w-full h-fit bg-Blue-2 text-white p-1 py-2 rounded-t-[30px] text-center flex flex-col justify-center items-center">
           <button
             className="inline-block text-black close px-2 mr-3 bg-white rounded-full self-end"
-            onClick={closeOverlay}
+            onClick={onClose}
             title="닫기"
           >
             X
@@ -47,15 +47,16 @@ const CustomOverlay = ({
                 리뷰보기
               </a>
             </div>
-            <button
-              onClick={() => {
-                handlePlaceSelect(studyChannelId, selectedCafe);
-                closeOverlay();
-              }}
-              className="btn-blue mt-4"
-            >
-              스터디 장소로 선택
-            </button>
+            {selectedCafe && (
+              <button
+                onClick={() => {
+                  handleButtonClick(selectedCafe);
+                }}
+                className="btn-blue mt-4"
+              >
+                스터디 장소로 선택
+              </button>
+            )}
           </div>
         </div>
       </div>

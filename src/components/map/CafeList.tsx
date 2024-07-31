@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { LocateType } from "../../services/location-api";
 import CustomOverlay from "./CustomOverlay";
 import ReactDOM from "react-dom/client";
@@ -6,20 +6,20 @@ import ReactDOM from "react-dom/client";
 interface CafeListProps {
   studyChannelId: number;
   map: kakao.maps.Map | null;
-  selectedCafe: LocateType | null;
-  onSelectCafe: (cafe: LocateType) => void;
-  handlePlaceSelect: (studyChannelId: number, selectedCafe: LocateType | null) => Promise<void>;
+  handlePlaceSelect: (studyChannelId: number, cafe: LocateType) => Promise<void>;
   originMarker?: kakao.maps.Marker;
+  onSelectCafe: React.Dispatch<React.SetStateAction<LocateType | null>>;
 }
 
-const CafeList: React.FC<CafeListProps> = ({
-  studyChannelId,
-  map,
-  selectedCafe,
-  onSelectCafe,
-  handlePlaceSelect,
-  originMarker,
-}) => {
+const CafeList: React.FC<CafeListProps> = ({ studyChannelId, map, handlePlaceSelect, originMarker, onSelectCafe }) => {
+  const [selectedCafe, setSelectedCafe] = useState<LocateType>();
+
+  useEffect(() => {
+    if (selectedCafe) {
+      onSelectCafe(() => selectedCafe);
+    }
+  }, [selectedCafe, onSelectCafe]);
+
   useEffect(() => {
     if (!map) return;
 
@@ -44,13 +44,17 @@ const CafeList: React.FC<CafeListProps> = ({
               });
 
               kakao.maps.event.addListener(marker, "click", () => {
+                console.log("Marker clicked");
+
                 const postCafeInfo: LocateType = {
                   lat: place.y,
                   lng: place.x,
                   placeName: place.place_name,
                   placeAddress: place.address_name,
                 };
-                onSelectCafe(postCafeInfo);
+                setSelectedCafe(postCafeInfo);
+                console.log("Cafe Info:", postCafeInfo);
+
                 const overlay = new kakao.maps.CustomOverlay({
                   map: map,
                   position: marker.getPosition(),
@@ -59,34 +63,36 @@ const CafeList: React.FC<CafeListProps> = ({
 
                 const overlayContent = (
                   <CustomOverlay
-                    overlay={overlay}
                     placeName={place.place_name}
                     placeAddress={place.address_name}
                     placeWebsite={place.place_url || ""}
-                    onClose={() => overlay.setMap(null)}
-                    handlePlaceSelect={handlePlaceSelect}
+                    onClose={() => {
+                      console.log("Overlay closed");
+                      overlay.setMap(null);
+                    }}
                     studyChannelId={studyChannelId}
+                    handlePlaceSelect={handlePlaceSelect}
                     selectedCafe={selectedCafe}
                   />
                 );
 
                 const contentElement = overlay.getContent() as HTMLElement;
-                contentElement.classList.add("absolute");
-                contentElement.classList.add("z-50");
-                contentElement.classList.add("bottom-1/2");
-                contentElement.classList.add("right-[-8rem]");
+                console.log("Overlay Content Element:", contentElement);
+                contentElement.classList.add("absolute", "z-50", "bottom-1/2", "right-[-8rem]");
                 const root = ReactDOM.createRoot(contentElement);
                 root.render(overlayContent);
 
-                overlay.setMap(map);
+                overlay.setMap(map); // Show the overlay on the map
               });
             });
+          } else {
+            console.log("Category search failed with status:", status);
           }
         },
         { useMapBounds: true },
       );
     });
-  }, [map, onSelectCafe]);
+  }, [map, handlePlaceSelect, originMarker]);
 
   return null;
 };
