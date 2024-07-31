@@ -66,7 +66,7 @@ const Recruitment = (): JSX.Element => {
     }
   };
 
-  const handleConfirm = (
+  const handleConfirm = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     channelId: number,
     participationId: number,
@@ -76,10 +76,24 @@ const Recruitment = (): JSX.Element => {
     // if (studyInfo.data?.capacity === studyInfo.data.)
 
     if (modalState.type === "YES") {
-      if (target.classList.contains("yes-btn")) postApprove(Number(channelId), participationId);
+      if (target.classList.contains("yes-btn")) {
+        try {
+          await postApprove(Number(channelId), participationId);
+        } catch (error) {
+          console.log("승인 에러");
+          console.log(error);
+        }
+      }
     }
     if (modalState.type === "NO") {
-      if (target.classList.contains("yes-btn")) postReject(Number(channelId), participationId);
+      if (target.classList.contains("yes-btn")) {
+        try {
+          await postReject(Number(channelId), participationId);
+        } catch (error) {
+          console.log("거절 에러");
+          console.log(error);
+        }
+      }
     }
     setModalState((origin) => ({ ...origin, isOpen: false }));
     window.location.reload();
