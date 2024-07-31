@@ -54,9 +54,9 @@ const ScheduleEdit = (): JSX.Element => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(placeId); // placeId 디버깅 로그
-  }, [placeId]);
+  // useEffect(() => {
+  //   console.log(placeId); // placeId 디버깅 로그
+  // }, [placeId]);
 
   useEffect(() => {
     // 기존에 등록된 일정이 있을 경우 등록된 일정으로 상태 세팅
@@ -137,7 +137,7 @@ const ScheduleEdit = (): JSX.Element => {
     //   console.log(accessToken);
     //   alert("유저 정보가 존재하지 않습니다.");
     // }
-    console.log(repeatEndDate);
+    // console.log(repeatEndDate);
   }, [userInfoData.data, selectedDate, inputValue, repeatState, repeatEndDate, placeId, time, originInfo]);
 
   // 일정 이름, 내용 input의 handler함수
@@ -216,7 +216,7 @@ const ScheduleEdit = (): JSX.Element => {
       return;
     } else {
       // 일정 생성
-      console.log("일정생성모달");
+      // console.log("일정생성모달");
 
       setModalInfo(() => ({
         isOpen: true,

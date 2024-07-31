@@ -136,7 +136,7 @@ const CreateStudy: React.FC = () => {
           <select
             value={study.category}
             onChange={(e) => {
-              console.log(e.target.value);
+              // console.log(e.target.value);
               study.setField("category", e.target.value);
             }}
             className="w-48 p-1 border border-solid border-Gray-2 rounded-[10px] mt-2 mb-8"

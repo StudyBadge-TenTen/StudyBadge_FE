@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       password,
       checkPassword,
     });
-    console.log("postSignUp 응답 : " + response); // 서버 응답 체크 로그
+    // console.log("postSignUp 응답 : " + response); // 서버 응답 체크 로그
     return response;
   },
   reset: () =>

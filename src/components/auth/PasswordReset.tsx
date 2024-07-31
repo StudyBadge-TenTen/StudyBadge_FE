@@ -15,7 +15,7 @@ const PasswordReset: React.FC = () => {
     e.preventDefault();
     try {
       const response = await postVerificationEmail(email ?? userEmail);
-      console.log(response);
+      // console.log(response);
       if (axios.isAxiosError(response)) {
         const error = response.response?.data as CustomErrorType;
         alert(error.message);

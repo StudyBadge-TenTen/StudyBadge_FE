@@ -25,7 +25,7 @@ const Recruitment = (): JSX.Element => {
   });
 
   useEffect(() => {
-    console.log(studyInfo.data);
+    // console.log(studyInfo.data);
   }, [studyInfo]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

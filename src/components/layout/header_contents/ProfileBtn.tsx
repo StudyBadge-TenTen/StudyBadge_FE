@@ -7,7 +7,7 @@ const ProfileBtn = (): JSX.Element => {
   const navigate = useNavigate();
   const { accessToken } = useAuthStore();
   const handleClick = () => {
-    console.log("click profile btn");
+    // console.log("click profile btn");
     if (accessToken) {
       navigate("/profile/myInfo");
     } else {

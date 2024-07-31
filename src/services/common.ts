@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use(
     if (accessToken) {
       config.headers["authorization"] = `Bearer ${accessToken}`;
     }
-    console.log("Request config:", config); // 디버깅을 위해 추가
+    // console.log("Request config:", config); // 디버깅을 위해 추가
     return config;
   },
   (error) => {
@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
 // 응답 인터셉터 추가
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("Response headers:", response.headers); // 디버깅을 위해 추가
+    // console.log("Response headers:", response.headers); // 디버깅을 위해 추가
     return response.data;
   },
   async (error) => {
@@ -101,7 +101,7 @@ async function fetchCall<T>(
     ...(data && { data }),
     ...(params && { params }),
   };
-  console.log("Fetch call config:", config); // 디버깅을 위해 추가
+  // console.log("Fetch call config:", config); // 디버깅을 위해 추가
   return axiosInstance(config);
 }
 

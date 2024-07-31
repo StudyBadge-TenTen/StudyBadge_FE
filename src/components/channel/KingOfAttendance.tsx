@@ -14,15 +14,15 @@ const KingOfAttendance = () => {
   const { data, error, isLoading } = useAttendanceList(Number(channelId), accessToken, isMember);
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
 
     if (channelId && Array.isArray(data)) {
       const ratioList = data.map((attendanceInfo) => attendanceInfo.attendanceRatio);
       const bestAttendanceRatio = Math.max(...ratioList);
-      console.log(bestAttendanceRatio);
+      // console.log(bestAttendanceRatio);
 
       const newBestMembers = data.filter((attendanceInfo) => attendanceInfo.attendanceRatio === bestAttendanceRatio);
-      console.log(newBestMembers);
+      // console.log(newBestMembers);
 
       setBestMembers(() => [...newBestMembers]);
     }

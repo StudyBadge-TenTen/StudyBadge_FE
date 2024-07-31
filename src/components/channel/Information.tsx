@@ -43,7 +43,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
     //channelId를 이용해 채널 정보 get api호출
     // "정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더", "지역" 이 순서로
     // studyDetailList에 저장
-    console.log(data); // 디버깅 로그
+    // console.log(data); // 디버깅 로그
 
     if (data) {
       const detailList = [
@@ -107,7 +107,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
             onClick={() => {
               if (isEditMode) {
                 // 수정 데이터 put으로 서버에 전송
-                console.log(newStudyInfo); // 디버깅 로그
+                // console.log(newStudyInfo); // 디버깅 로그
 
                 putStudyInfo(Number(channelId), newStudyInfo);
                 if (newSubLeader.id) {
