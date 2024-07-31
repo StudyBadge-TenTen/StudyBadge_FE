@@ -13,11 +13,11 @@ export const useSSE = () => {
     ? import.meta.env.VITE_APP_LOCAL_BASE_URL
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
   const { notificationList, setNewNotification } = useNotificationStore();
-  const storageAccessToken = getAccessToken();
 
   // console.log("useSSE hook"); // useSSE 작동 테스트
 
   useEffect(() => {
+    const storageAccessToken = getAccessToken();
     if (storageAccessToken) {
       setField("accessToken", storageAccessToken);
     }
