@@ -8,16 +8,16 @@ import { NEW_NOTIFICATION } from "@/constants/session-storage";
 import { getAccessToken } from "@/utils/cookie";
 
 export const useSSE = () => {
-  const { accessToken, setField, isLoginFailed } = useAuthStore();
+  const { setField, isLoginFailed } = useAuthStore();
   const API_BASE_URL = import.meta.env.DEV
     ? import.meta.env.VITE_APP_LOCAL_BASE_URL
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
   const { notificationList, setNewNotification } = useNotificationStore();
+  const storageAccessToken = getAccessToken();
 
   // console.log("useSSE hook"); // useSSE 작동 테스트
 
   useEffect(() => {
-    const storageAccessToken = getAccessToken();
     if (storageAccessToken) {
       setField("accessToken", storageAccessToken);
     }
@@ -25,8 +25,8 @@ export const useSSE = () => {
 
   useEffect(() => {
     // 로그인 상태가 아닐 경우, 재연결하지 않음
-    if (isLoginFailed || !accessToken) {
-      console.log("현재 로그인상태가 아닙니다.");
+    if (isLoginFailed || !storageAccessToken) {
+      console.log("useSSE - 현재 로그인상태가 아닙니다. 로그인 상태가 아닐 경우, 재연결하지 않음");
       return;
     }
 
@@ -38,9 +38,9 @@ export const useSSE = () => {
       eventSource = new EventSourcePolyfill(`${API_BASE_URL}/api/notifications/subscribe`, {
         headers: {
           "Last-Event-ID": localStorage.getItem(LAST_EVENT_ID) ?? "",
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${storageAccessToken}`,
         },
-        heartbeatTimeout: 120000, // 서버와 동일하게 설정하는 것이 맞다고 함
+        heartbeatTimeout: 3600000, // 서버와 동일하게 설정하는 것이 맞다고 함
         withCredentials: true,
       });
 
@@ -50,7 +50,7 @@ export const useSSE = () => {
     };
 
     const onMessage = (ev: MessageEvent) => {
-      if (!accessToken) return;
+      if (!storageAccessToken) return;
 
       // console.log("Event received: ", ev.data); // 디버깅 로그 추가
       try {
@@ -66,26 +66,28 @@ export const useSSE = () => {
           sessionStorage.setItem(NEW_NOTIFICATION, JSON.stringify(newNotification));
           localStorage.setItem(LAST_EVENT_ID, ev.lastEventId);
           setNewNotification(newNotification);
-          // 중복 알림 필터링
-          // const isDuplicate = notificationList.some((noti) => noti.notificationId === newNotification.notificationId);
-          // if (!isDuplicate) {
-          // }
         }
       } catch (error) {
+        console.log("useSSE onMessage error");
         console.error("Failed to parse event data: ", error);
       }
     };
 
     const onError = (err: Event) => {
+      console.log("useSSE onError error");
       console.log("Error receiving notifications", err);
+
       if (eventSource) {
         eventSource.close();
+        console.log("eventSource close");
       }
       if (retryTimeout) {
         clearTimeout(retryTimeout); // 클리어하는 코드 추가
+        console.log("기존 timeout clear");
       }
       // 재연결
       retryTimeout = setTimeout(connect, 3000);
+      console.log("현재 시점으로부터 3초 뒤 재연결");
     };
 
     const onOpen = () => {
@@ -97,12 +99,14 @@ export const useSSE = () => {
     return () => {
       if (eventSource) {
         eventSource.close();
+        console.log("eventSource close");
       }
       if (retryTimeout) {
         clearTimeout(retryTimeout); // 클리어하는 코드 추가
+        console.log("기존 timeout clear");
       }
     };
-  }, [accessToken, API_BASE_URL, notificationList, setNewNotification, isLoginFailed]);
+  }, [storageAccessToken, API_BASE_URL, notificationList, setNewNotification, isLoginFailed]);
 
   return null;
 };
