@@ -85,7 +85,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
       if (accessToken && channelId && year && month) {
         scheduleCalculator({ channelId: Number(channelId), year, month }).then((response) => {
           if (response) {
-            console.log(response);
+            // console.log(response);
 
             response.scheduleMarks.map((schedule) => {
               setMarks((marks) => [...marks, ...schedule.marks]);

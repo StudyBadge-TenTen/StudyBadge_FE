@@ -43,7 +43,7 @@ const repeatFunction = (
 const scheduleCalculator = async ({ channelId, year, month }: ScheduleParamsType) => {
   try {
     const scheduleList: ScheduleType[] = await getSchedules({ channelId, year, month });
-    console.log(scheduleList);
+    // console.log(scheduleList);
 
     if (Array.isArray(scheduleList)) {
       if (scheduleList.length === 0) {

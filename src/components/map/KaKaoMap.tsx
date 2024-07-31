@@ -16,7 +16,7 @@ const KakaoMap = ({ originPlaceId, studyChannelId, setPlaceId }: KakaoMapProps):
   const [selectedCafe, setSelectedCafe] = useState<LocateType | null>(null);
 
   useEffect(() => {
-    console.log(selectedCafe);
+    // console.log(selectedCafe);
   }, [selectedCafe]);
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const KakaoMap = ({ originPlaceId, studyChannelId, setPlaceId }: KakaoMapProps):
   ) => {
     e.preventDefault();
     // await handleCafeSelect(cafe);
-    console.log("장소 선택");
+    // console.log("장소 선택");
 
     try {
       const response = await postLocate(studyChannelId, selectedCafe);
@@ -93,7 +93,7 @@ const KakaoMap = ({ originPlaceId, studyChannelId, setPlaceId }: KakaoMapProps):
         const placeId = response.id;
         sessionStorage.setItem("placeId", String(placeId));
         setPlaceId(() => placeId);
-        console.log("Selected place ID:", placeId); // 디버깅로그
+        // console.log("Selected place ID:", placeId); // 디버깅로그
       }
     } catch (error) {
       console.error("Error selecting place:", error);

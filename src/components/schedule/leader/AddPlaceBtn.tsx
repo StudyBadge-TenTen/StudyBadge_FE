@@ -14,7 +14,7 @@ const AddPlaceBtn = ({ setPlaceId, originPlaceId, studyChannelId }: AddPlaceBtnP
 
   // 기존 장소 id
   useEffect(() => {
-    console.log(originPlaceId);
+    // console.log(originPlaceId);
   }, [originPlaceId]);
 
   return (

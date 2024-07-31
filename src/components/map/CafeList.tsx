@@ -29,7 +29,7 @@ const CafeList: React.FC<CafeListProps> = ({ studyChannelId, map, handlePlaceSel
 
     // 기존에 등록한 장소에 해당하는 마커일 경우
     if (originMarker) {
-      console.log(originMarker);
+      // console.log(originMarker);
     }
 
     const places = new kakao.maps.services.Places(map);
@@ -47,7 +47,7 @@ const CafeList: React.FC<CafeListProps> = ({ studyChannelId, map, handlePlaceSel
             });
 
             kakao.maps.event.addListener(marker, "click", () => {
-              console.log("Marker clicked");
+              // console.log("Marker clicked");
 
               const postCafeInfo: LocateType = {
                 lat: place.y,
@@ -56,7 +56,7 @@ const CafeList: React.FC<CafeListProps> = ({ studyChannelId, map, handlePlaceSel
                 placeAddress: place.address_name,
               };
               setSelectedCafe(postCafeInfo);
-              console.log("Cafe Info:", postCafeInfo);
+              // console.log("Cafe Info:", postCafeInfo);
 
               const content = document.createElement("div");
               const customOverlay = new kakao.maps.CustomOverlay({
@@ -71,7 +71,7 @@ const CafeList: React.FC<CafeListProps> = ({ studyChannelId, map, handlePlaceSel
                   placeAddress={place.address_name}
                   placeWebsite={place.place_url || ""}
                   onClose={() => {
-                    console.log("Overlay closed");
+                    // console.log("Overlay closed");
                     customOverlay.setMap(null);
                   }}
                   studyChannelId={studyChannelId}
@@ -81,7 +81,7 @@ const CafeList: React.FC<CafeListProps> = ({ studyChannelId, map, handlePlaceSel
               );
 
               const contentElement = customOverlay.getContent() as HTMLElement;
-              console.log("Overlay Content Element:", contentElement);
+              // console.log("Overlay Content Element:", contentElement);
               contentElement.classList.add("absolute", "z-50", "bottom-1/2", "right-[-8rem]");
               const root = ReactDOM.createRoot(content);
               root.render(overlayContent);

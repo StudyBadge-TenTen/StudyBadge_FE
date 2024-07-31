@@ -18,7 +18,7 @@ export const fetchLocate = async (studyChannelId: number, placeId: number) => {
 };
 
 export const postLocate = async (studyChannelId: number, placeRequestBody: LocateType | null) => {
-  console.log(studyChannelId, placeRequestBody);
+  // console.log(studyChannelId, placeRequestBody);
 
   const placeId = await fetchCall<{ id: number }>(
     `/api/study-channels/${studyChannelId}/places`,
