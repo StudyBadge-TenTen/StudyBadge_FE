@@ -26,7 +26,7 @@ function App() {
   }, [refreshAccessToken]);
 
   useLoginFailed();
-  // useSSE();
+  useSSE();
 
   return (
     <BrowserRouter>
