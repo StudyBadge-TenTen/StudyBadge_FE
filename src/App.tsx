@@ -6,35 +6,31 @@ import { useSSE } from "./hooks/useSSE";
 import { useAuthStore } from "./store/auth-store";
 import { useEffect } from "react";
 import useLoginFailed from "./hooks/useLoginFailed";
-import { getCookie } from "./utils/get-cookie";
 
 function App() {
-  const { refreshAccessToken, setField } = useAuthStore();
+  const { setField } = useAuthStore();
+
+  // useEffect(() => {
+  //   const refreshToken = sessionStorage.getItem("refreshToken");
+  //   const reAuth = async (refreshToken: string) => {
+  //     try {
+  //       await refreshAccessToken(refreshToken);
+  //     } catch (error) {
+  //       console.error("Failed to refresh access token on load:", error);
+  //     }
+  //   };
+  //   if (refreshToken) {
+  //     reAuth(refreshToken);
+  //   }
+  // }, []);
 
   useEffect(() => {
-    const refreshToken = getCookie("refreshToken");
-
-    console.log("refreshToken: ", refreshToken);
-    if (refreshToken) {
-      const initAuth = async () => {
-        try {
-          await refreshAccessToken();
-        } catch (error) {
-          console.error("Failed to refresh access token on load:", error);
-        }
-      };
-
-      initAuth();
+    if (import.meta.env.DEV || import.meta.env.PROD) {
+      const storageToken = sessionStorage.getItem("accessToken");
+      if (storageToken) {
+        setField("accessToken", storageToken);
+      }
     }
-  }, [refreshAccessToken]);
-
-  useEffect(() => {
-    // if (import.meta.env.DEV) {
-    //   const storageToken = sessionStorage.getItem("accessToken");
-    //   if (storageToken) {
-    //     setField("accessToken", storageToken);
-    //   }
-    // }
   }, [setField]);
 
   useLoginFailed();
