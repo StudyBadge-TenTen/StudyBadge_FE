@@ -23,6 +23,7 @@ const Header = (): JSX.Element => {
   const { accessToken, logout, reset } = useAuthStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
+  const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
 
   useEffect(() => {
     const storedNewIcon = localStorage.getItem(NEW_NOTI_ICON);
@@ -31,10 +32,27 @@ const Header = (): JSX.Element => {
     }
   }, [navigate]);
 
+  // useEffect(() => {
+  //   if (newIcon) {
+  //     localStorage.setItem(NEW_NOTI_ICON, "true");
+  //     const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
+  //     if (newNotificationJSON) {
+  //       const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
+  //       setNewMessage(newNotification.content);
+  //       setNewToast(true);
+
+  //       setTimeout(() => {
+  //         setNewToast(false);
+  //         setNewMessage("");
+  //       }, 5000);
+  //     }
+  //   }
+  // }, [newIcon]);
+
   useEffect(() => {
-    if (newIcon) {
+    if (newNotification) {
+      setNewIcon(() => true);
       localStorage.setItem(NEW_NOTI_ICON, "true");
-      const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
       if (newNotificationJSON) {
         const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
         setNewMessage(newNotification.content);
@@ -46,13 +64,7 @@ const Header = (): JSX.Element => {
         }, 5000);
       }
     }
-  }, [newIcon]);
-
-  useEffect(() => {
-    if (newNotification) {
-      setNewIcon(() => true);
-    }
-  }, [newNotification]);
+  }, [newNotification, newNotificationJSON]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(() => e.target.value);
