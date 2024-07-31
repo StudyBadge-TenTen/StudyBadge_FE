@@ -6,6 +6,7 @@ import { AttendScheduleInfoType, PostAttendObjectType } from "../../../types/sch
 import { useAuthStore } from "@/store/auth-store";
 
 const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleInfo: AttendScheduleInfoType }) => {
+  console.log("CheckAttend props:", { channelId, scheduleInfo }); // 디버깅 로그
   const { accessToken } = useAuthStore();
   const { data, error, isLoading } = useMemberList(channelId, accessToken);
   const [attendList, setAttendList] = useState<PostAttendObjectType[]>([]);
@@ -28,6 +29,7 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
   }, [data, error]);
 
   useEffect(() => {
+    console.log("CheckAttend useEffect", { data, error, isLoading }); // 디버깅 로그
     if (data) {
       const attendList = data.studyMembers.map((member) => {
         return { studyMemberId: member.memberId, isAttendance: false };
