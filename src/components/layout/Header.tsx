@@ -51,16 +51,14 @@ const Header = (): JSX.Element => {
     if (newNotification) {
       setNewIcon(() => true);
       localStorage.setItem(NEW_NOTI_ICON, "true");
-      if (newNotification) {
-        setNewMessage(newNotification.content);
-        setNewToast(true);
+      setNewMessage(newNotification.content);
+      setNewToast(true);
 
-        setTimeout(() => {
-          sessionStorage.removeItem(NEW_NOTIFICATION);
-          setNewToast(false);
-          setNewMessage("");
-        }, 5000);
-      }
+      setTimeout(() => {
+        sessionStorage.removeItem(NEW_NOTIFICATION);
+        setNewToast(false);
+        setNewMessage("");
+      }, 5000);
     }
   }, [newNotification]);
 
@@ -80,6 +78,7 @@ const Header = (): JSX.Element => {
     if (accessToken) {
       setNewIcon(() => false);
       localStorage.removeItem(NEW_NOTI_ICON);
+      sessionStorage.removeItem(NEW_NOTIFICATION);
       navigate("/profile/notification");
     } else {
       alert("로그인 후 이용하실 수 있습니다.");
