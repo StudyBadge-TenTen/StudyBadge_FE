@@ -9,28 +9,26 @@ import { useAuthStore } from "../../store/auth-store";
 import Modal from "../common/Modal";
 import MobileSearchBar from "./header_contents/MobileSearchBar";
 import { NEW_NOTIFICATION } from "@/constants/session-storage";
-import { NotificationType } from "@/types/notification-type";
 import { NEW_NOTI_ICON } from "@/constants/local-storage";
 
 const Header = (): JSX.Element => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState<string>("");
   const { filter, setFilter } = useFilterStore();
-  const { newNotification } = useNotificationStore();
+  const { newNotification, setNewNotification } = useNotificationStore();
   const [newIcon, setNewIcon] = useState(false);
   const [newToast, setNewToast] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const { accessToken, logout, reset } = useAuthStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
-  const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
 
   useEffect(() => {
-    const storedNewIcon = localStorage.getItem(NEW_NOTI_ICON);
-    if (storedNewIcon) {
-      setNewIcon(() => true);
+    const storedNewNoti = localStorage.getItem(NEW_NOTIFICATION);
+    if (storedNewNoti) {
+      setNewNotification(JSON.parse(storedNewNoti));
     }
-  }, [navigate]);
+  }, [setNewNotification]);
 
   // useEffect(() => {
   //   if (newIcon) {
@@ -53,18 +51,18 @@ const Header = (): JSX.Element => {
     if (newNotification) {
       setNewIcon(() => true);
       localStorage.setItem(NEW_NOTI_ICON, "true");
-      if (newNotificationJSON) {
-        const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
+      if (newNotification) {
         setNewMessage(newNotification.content);
         setNewToast(true);
 
         setTimeout(() => {
+          sessionStorage.removeItem(NEW_NOTIFICATION);
           setNewToast(false);
           setNewMessage("");
         }, 5000);
       }
     }
-  }, [newNotification, newNotificationJSON]);
+  }, [newNotification]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(() => e.target.value);

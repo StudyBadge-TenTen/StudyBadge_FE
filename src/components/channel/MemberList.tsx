@@ -18,6 +18,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
   const { accessToken, isMember } = useAuthStore();
   const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
+  const [studyMemberId, setStudyMemberId] = useState<number>();
   const { data, error, isLoading } = useQuery<MemberListResponseType, AxiosError>({
     queryKey: ["memberList", channelId],
     queryFn: () => getMemberList(Number(channelId)),
@@ -33,7 +34,9 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
   //   console.log(error);
   // }, [error]);
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, studyMemberId: number) => {
+    setStudyMemberId(() => studyMemberId);
+
     const target = e.target as HTMLButtonElement;
     if (target.id === "subLeaderBtn") {
       setModalState(() => ({
@@ -51,12 +54,18 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
     }
   };
 
-  const handleConfirm = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, memberId: number, memberName: string) => {
+  const handleConfirm = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    studyMemberId: number,
+    memberName: string,
+  ) => {
     const target = e.target as HTMLButtonElement;
     if (modalState.type === "SUB_LEADER") {
-      if (target.classList.contains("yes-btn")) postSubLeader(Number(channelId), { studyMemberId: memberId });
+      if (target.classList.contains("yes-btn")) {
+        await postSubLeader(Number(channelId), { studyMemberId: studyMemberId });
+      }
       if (setNewSubLeader && setModal) {
-        setNewSubLeader(() => ({ name: memberName, id: memberId }));
+        setNewSubLeader(() => ({ name: memberName, id: studyMemberId }));
         setModalState((origin) => ({
           ...origin,
           isOpen: false,
@@ -66,7 +75,9 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
       }
     }
     if (modalState.type === "BANISH") {
-      if (target.classList.contains("yes-btn")) postBanish(Number(channelId), memberId);
+      if (target.classList.contains("yes-btn")) {
+        await postBanish(Number(channelId), studyMemberId);
+      }
     }
     setModalState((origin) => ({ ...origin, isOpen: false }));
     window.location.reload();
@@ -129,25 +140,25 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                         <button
                           id="subLeaderBtn"
                           className={`${(member.role === "LEADER" || member.role === "SUB_LEADER") && "hidden"} btn-blue px-3 py-2 w-28`}
-                          onClick={(e) => handleClick(e)}
+                          onClick={(e) => handleClick(e, member.memberId)}
                         >
                           서브리더로 지정
                         </button>
                         <button
                           id="banishBtn"
                           className={`${member.role === "LEADER" && "hidden"} btn-red px-3 py-2 w-28`}
-                          onClick={(e) => handleClick(e)}
+                          onClick={(e) => handleClick(e, member.memberId)}
                         >
                           퇴출
                         </button>
-                        {modalState.isOpen && (
+                        {modalState.isOpen && studyMemberId && (
                           <Modal>
                             <div className="w-60 px-6 flex flex-col justify-center items-center text-center whitespace-pre-wrap">
                               {modalState.content}
                               <div className="flex justify-center items-center mt-10">
                                 <button
                                   className="yes-btn btn-blue w-10 mr-4"
-                                  onClick={(e) => handleConfirm(e, member.memberId, member.name)}
+                                  onClick={(e) => handleConfirm(e, studyMemberId, member.name)}
                                 >
                                   예
                                 </button>
