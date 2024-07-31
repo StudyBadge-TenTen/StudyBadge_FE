@@ -49,7 +49,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   }>({ data: data, error: error, isLoading: isLoading });
 
   useEffect(() => {
-    if (!isMember) return;
+    if (!isMember && !isLeader) return;
     return () => setIsEditMode(false);
   }, []);
 
@@ -59,7 +59,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   // 최초 로드 시 selectedDateParam 값이 있으면 상태를 업데이트
   useEffect(() => {
-    if (!isMember) return;
+    if (!isMember && !isLeader) return;
     if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {
       const newSelectedMonth = moment(selectedDateParam).format("YYYY-MM");
       setSelectedDate(selectedDateParam);
@@ -74,14 +74,14 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   // selectedDate가 변경될 때마다 URL을 업데이트
   useEffect(() => {
-    if (!isMember) return;
+    if (!isMember && !isLeader) return;
     if (selectedDate && selectedDate !== selectedDateParam) {
       navigate(`/channel/${channelId}/schedule/${selectedDate}`, { replace: true });
     }
   }, [isMember, selectedDate, navigate, channelId, selectedDateParam]);
 
   useEffect(() => {
-    if (!isMember) return;
+    if (!isMember && !isLeader) return;
     //month상태가 바뀔 때마다 scheduleCalculator()호출해 일정들 가져오기
     if (channelId) {
       const year = selectedMonth.split("-")[0];
@@ -104,7 +104,8 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   // 선택하는 날짜가 바뀔 때마다 날짜에 해당되는 일정정보를 set하기 위해
   useEffect(() => {
-    if (!isMember) return;
+    console.log("useQuery 결과:", { data, error, isLoading }); // 디버깅 로그
+    if (!isMember && !isLeader) return;
     if (scheduleInfo && moment(selectedDate).isBefore(todayString)) {
       // 일정이 있고, 지난 날짜의 일정일 때
       setAttendList(() => ({ data: data, error: error, isLoading: isLoading }));
@@ -129,7 +130,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
         setIsLoadingState(() => false);
       }
     }
-  }, [isMember, selectedDate, data, error, isLoading, scheduleState]);
+  }, [isMember, isLeader, selectedDate, data, error, isLoading, scheduleState]);
 
   return (
     <>
