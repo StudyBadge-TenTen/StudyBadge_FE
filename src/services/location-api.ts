@@ -17,7 +17,7 @@ export const fetchLocate = async (studyChannelId: number, placeId: number) => {
   return locateInfo;
 };
 
-export const postLocate = async (studyChannelId: number, placeRequestBody: LocateType) => {
+export const postLocate = async (studyChannelId: number, placeRequestBody: LocateType | null) => {
   console.log(studyChannelId, placeRequestBody);
 
   const placeId = await fetchCall<{ id: number }>(

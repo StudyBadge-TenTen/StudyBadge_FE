@@ -6,11 +6,10 @@ import { useGetStudyInfo } from "@/hooks/useQuery";
 interface KakaoMapProps {
   originPlaceId?: number;
   studyChannelId: number;
-  onClose: () => void;
   setPlaceId: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-const KakaoMap = ({ originPlaceId, studyChannelId, onClose, setPlaceId }: KakaoMapProps): JSX.Element => {
+const KakaoMap = ({ originPlaceId, studyChannelId, setPlaceId }: KakaoMapProps): JSX.Element => {
   const { data: studyInfo, isLoading: isStudyInfoLoading } = useGetStudyInfo(studyChannelId);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const [originMarker, setOriginMarker] = useState<kakao.maps.Marker | null>(null);
@@ -73,22 +72,18 @@ const KakaoMap = ({ originPlaceId, studyChannelId, onClose, setPlaceId }: KakaoM
         initializeMap(37.5665, 126.978);
       }
     });
-  }, [originPlaceId, studyChannelId, studyInfo, isStudyInfoLoading]);
+  }, [originPlaceId, studyChannelId, studyInfo, isStudyInfoLoading, selectedCafe]);
 
-  const handleCafeSelect = (cafe: LocateType) => {
-    console.log(cafe); // 디버깅로그
-    setSelectedCafe(cafe);
-  };
+  const handlePlaceSelect = async (studyChannelId: number, selectedCafe: LocateType) => {
+    // await handleCafeSelect(cafe);
+    console.log("장소 선택");
 
-  const handlePlaceSelect = async (studyChannelId: number, selectedCafe: LocateType | null) => {
-    if (!selectedCafe) return;
     try {
       const response = await postLocate(studyChannelId, selectedCafe);
       if (response) {
         const placeId = response.id;
         setPlaceId(() => placeId);
         console.log("Selected place ID:", placeId); // 디버깅로그
-        onClose();
       }
     } catch (error) {
       console.error("Error selecting place:", error);
@@ -102,18 +97,16 @@ const KakaoMap = ({ originPlaceId, studyChannelId, onClose, setPlaceId }: KakaoM
         <CafeList
           studyChannelId={studyChannelId}
           map={map}
-          selectedCafe={selectedCafe}
-          onSelectCafe={handleCafeSelect}
           handlePlaceSelect={handlePlaceSelect}
           originMarker={originMarker}
+          onSelectCafe={setSelectedCafe}
         />
       ) : (
         <CafeList
           studyChannelId={studyChannelId}
           map={map}
-          selectedCafe={selectedCafe}
-          onSelectCafe={handleCafeSelect}
           handlePlaceSelect={handlePlaceSelect}
+          onSelectCafe={setSelectedCafe}
         />
       )}
     </div>

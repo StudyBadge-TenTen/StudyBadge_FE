@@ -19,33 +19,63 @@ const ConfirmModal = ({
   const { selectedDate } = useSelectedDateStore();
   const userInfo = useUserInfo(accessToken);
 
-  if (channelId && originInfo && modalInfo && newSchedule && repeatState) {
-    const handleModalBtnClick = async (
-      e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-      props: ConfirmModalPropsType,
-    ) => {
-      const { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState } = props;
-      const target = e.target as HTMLButtonElement;
+  const handleModalBtnClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    props: ConfirmModalPropsType,
+  ) => {
+    const { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState } = props;
+    const target = e.target as HTMLButtonElement;
 
-      // 취소 버튼 누를 시
-      if (target.classList.contains("cancel-confirm")) {
-        setModalInfo(() => ({
-          isOpen: false,
-          modalFor: "EDIT",
-          isAfterCheck: false,
-        }));
-        return;
+    // 취소 버튼 누를 시
+    if (target.classList.contains("cancel-confirm")) {
+      setModalInfo(() => ({
+        isOpen: false,
+        modalFor: "EDIT",
+        isAfterCheck: false,
+      }));
+      return;
+    }
+
+    try {
+      if (!originInfo) {
+        // 일정 생성일 때
+        if (target.classList.contains("yes")) {
+          await postSchedule(Number(channelId), newSchedule, repeatState);
+          // const response = await postSchedule(Number(channelId), newSchedule, repeatState);
+          // console.log(response); // 디버깅로그
+          console.log("post schedule");
+
+          navigate(`/channel/${channelId}/schedule/${selectedDate}`);
+        } else if (target.classList.contains("no")) {
+          setModalInfo(() => ({
+            isOpen: false,
+            modalFor: "EDIT",
+            isAfterCheck: false,
+          }));
+          return;
+        }
       }
-
-      try {
-        if (!originInfo) {
-          // 일정 생성일 때
+      // 일정 변경 저장일 때
+      else if (modalInfo.modalFor === "EDIT" && originInfo) {
+        if (modalInfo.isAfterCheck) {
           if (target.classList.contains("yes")) {
-            await postSchedule(Number(channelId), newSchedule, repeatState);
-            // const response = await postSchedule(Number(channelId), newSchedule, repeatState);
+            await putSchedule(Number(channelId), newSchedule, true);
+            // const response = await putSchedule(Number(channelId), newSchedule, true);
             // console.log(response); // 디버깅로그
-            console.log("post schedule");
-
+            console.log("put schedule");
+          } else if (target.classList.contains("no")) {
+            await putSchedule(Number(channelId), newSchedule, false);
+            // const response = await putSchedule(Number(channelId), newSchedule, false);
+            // console.log(response); // 디버깅로그
+            console.log("put schedule");
+          }
+          navigate(`/channel/${channelId}/schedule/${selectedDate}`);
+        } else {
+          if (target.classList.contains("yes")) {
+            await putSchedule(Number(channelId), newSchedule);
+            // const response = await putSchedule(Number(channelId), newSchedule);
+            // console.log(response); // 디버깅로그
+            console.log("put schedule");
             navigate(`/channel/${channelId}/schedule/${selectedDate}`);
           } else if (target.classList.contains("no")) {
             setModalInfo(() => ({
@@ -56,27 +86,33 @@ const ConfirmModal = ({
             return;
           }
         }
-        // 일정 변경 저장일 때
-        else if (modalInfo.modalFor === "EDIT" && originInfo) {
+      } else if (modalInfo.modalFor === "DELETE") {
+        if (originInfo && userInfo.data) {
+          const deleteRequestBody = {
+            memberId: userInfo.data.memberId,
+            scheduleId: originInfo.id,
+            selectedDate: selectedDate,
+          };
+          // 일정 삭제일 때
           if (modalInfo.isAfterCheck) {
             if (target.classList.contains("yes")) {
-              await putSchedule(Number(channelId), newSchedule, true);
-              // const response = await putSchedule(Number(channelId), newSchedule, true);
+              await deleteSchedule(Number(channelId), deleteRequestBody, true);
+              // const response = await deleteSchedule(Number(channelId), deleteRequestBody, true);
               // console.log(response); // 디버깅로그
-              console.log("put schedule");
+              console.log("delete schedule");
             } else if (target.classList.contains("no")) {
-              await putSchedule(Number(channelId), newSchedule, false);
-              // const response = await putSchedule(Number(channelId), newSchedule, false);
+              await deleteSchedule(Number(channelId), deleteRequestBody, false);
+              // const response = await deleteSchedule(Number(channelId), deleteRequestBody, false);
               // console.log(response); // 디버깅로그
-              console.log("put schedule");
+              console.log("delete schedule");
             }
             navigate(`/channel/${channelId}/schedule/${selectedDate}`);
           } else {
             if (target.classList.contains("yes")) {
-              await putSchedule(Number(channelId), newSchedule);
-              // const response = await putSchedule(Number(channelId), newSchedule);
+              await deleteSchedule(Number(channelId), deleteRequestBody);
+              // const response = await deleteSchedule(Number(channelId), deleteRequestBody);
               // console.log(response); // 디버깅로그
-              console.log("put schedule");
+              console.log("delete schedule");
               navigate(`/channel/${channelId}/schedule/${selectedDate}`);
             } else if (target.classList.contains("no")) {
               setModalInfo(() => ({
@@ -87,112 +123,73 @@ const ConfirmModal = ({
               return;
             }
           }
-        } else if (modalInfo.modalFor === "DELETE") {
-          if (originInfo && userInfo.data) {
-            const deleteRequestBody = {
-              memberId: userInfo.data.memberId,
-              scheduleId: originInfo.id,
-              selectedDate: selectedDate,
-            };
-            // 일정 삭제일 때
-            if (modalInfo.isAfterCheck) {
-              if (target.classList.contains("yes")) {
-                await deleteSchedule(Number(channelId), deleteRequestBody, true);
-                // const response = await deleteSchedule(Number(channelId), deleteRequestBody, true);
-                // console.log(response); // 디버깅로그
-                console.log("delete schedule");
-              } else if (target.classList.contains("no")) {
-                await deleteSchedule(Number(channelId), deleteRequestBody, false);
-                // const response = await deleteSchedule(Number(channelId), deleteRequestBody, false);
-                // console.log(response); // 디버깅로그
-                console.log("delete schedule");
-              }
-              navigate(`/channel/${channelId}/schedule/${selectedDate}`);
-            } else {
-              if (target.classList.contains("yes")) {
-                await deleteSchedule(Number(channelId), deleteRequestBody);
-                // const response = await deleteSchedule(Number(channelId), deleteRequestBody);
-                // console.log(response); // 디버깅로그
-                console.log("delete schedule");
-                navigate(`/channel/${channelId}/schedule/${selectedDate}`);
-              } else if (target.classList.contains("no")) {
-                setModalInfo(() => ({
-                  isOpen: false,
-                  modalFor: "EDIT",
-                  isAfterCheck: false,
-                }));
-                return;
-              }
-            }
-          }
         }
-      } catch (error) {
-        console.log(error);
-        alert("일정 저장에 실패했습니다.");
-        return;
       }
-    };
+    } catch (error) {
+      console.log(error);
+      alert("일정 저장에 실패했습니다.");
+      return;
+    }
+  };
 
-    return (
-      <>
-        {modalInfo.isOpen &&
-          (modalInfo.isAfterCheck ? (
-            <Modal>
-              <div className="my-8">이후 일정에도 적용하시겠습니까?</div>
-              <div className="flex justify-center items-center">
-                <button
-                  onClick={(e) =>
-                    handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
-                  }
-                  className="yes btn-blue w-16"
-                >
-                  예
-                </button>
-                <button
-                  onClick={(e) =>
-                    handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
-                  }
-                  className="no btn-blue w-16 ml-4"
-                >
-                  아니요
-                </button>
-              </div>
+  return (
+    <>
+      {modalInfo.isOpen &&
+        (modalInfo.isAfterCheck ? (
+          <Modal>
+            <div className="my-8">이후 일정에도 적용하시겠습니까?</div>
+            <div className="flex justify-center items-center">
               <button
                 onClick={(e) =>
                   handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
                 }
-                className="cancel-confirm btn-blue bg-Gray-2 hover:bg-Gray-3 text-black hover:text-white mt-8"
+                className="yes btn-blue w-16"
               >
-                취소
+                예
               </button>
-            </Modal>
-          ) : (
-            <Modal>
-              <div className="my-8">일정을 {modalInfo.modalFor === "EDIT" ? "저장" : "삭제"}하시겠습니까?</div>
-              <div className="flex justify-center items-center">
-                <button
-                  onClick={(e) =>
-                    handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
-                  }
-                  className="yes btn-blue w-16"
-                >
-                  예
-                </button>
-                <button
-                  onClick={(e) =>
-                    handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
-                  }
-                  className="no btn-blue w-16 ml-4"
-                >
-                  아니요
-                </button>
-              </div>
-            </Modal>
-          ))}
-      </>
-    );
-  }
-  return <></>;
+              <button
+                onClick={(e) =>
+                  handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
+                }
+                className="no btn-blue w-16 ml-4"
+              >
+                아니요
+              </button>
+            </div>
+            <button
+              onClick={(e) =>
+                handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
+              }
+              className="cancel-confirm btn-blue bg-Gray-2 hover:bg-Gray-3 text-black hover:text-white mt-8"
+            >
+              취소
+            </button>
+          </Modal>
+        ) : (
+          <Modal>
+            <div className="my-8">일정을 {modalInfo.modalFor === "EDIT" ? "저장" : "삭제"}하시겠습니까?</div>
+            <div className="flex justify-center items-center">
+              <button
+                onClick={(e) =>
+                  handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
+                }
+                className="yes btn-blue w-16"
+              >
+                예
+              </button>
+              <button
+                onClick={(e) =>
+                  handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
+                }
+                className="no btn-blue w-16 ml-4"
+              >
+                아니요
+              </button>
+            </div>
+          </Modal>
+        ))}
+    </>
+  );
 };
 
 export default ConfirmModal;
