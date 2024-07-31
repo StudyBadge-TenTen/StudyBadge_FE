@@ -12,7 +12,7 @@ export const useSSE = () => {
   const API_BASE_URL = import.meta.env.DEV
     ? import.meta.env.VITE_APP_LOCAL_BASE_URL
     : import.meta.env.VITE_APP_PRODUCTION_BASE_URL;
-  const { notificationList, setNewNotification } = useNotificationStore();
+  const { setNewNotification } = useNotificationStore();
 
   // console.log("useSSE hook"); // useSSE 작동 테스트
 
@@ -106,7 +106,7 @@ export const useSSE = () => {
         console.log("기존 timeout clear");
       }
     };
-  }, [accessToken, API_BASE_URL, notificationList, setNewNotification, isLoginFailed]);
+  }, [accessToken, API_BASE_URL, setNewNotification, isLoginFailed]);
 
   return null;
 };
