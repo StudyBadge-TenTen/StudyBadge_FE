@@ -53,9 +53,21 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     return () => setIsEditMode(false);
   }, []);
 
-  useEffect(() => {
-    console.log(isEditMode); // 디버깅 로그
-  }, [isEditMode]);
+  // useEffect(() => {
+  //   console.log("isEditMode: ", isEditMode); // 디버깅 로그
+  // }, [isEditMode]);
+
+  // useEffect(() => {
+  //   console.log("checkDay: ", checkDay);
+  // }, [checkDay]);
+
+  // useEffect(() => {
+  //   console.log(attendList);
+  // }, [attendList]);
+
+  // useEffect(() => {
+  //   console.log("isStudyEnd: ", isStudyEnd);
+  // }, [isStudyEnd]);
 
   // 최초 로드 시 selectedDateParam 값이 있으면 상태를 업데이트
   useEffect(() => {
@@ -104,16 +116,21 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   // 선택하는 날짜가 바뀔 때마다 날짜에 해당되는 일정정보를 set하기 위해
   useEffect(() => {
-    console.log("useQuery 결과:", { data, error, isLoading }); // 디버깅 로그
+    // console.log("useQuery 결과:", { data, error, isLoading }); // 디버깅 로그
+    // console.log("isMember: ", isMember, ", isLeader: ", isLeader);
+
     if (!isMember && !isLeader) return;
-    if (scheduleInfo && moment(selectedDate).isBefore(todayString)) {
+
+    if (scheduleInfo && moment(selectedDate).isBefore(todayString) && data) {
       // 일정이 있고, 지난 날짜의 일정일 때
       setAttendList(() => ({ data: data, error: error, isLoading: isLoading }));
+      setCheckDay(() => false);
     } else if (scheduleInfo && moment(selectedDate).isSame(todayString)) {
       // 일정이 있고, 오늘일 때
       setCheckDay(() => true);
     } else {
       setAttendList(() => ({ data: undefined, error: undefined, isLoading: false }));
+      setCheckDay(() => false);
     }
 
     if (scheduleState && scheduleState.scheduleList.length !== 0) {
@@ -215,17 +232,18 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                               출석체크
                             </button>
                           </div>
-                          {channelId && isEditMode && (
-                            <CheckAttend
-                              channelId={Number(channelId)}
-                              scheduleInfo={{
-                                scheduleType: scheduleInfo.repeated ? "REPEAT" : "SINGLE",
-                                scheduleId: scheduleInfo.id,
-                                attendanceCheckDate: selectedDate,
-                              }}
-                            />
-                          )}
                         </>
+                      )}
+                      {channelId && isEditMode && (
+                        <CheckAttend
+                          channelId={Number(channelId)}
+                          scheduleInfo={{
+                            scheduleType: scheduleInfo.repeated ? "REPEAT" : "SINGLE",
+                            scheduleId: scheduleInfo.id,
+                            attendanceCheckDate: selectedDate,
+                          }}
+                          originAttendList={attendList.data}
+                        />
                       )}
                       {!attendList || (Array.isArray(attendList.data) && attendList.data?.length === 0) ? (
                         <div className="text-center text-Gray-3">출석체크를 하지 않았습니다.</div>
