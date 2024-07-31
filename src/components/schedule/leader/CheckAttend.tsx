@@ -16,13 +16,25 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
   }, []);
 
   useEffect(() => {
+    console.log("CheckAttend 렌더링", channelId, scheduleInfo);
+  }, [channelId, scheduleInfo]);
+
+  useEffect(() => {
+    if (error) {
+      console.error("멤버 리스트를 불러오는 데 실패하였습니다.", error);
+    } else {
+      console.log(data); // 디버깅 로그
+    }
+  }, [data, error]);
+
+  useEffect(() => {
     if (data) {
       const attendList = data.studyMembers.map((member) => {
         return { studyMemberId: member.memberId, isAttendance: false };
       });
       setAttendList(() => [...attendList]);
-      console.log(data);
-      console.log(attendList);
+      console.log("멤버 데이터:", data); // 디버깅 로그
+      console.log("초기 출석 리스트:", attendList); // 디버깅 로그
     } else {
       console.log("멤버 리스트 데이터가 없습니다");
     }
