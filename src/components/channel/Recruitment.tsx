@@ -17,6 +17,7 @@ const Recruitment = (): JSX.Element => {
   const { channelId } = useParams();
   const studyInfo = useGetStudyInfo(Number(channelId));
   const { data, error, isLoading } = useRecruitment(Number(channelId), accessToken);
+  // const [participateId, setParticipateId] = useState<number>();
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: "",
@@ -29,6 +30,8 @@ const Recruitment = (): JSX.Element => {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
+    console.log(target.id);
+
     if (target.classList.contains("yes-btn")) {
       setModalState(() => ({
         isOpen: true,
@@ -72,7 +75,8 @@ const Recruitment = (): JSX.Element => {
     participationId: number,
   ) => {
     const target = e.target as HTMLButtonElement;
-
+    e.stopPropagation();
+    console.log(target.id);
     // if (studyInfo.data?.capacity === studyInfo.data.)
 
     if (modalState.type === "YES") {
@@ -169,10 +173,18 @@ const Recruitment = (): JSX.Element => {
                         {participant.banCnt >= BAN_COUNT && <p className="text-Red-2">3회 이상 퇴출됨</p>}
                         {participant.participationStatus === "APPROVE_WAITING" ? (
                           <div className="flex mt-2">
-                            <button onClick={handleClick} className="no-btn btn-blue w-10 mr-4">
+                            <button
+                              id={`${participant.participationId}-noBtn`}
+                              onClick={handleClick}
+                              className="no-btn btn-blue w-10 mr-4"
+                            >
                               거절
                             </button>
-                            <button onClick={handleClick} className="yes-btn btn-blue w-10 ">
+                            <button
+                              id={`${participant.participationId}-yesBtn`}
+                              onClick={handleClick}
+                              className="yes-btn btn-blue w-10 "
+                            >
                               수락
                             </button>
                           </div>
@@ -185,12 +197,14 @@ const Recruitment = (): JSX.Element => {
                               {modalState.content}
                               <div className="flex justify-center items-center mt-10">
                                 <button
+                                  id={`${participant.participationId}-modal-yes`}
                                   className="yes-btn btn-blue w-10 mr-4"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participant.participationId)}
                                 >
                                   예
                                 </button>
                                 <button
+                                  id={`${participant.participationId}-modal-no`}
                                   className="no-btn btn-blue"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participant.participationId)}
                                 >

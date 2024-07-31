@@ -103,6 +103,7 @@ const getRecruitment = async (studyChannelId: number) => {
     `/api/study-channels/${studyChannelId}/participation-status`,
     "get",
   );
+  console.log(recruitList);
   if (axios.isAxiosError(recruitList)) {
     const error = recruitList.response?.data as CustomErrorType;
     console.log(error);
