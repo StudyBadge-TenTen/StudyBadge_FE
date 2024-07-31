@@ -46,7 +46,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     data: AttendMemberType[] | undefined;
     error: Error | undefined | null;
     isLoading: boolean;
-  }>({ data: data, error: error, isLoading: isLoading });
+  }>({ data: undefined, error: undefined, isLoading: false });
 
   useEffect(() => {
     if (!isMember && !isLeader) return;
@@ -61,9 +61,9 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   //   console.log("checkDay: ", checkDay);
   // }, [checkDay]);
 
-  // useEffect(() => {
-  //   console.log(attendList);
-  // }, [attendList]);
+  useEffect(() => {
+    console.log(attendList);
+  }, [attendList]);
 
   // useEffect(() => {
   //   console.log("isStudyEnd: ", isStudyEnd);
@@ -147,7 +147,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
         setIsLoadingState(() => false);
       }
     }
-  }, [isMember, isLeader, selectedDate, data, error, isLoading, scheduleState]);
+  }, [isMember, isLeader, selectedDate, data, error, isLoading, scheduleInfo, scheduleState]);
 
   return (
     <>
@@ -250,11 +250,11 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                       ) : attendList.isLoading ? (
                         <div className="skeleton w-full h-28 rounded-[30px] bg-Gray-1 animate-pulse"></div>
                       ) : (
-                        attendList.data && (
+                        attendList && (
                           <div className="h-28 flex flex-wrap">
-                            {attendList &&
+                            {attendList.data &&
                               Array.isArray(attendList.data) &&
-                              attendList.data?.map(
+                              attendList.data.map(
                                 (member) =>
                                   member.attendance && (
                                     <div
