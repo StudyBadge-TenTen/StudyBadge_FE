@@ -36,7 +36,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   const todayString = moment(today).format("YYYY-MM-DD");
 
   const { data, error, isLoading } = useQuery<AttendMemberType[], Error>({
-    queryKey: ["attendList", channelId, scheduleInfo?.id, selectedDate],
+    queryKey: ["attendList", channelId, scheduleInfo, selectedDate],
     queryFn: () =>
       getAttendList(Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated ? "repeat" : "single", selectedDate),
     enabled: !!channelId && !!scheduleInfo && !!selectedDate,
@@ -46,12 +46,16 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     data: AttendMemberType[] | undefined;
     error: Error | undefined | null;
     isLoading: boolean;
-  }>({ data: undefined, error: undefined, isLoading: false });
+  }>({ data: data, error: error, isLoading: isLoading });
 
   useEffect(() => {
     if (!isMember) return;
     return () => setIsEditMode(false);
   }, []);
+
+  useEffect(() => {
+    console.log(isEditMode); // 디버깅 로그
+  }, [isEditMode]);
 
   // 최초 로드 시 selectedDateParam 값이 있으면 상태를 업데이트
   useEffect(() => {
@@ -203,7 +207,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                         {selectedDate.split("-")[1]}.{selectedDate.split("-")[2]} 출석 멤버
                       </h3>
                       {/* 조건 : 미종료스터디, 리더, 오늘, 출석체크비활성화 시 버튼 렌더링 */}
-                      {!isStudyEnd && isLeader && checkDay && !isEditMode ? (
+                      {!isStudyEnd && isLeader && checkDay && !isEditMode && (
                         <>
                           <div className="flex justify-center items-center">
                             <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
@@ -221,55 +225,39 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                             />
                           )}
                         </>
-                      ) : (
-                        <>
-                          {/* 출석체크 작동 확인용 */}
-                          {/* <div className="flex justify-center items-center">
-                        <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
-                          출석체크
-                        </button>
-                      </div>
-                      {channelId && isEditMode && (
-                        <CheckAttend
-                          channelId={Number(channelId)}
-                          scheduleInfo={{
-                            scheduleType: scheduleInfo.repeated ? "REPEAT" : "SINGLE",
-                            scheduleId: scheduleInfo.id,
-                            attendanceCheckDate: selectedDate,
-                          }}
-                        />
-                      )} */}
-                        </>
                       )}
                       {!attendList || (Array.isArray(attendList.data) && attendList.data?.length === 0) ? (
                         <div className="text-center text-Gray-3">출석체크를 하지 않았습니다.</div>
                       ) : attendList.isLoading ? (
                         <div className="skeleton w-full h-28 rounded-[30px] bg-Gray-1 animate-pulse"></div>
                       ) : (
-                        <div className="h-28 flex flex-wrap">
-                          {attendList &&
-                            attendList.data?.map(
-                              (member) =>
-                                member.attendance && (
-                                  <div
-                                    key={member.studyMemberId}
-                                    className="member w-fit h-fit flex flex-col justify-center items-center mx-2"
-                                  >
-                                    {member.imageUrl ? (
-                                      <img
-                                        src={member.imageUrl}
-                                        alt="프로필이미지"
-                                        className="w-16 h-16 object-cover rounded-full bg-Gray-2"
-                                      />
-                                    ) : (
-                                      <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
-                                    )}
+                        attendList.data && (
+                          <div className="h-28 flex flex-wrap">
+                            {attendList &&
+                              Array.isArray(attendList.data) &&
+                              attendList.data?.map(
+                                (member) =>
+                                  member.attendance && (
+                                    <div
+                                      key={member.studyMemberId}
+                                      className="member w-fit h-fit flex flex-col justify-center items-center mx-2"
+                                    >
+                                      {member.imageUrl ? (
+                                        <img
+                                          src={member.imageUrl}
+                                          alt="프로필이미지"
+                                          className="w-16 h-16 object-cover rounded-full bg-Gray-2"
+                                        />
+                                      ) : (
+                                        <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
+                                      )}
 
-                                    <span>{member.name}</span>
-                                  </div>
-                                ),
-                            )}
-                        </div>
+                                      <span>{member.name}</span>
+                                    </div>
+                                  ),
+                              )}
+                          </div>
+                        )
                       )}
                     </>
                   </>
