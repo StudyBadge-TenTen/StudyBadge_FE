@@ -7,6 +7,7 @@ import Modal from "../common/Modal";
 import MemberList from "./MemberList";
 import { useGetStudyInfo } from "../../hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
+import { categoryEnToKr } from "@/utils/transform-function";
 
 const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
   const { channelId } = useParams();
@@ -155,7 +156,11 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
             )}
           </p>
           <p className="text-Blue-2 p-2">
-            <b>카테고리:</b> {data?.category}
+            {data && data.category && (
+              <>
+                <b>카테고리:</b> {categoryEnToKr(data.category)}
+              </>
+            )}
           </p>
           <div className="w-full">
             <b className="inline-block text-Blue-2 pl-4 my-2">소개</b>
