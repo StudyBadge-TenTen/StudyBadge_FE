@@ -7,7 +7,7 @@ const useLoginFailed = () => {
     if (refreshToken && !isLoginFailed) {
       const initAuth = async () => {
         try {
-          await refreshAccessToken(refreshToken);
+          await refreshAccessToken();
         } catch (error) {
           console.error("Failed to refresh access token on load:", error);
           setLoginFailed(true); // 로그인 실패 시 상태 업데이트

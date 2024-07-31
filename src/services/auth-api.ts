@@ -1,35 +1,21 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { fetchCall, setApiToken } from "./common";
+import { API_BASE_URL, fetchCall } from "./common";
 import { LoginResponse, SignUpData } from "../types/auth-type";
+import { useAuthStore } from "@/store/auth-store";
+import { removeAccessToken, removeRefreshToken } from "@/utils/cookie";
 
 export const postLogin = async (email: string, password: string): Promise<LoginResponse> => {
   try {
     const response = await axios.post<LoginResponse>(
-      `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/members/login`,
+      `${API_BASE_URL}/api/members/login`,
       { email, password },
       { withCredentials: true }, // withCredentials 옵션 추가
     );
 
-    if (response.status === 500) {
-      if (import.meta.env.DEV || import.meta.env.PROD) {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessTokenExpiration");
-        window.location.reload();
-      }
-    }
-
     const accessTokenBearer = response.headers["authorization"] as string;
     const accessToken = accessTokenBearer.split(" ")[1];
-    // console.log("Access token received:", accessToken); // 디버깅을 위해 추가
 
-    // 쿠키는 HTTP Only로 설정되었으므로, JavaScript를 통해 접근할 수 없음.
-    // 브라우저가 자동으로 관리하도록 설정.
-
-    setApiToken(accessToken);
-
-    // refreshToken은 JavaScript를 통해 직접 접근 불가
-    // const refreshToken = response.headers["Set-Cookie"];
-    // refreshToken을 빈 문자열로 반환하면 설정됨
+    useAuthStore.getState().setField("accessToken", accessToken);
 
     return { accessToken, refreshToken: response.data.refreshToken };
   } catch (error) {
@@ -89,13 +75,9 @@ export const postLogout = async () => {
   } catch (error) {
     console.log(error); // 디버깅 로그
   } finally {
-    if (import.meta.env.DEV || import.meta.env.PROD) {
-      sessionStorage.removeItem("accessToken");
-      sessionStorage.removeItem("accessTokenExpiration");
-      window.location.reload();
-    }
-    sessionStorage.removeItem("refreshToken");
-    setApiToken("");
+    removeAccessToken();
+    removeRefreshToken();
+    window.location.reload(); // 새로고침하여 로그아웃 상태를 반영
   }
 };
 

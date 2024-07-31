@@ -27,8 +27,12 @@ const getMyStudy = async () => {
       return [];
     } else {
       const error = myStudy.response?.data as CustomErrorType;
-      console.log(error.message);
-      return [];
+      if (error.errorCode === "NOT_FOUND_STUDY") {
+        return [];
+      } else {
+        console.log(error.message);
+        return [];
+      }
     }
   } else {
     return myStudy ?? [];

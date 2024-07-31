@@ -4,8 +4,10 @@ import { transDay } from "../../../utils/schedule-function";
 import RepeatSetter from "./RepeatSetter";
 import TimeSelector from "./TimeSelector";
 import { useSelectedDateStore } from "../../../store/schedule-store";
+import { useEffect } from "react";
 
 const Setters = ({
+  originInfo,
   selector,
   setSelector,
   time,
@@ -17,6 +19,12 @@ const Setters = ({
   setRepeatEndDate,
 }: SettersPropsType): JSX.Element => {
   const { selectedDate } = useSelectedDateStore();
+
+  useEffect(() => {
+    if (originInfo && originInfo.repeatEndDate) {
+      setRepeatEndDate(() => originInfo.repeatEndDate!);
+    }
+  }, [originInfo]);
 
   const handleSelectorClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const btn = e.target as HTMLButtonElement;
@@ -120,18 +128,20 @@ const Setters = ({
         <label htmlFor="repeatEndDate" className="mr-8">
           종료날짜
         </label>
-        <button
-          type="button"
-          id="repeatEndDate"
-          onClick={(e) => handleSelectorClick(e)}
-          className="w-40 bg-white py-1 rounded-[50px] flex justify-center items-center"
-        >
-          {repeatEndDate === "NONE" ? `${selectedDate}` : `${repeatEndDate}`}
-        </button>
+        {repeatEndDate && (
+          <button
+            type="button"
+            id="repeatEndDate"
+            onClick={(e) => handleSelectorClick(e)}
+            className="w-40 bg-white py-1 rounded-[50px] flex justify-center items-center"
+          >
+            {repeatEndDate}
+          </button>
+        )}
       </div>
       {selector === "repeatEndDate" && (
         <>
-          <Calendar setRepeatEndDate={setRepeatEndDate} />
+          <Calendar repeatEndDate={repeatEndDate} setRepeatEndDate={setRepeatEndDate} />
         </>
       )}
     </div>

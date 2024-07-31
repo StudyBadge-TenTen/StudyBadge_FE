@@ -107,6 +107,7 @@ interface RepeatSetterPropsType {
 }
 
 interface SettersPropsType {
+  originInfo: ScheduleType;
   selector: SelectorType;
   setSelector: React.Dispatch<React.SetStateAction<SelectorType>>;
   time: {

@@ -9,9 +9,11 @@ import { useParams } from "react-router";
 
 const Calendar = ({
   marks,
+  repeatEndDate,
   setRepeatEndDate,
 }: {
   marks?: string[];
+  repeatEndDate?: string;
   setRepeatEndDate?: React.Dispatch<React.SetStateAction<string>>;
 }): JSX.Element => {
   const { selectedDateParam } = useParams();
@@ -19,16 +21,20 @@ const Calendar = ({
   // if (selectedDateParam) {
   const { setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
-  const [value, onChange] = useState<Value>(selectedDateParam ? new Date(selectedDateParam) : new Date());
+  const [value, onChange] = useState<Value>(
+    repeatEndDate ? new Date(repeatEndDate) : selectedDateParam ? new Date(selectedDateParam) : new Date(),
+  );
   const [mark, setMark] = useState<string[]>([]);
   // const [mark, setMark] = useState(marks);
   // 달력에 일정표시할 날짜들을 mark배열에 "YYYY-MM-DD"형태로 담을 예정
 
   useEffect(() => {
-    if (selectedDateParam) {
+    if (repeatEndDate) {
+      onChange(() => new Date(repeatEndDate));
+    } else if (selectedDateParam) {
       onChange(() => new Date(selectedDateParam));
     }
-  }, [selectedDateParam]);
+  }, [repeatEndDate, selectedDateParam]);
 
   useEffect(() => {
     setMark(() => marks ?? []);
@@ -42,6 +48,7 @@ const Calendar = ({
 
     if (!mark.length && setRepeatEndDate) {
       setRepeatEndDate(() => transDate);
+      onChange(() => date);
       return;
     }
 

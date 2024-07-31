@@ -2,8 +2,15 @@ import { create } from "zustand";
 import axios from "axios";
 import { postLogin, postLogout, postSignUp } from "../services/auth-api";
 import { AuthStoreType, PasswordResetStore } from "../types/auth-type";
-import { setApiToken } from "../services/common";
 import { CustomErrorType } from "@/types/common";
+import {
+  getRefreshToken,
+  removeAccessToken,
+  removeRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from "@/utils/cookie";
+import { API_BASE_URL } from "@/services/common";
 
 export const useAuthStore = create<AuthStoreType>((set, get) => ({
   email: "",
@@ -29,25 +36,15 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       set({ accessToken: accessToken, refreshToken: refreshToken });
 
       if (refreshToken) {
-        sessionStorage.setItem("refreshToken", refreshToken);
+        setRefreshToken(refreshToken);
       }
 
-      // dev 모드 시
-      if (import.meta.env.DEV || import.meta.env.PROD) {
-        const expirationTime = new Date().getTime() + 7200000; // 2시간
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
-      }
+      setAccessToken(accessToken);
       axios.defaults.headers.common["authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorData = error.response?.data as CustomErrorType;
         alert(errorData.message);
-      }
-      if (import.meta.env.DEV || import.meta.env.PROD) {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessTokenExpiration");
-        window.location.reload();
       }
       console.error("Login failed:", error);
       throw error;
@@ -82,53 +79,34 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       refreshToken: null,
     }),
 
-  // initiateSocialLogin: (provider) => {
-  //   initiateSocialLogin(provider);
-  // },
-
-  // handleSocialLoginCallback: async (provider) => {
-  //   try {
-  //     const { accessToken } = await postSocialLoginCallback(provider);
-  //     set({ accessToken });
-  //     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-  //   } catch (error) {
-  //     console.error(`${provider} login failed:`, error);
-  //     throw error;
-  //   }
-  // },
-
-  refreshAccessToken: async (refreshToken: string) => {
+  refreshAccessToken: async () => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/token/re-issue`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${refreshToken}`,
-          },
+      const refreshToken = getRefreshToken();
+
+      if (!refreshToken) {
+        alert("다시 로그인 해주시기 바랍니다");
+        window.location.href = "/";
+        return;
+      }
+
+      const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
         },
-      );
-      // const response = await axios.post<LoginResponse>(
-      //   `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/token/re-issue`,
-      //   // { refreshToken: get().refreshToken },
-      //   {}, // 토큰 재발급시 refresh token을 쿠키로 받는다면 위 코드가 필요없다고 함
-      //   { withCredentials: true },
-      // );
+      });
 
       const accessTokenBearer = response.headers["authorization"] as string;
 
       if (accessTokenBearer) {
         const accessToken = accessTokenBearer.replace("Bearer ", "");
-
-        // 토큰을 설정합니다.
-        setApiToken(accessToken);
-        // 새로운 accessToken을 저장, refreshToken은 쿠키에 있고 App컴포넌트에 새로고침 시 받아오는 코드 있음
+        setAccessToken(accessToken);
         set({ accessToken: accessToken });
       }
     } catch (error) {
-      console.error("Error refreshing access token:", error);
-      alert("다시 로그인 해주시기 바랍니다.");
-      throw error;
+      alert("다시 로그인 해주시기 바랍니다");
+      window.location.href = "/";
+      return;
     }
   },
 
@@ -144,12 +122,10 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       console.error("Logout failed:", error);
       throw error;
     } finally {
-      if (import.meta.env.DEV || import.meta.env.PROD) {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessTokenExpiration");
-        window.location.reload();
-      }
-      setApiToken("");
+      set({ accessToken: null, refreshToken: null });
+      removeAccessToken();
+      removeRefreshToken();
+      window.location.reload();
     }
   },
 }));

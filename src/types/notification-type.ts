@@ -8,6 +8,13 @@ interface NotificationType {
   // 이건 백엔드 api :/api/study-channels/%d/schedules/date?year=%d&month=%d
 }
 
+interface NotificationListType {
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  content: NotificationType[];
+}
+
 interface NotificationStoreType {
   newNotification: NotificationType | null;
   notificationList: NotificationType[];
@@ -15,4 +22,4 @@ interface NotificationStoreType {
   setNotificationList: (newNotiList: NotificationType[]) => void;
 }
 
-export type { NotificationType, NotificationStoreType };
+export type { NotificationType, NotificationListType, NotificationStoreType };

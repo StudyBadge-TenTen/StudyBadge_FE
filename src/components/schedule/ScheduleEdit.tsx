@@ -34,7 +34,7 @@ const ScheduleEdit = (): JSX.Element => {
     end: ["00", "00"],
   });
   const [repeatState, setRepeatState] = useState<RepeatCycleType | "NONE">("NONE");
-  const [repeatEndDate, setRepeatEndDate] = useState("NONE");
+  const [repeatEndDate, setRepeatEndDate] = useState(selectedDate);
   const [placeId, setPlaceId] = useState<number>(); // 맵에서 id를 넘겨받아 세팅
   const { newSchedule, setNewSchedule } = useNewScheduleStore();
   const [modalInfo, setModalInfo] = useState({
@@ -49,23 +49,6 @@ const ScheduleEdit = (): JSX.Element => {
     // 드롭다운모달 밖을 클릭할 때를 감지하기 위한 이벤트 등록
     window.addEventListener("click", (e) => handleSelectorReset(e));
 
-    // 기존에 등록된 일정이 있을 경우 등록된 일정으로 상태 세팅
-    if (originInfo) {
-      setTime(() => ({
-        start: [originInfo.scheduleStartTime.split(":")[0], originInfo.scheduleStartTime.split(":")[1]],
-        end: [originInfo.scheduleEndTime.split(":")[0], originInfo.scheduleEndTime.split(":")[1]],
-      }));
-      // 반복일정인 경우
-      if (originInfo.repeated && originInfo.repeatCycle) {
-        setRepeatState(() => originInfo.repeatCycle!);
-        setRepeatEndDate(() => originInfo.repeatEndDate!);
-      }
-      // 오프라인 일정의 경우
-      if (originInfo.placeId) {
-        setPlaceId(() => originInfo.placeId);
-      }
-    }
-
     return () => {
       window.removeEventListener("click", (e) => handleSelectorReset(e));
     };
@@ -76,22 +59,19 @@ const ScheduleEdit = (): JSX.Element => {
   }, [placeId]);
 
   useEffect(() => {
-    if (repeatState === "NONE") {
-      setRepeatEndDate(() => selectedDate ?? selectedDateParam);
-    }
-  }, [repeatState]);
-
-  useEffect(() => {
+    // 기존에 등록된 일정이 있을 경우 등록된 일정으로 상태 세팅
     if (originInfo) {
       setInputValue(() => ({ name: originInfo.scheduleName, content: originInfo.scheduleContent }));
       setTime({
         start: [originInfo.scheduleStartTime.split(":")[0], originInfo.scheduleStartTime.split(":")[1]],
         end: [originInfo.scheduleEndTime.split(":")[0], originInfo.scheduleEndTime.split(":")[1]],
       });
+      // 반복일정인 경우
       if (originInfo.repeated && originInfo.repeatCycle && originInfo.repeatEndDate) {
         setRepeatState(originInfo.repeatCycle);
         setRepeatEndDate(originInfo.repeatEndDate);
       }
+      // 오프라인 일정의 경우
       if (originInfo.placeId) {
         setPlaceId(originInfo.placeId);
       }
@@ -99,7 +79,7 @@ const ScheduleEdit = (): JSX.Element => {
   }, [originInfo]);
 
   useEffect(() => {
-    if (repeatState === "NONE") {
+    if (repeatState === "NONE" && !originInfo) {
       setRepeatEndDate(selectedDate ?? selectedDateParam);
     }
   }, [repeatState, selectedDate, selectedDateParam]);
@@ -132,7 +112,7 @@ const ScheduleEdit = (): JSX.Element => {
             editType: "repeat",
             repeatCycle: repeatState,
             repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
-            repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
+            repeatEndDate: repeatEndDate,
             selectedDate: selectedDate,
           });
         }
@@ -148,7 +128,7 @@ const ScheduleEdit = (): JSX.Element => {
             scheduleDate: selectedDate,
             repeatCycle: repeatState,
             repeatSituation: situationCalculator(repeatState, selectedDate, selectedDay),
-            repeatEndDate: repeatEndDate === "NONE" ? selectedDate : repeatEndDate,
+            repeatEndDate: repeatEndDate,
           });
         }
       }
@@ -157,6 +137,7 @@ const ScheduleEdit = (): JSX.Element => {
     //   console.log(accessToken);
     //   alert("유저 정보가 존재하지 않습니다.");
     // }
+    console.log(repeatEndDate);
   }, [userInfoData.data, selectedDate, inputValue, repeatState, repeatEndDate, placeId, time, originInfo]);
 
   // 일정 이름, 내용 input의 handler함수
@@ -203,9 +184,16 @@ const ScheduleEdit = (): JSX.Element => {
     ) {
       alert("종료 시간은 반드시 시작 시간보다 이후여야 합니다.");
       return;
-    } else if (repeatEndDate < selectedDate) {
-      alert("반복 종료일은 반드시 선택한 날짜 이후여야 합니다.");
-      return;
+    }
+    if (repeatState !== "NONE") {
+      if (!repeatEndDate) {
+        alert("반복 일정은 반복 종료일 설정이 필수입니다.");
+        return;
+      }
+      if (repeatEndDate < selectedDate) {
+        alert("반복 종료일은 반드시 선택한 날짜 이후여야 합니다.");
+        return;
+      }
     }
 
     if (originInfo) {
@@ -281,6 +269,7 @@ const ScheduleEdit = (): JSX.Element => {
               />
             </div>
             <Setters
+              originInfo={originInfo}
               selector={selector}
               setSelector={setSelector}
               time={time}

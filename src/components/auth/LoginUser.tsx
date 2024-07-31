@@ -29,7 +29,7 @@ const LoginUser: React.FC = () => {
       // console.log("로그인 성공");
       reset();
       navigate("/");
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       // console.error("로그인 실패:", error);
       alert("이메일 또는 비밀번호가 올바르지 않습니다.");

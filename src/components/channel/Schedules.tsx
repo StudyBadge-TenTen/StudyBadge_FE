@@ -173,7 +173,10 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                     </div>
                     {/* 오프라인 스터디일 경우 장소 추가 */}
                     {scheduleInfo.placeAddress && (
-                      <div className="h-fit flex items-center border border-solid border-Gray-2 rounded-[50px] p-2 my-2">
+                      <div
+                        title={scheduleInfo.placeAddress}
+                        className="h-fit flex items-center border border-solid border-Gray-2 rounded-[50px] p-2 my-2"
+                      >
                         <div className="w-fit flex items-center text-Blue-2 font-bold mx-4">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

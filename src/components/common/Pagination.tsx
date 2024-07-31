@@ -13,8 +13,10 @@ const Pagination = ({
 }: PaginationPropsType): JSX.Element => {
   const [curPageGroup, setCurPageGroup] = useState(1);
   const [pageList, setPageList] = useState<number[]>([]);
-  const totalPage = type === "CHANNEL" ? Math.ceil(dataListLength / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
-  const lastPageGroup = type === "CHANNEL" ? Math.ceil(totalPage / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
+  const totalPage =
+    type === "CHANNEL" || "NOTIFICATION" ? Math.ceil(dataListLength / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
+  const lastPageGroup =
+    type === "CHANNEL" || "NOTIFICATION" ? Math.ceil(totalPage / DATA_LENGTH_PER_PAGE) : Number.MAX_SAFE_INTEGER;
 
   useEffect(() => {
     let newPageList = [];
@@ -37,7 +39,7 @@ const Pagination = ({
         setCurPageGroup((origin) => origin - 1);
       }
     } else if (target.classList.contains("next-btn")) {
-      if (type === "CHANNEL") {
+      if (type === "CHANNEL" || "NOTIFICATION") {
         if (curPageGroup === lastPageGroup) return;
         else {
           setCurPageGroup((origin) => origin + 1);
@@ -61,6 +63,9 @@ const Pagination = ({
       if (type === "HISTORY" && setPage) {
         if (!historyList || historyList.length === 0) return;
         else setPage(() => Number(target.innerText));
+      }
+      if (type === "NOTIFICATION" && setPage) {
+        setPage(() => Number(target.innerText));
       }
     }
   };

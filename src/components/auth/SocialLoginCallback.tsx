@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/auth-store";
+import { setAccessToken } from "@/utils/cookie";
 
 const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
   const navigate = useNavigate();
@@ -15,10 +16,8 @@ const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
       if (accessToken) {
         // console.log(accessToken); // 디버깅 로그 추가
 
+        setAccessToken(accessToken);
         setField("accessToken", accessToken);
-        if (import.meta.env.DEV || import.meta.env.PROD) {
-          sessionStorage.setItem("accessToken", accessToken);
-        }
         if (first) {
           navigate("/profile/myInfo", { state: { social: true } });
         } else {
@@ -33,22 +32,6 @@ const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
       navigate("/login");
     }
   }, [navigate, setField, location, first]);
-
-  // axios로 소셜 로그인 요청하고 토큰 받는 방법일 때
-  // useEffect(() => {
-  //   const provider = location.pathname.includes("naver") ? "naver" : "kakao";
-
-  //   handleSocialLoginCallback(provider)
-  //     .then(() => {
-  //       // 로그인 성공 시 정보 수정 페이지로 이동 (계좌정보 입력을 위해)
-  //       navigate("/profile/myInfo", { state: { social: true } });
-  //     })
-  //     .catch((error) => {
-  //       alert("로그인에 실패하였습니다");
-  //       console.error("Social login failed:", error);
-  //       navigate("/login"); // 실패 시 로그인 페이지로 이동
-  //     });
-  // }, [location, navigate, handleSocialLoginCallback]);
 
   return <div>소셜 로그인 처리 중...</div>;
 };
