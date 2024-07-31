@@ -1,5 +1,6 @@
 import { ParticipationStatusType } from "@/types/profile-type";
 import { AuthStoreType } from "../types/auth-type";
+import { StudyCategoryType } from "@/types/study-channel-type";
 
 const nameToType = (formName: string) => {
   let name;
@@ -117,4 +118,23 @@ const stateToColorClassName = (participateState: ParticipationStatusType) => {
   return result;
 };
 
-export { nameToType, returnPlaceholder, nameToField, ParticipateEnToKr, stateToColorClassName };
+const categoryEnToKr = (category: StudyCategoryType) => {
+  let result;
+  switch (category) {
+    case "IT":
+      result = "컴퓨터/IT/개발";
+      break;
+    case "LANGUAGE":
+      result = "언어/어학";
+      break;
+    case "EMPLOYMENT":
+      result = "취업/이직";
+      break;
+    case "SELF_DEVELOPMENT":
+      result = "자기계발";
+      break;
+  }
+  return result;
+};
+
+export { nameToType, returnPlaceholder, nameToField, ParticipateEnToKr, stateToColorClassName, categoryEnToKr };
