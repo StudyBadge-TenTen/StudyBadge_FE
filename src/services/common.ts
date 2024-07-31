@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-import { getCookie } from "../utils/get-cookie";
 import { postLogout } from "./auth-api";
 
 // 공통 axios 만들기
@@ -14,11 +13,11 @@ const setApiToken = (token: string) => {
   console.log("Token set in setApiToken:", API_TOKEN); // 디버깅을 위해 추가
 
   // dev 모드 시
-  // if (import.meta.env.DEV) {
-  //   const expirationTime = new Date().getTime() + 7200000; // 2시간
-  //   sessionStorage.setItem("accessToken", token);
-  //   sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
-  // }
+  if (import.meta.env.DEV || import.meta.env.PROD) {
+    const expirationTime = new Date().getTime() + 7200000; // 2시간
+    sessionStorage.setItem("accessToken", token);
+    sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
+  }
 };
 
 const axiosInstance = axios.create({
@@ -29,58 +28,62 @@ const axiosInstance = axios.create({
   },
 });
 
+const MAX_RETRIES = 3;
+
 // 요청 인터셉터 추가
 axiosInstance.interceptors.request.use(
   async (config) => {
-    // 요청 헤더에 인증 토큰 추가해야함
+    // 요청 헤더에 인증 토큰 추가
 
-    if (import.meta.env.DEV) {
-      //   console.log("this is dev mode");
-      //   // dev 모드 시 스토리지에 토큰 저장
-      //   const tokenExpiration = sessionStorage.getItem("accessTokenExpiration");
-      //   // 만료 => 재발급 처리
-      // if (tokenExpiration) {
-      //     const isTokenExpired = new Date().getTime() > parseInt(tokenExpiration);
-      //     if (isTokenExpired) {
-      //       const refreshToken = getCookie("refreshToken");
-      //       if (refreshToken) {
-      //         try {
-      //           const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
-      //             headers: {
-      //               Authorization: `Bearer ${refreshToken}`,
-      //             },
-      //           });
-      //           const newAccessToken = response.headers["authorization"].split(" ")[1];
-      //           // 새로운 토큰 저장 및 요청 헤더에 추가
-      //           setApiToken(newAccessToken);
-      //           config.headers["authorization"] = `Bearer ${newAccessToken}`;
-      //           // 반환
-      //           return config;
-      //         } catch (refreshError) {
-      //           console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
-      //           // 필요에 따라 로그아웃 처리 등 추가 작업 수행
-      //           try {
-      //             await postLogout();
-      //             console.log("Token refresh error - try logout:", refreshError);
-      //           } catch (error) {
-      //             console.error("Logout error:", refreshError);
-      //             return Promise.reject(error);
-      //           }
-      //         }
-      //       }
-      //     } else {
-      //       console.log("토큰 만료 전");
-      //       const storageToken = sessionStorage.getItem("accessToken");
-      //       config.headers["authorization"] = `Bearer ${storageToken}`;
-      //       console.log(storageToken);
-      //       return config;
-      //     }
-      //   }
+    // const refreshToken = sessionStorage.getItem("refreshToken");
+    //
+    // if (refreshToken && !config.headers["authorization"]) {
+    //   try {
+    //     const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
+    //       headers: {
+    //         Authorization: `Bearer ${refreshToken}`,
+    //       },
+    //     });
+    //     const newAccessToken = response.headers["authorization"].split(" ")[1];
+    //     // 새로운 토큰 저장 및 요청 헤더에 추가
+    //     setApiToken(newAccessToken);
+    //     config.headers["authorization"] = `Bearer ${newAccessToken}`;
+    //   } catch (refreshError) {
+    //     console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
+    //     // 로그아웃 처리
+    //     try {
+    //       await postLogout();
+    //       console.log("Token refresh error - try logout:", refreshError);
+    //     } catch (logoutError) {
+    //       console.error("Logout error:", logoutError);
+    //     } finally {
+    //       alert("다시 로그인 해주시기 바랍니다.");
+    //     }
+    //     return Promise.reject(refreshError);
+    //   }
+    // }
+
+    if (import.meta.env.DEV || import.meta.env.PROD) {
+      console.log("this is dev mode");
+      try {
+        const storageToken = sessionStorage.getItem("accessToken");
+        config.headers["authorization"] = `Bearer ${storageToken}`;
+      } catch (refreshError) {
+        console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
+        // 로그아웃 처리
+        try {
+          await postLogout();
+          console.log("Token refresh error - try logout:", refreshError);
+        } catch (logoutError) {
+          console.error("Logout error:", logoutError);
+        } finally {
+          alert("다시 로그인 해주시기 바랍니다.");
+        }
+        return Promise.reject(refreshError);
+      }
     } else {
       console.log("this is prod mode"); // 디버깅을 위해 추가
-
       config.headers["authorization"] = `Bearer ${API_TOKEN}`;
-      return config;
     }
     console.log("Request config:", config); // 디버깅을 위해 추가
     return config;
@@ -100,45 +103,78 @@ axiosInstance.interceptors.response.use(
     return response.data;
   },
   async (error) => {
-    // 응답 에러 처리
     const axiosError = error as AxiosError;
     const originalRequest = error.config;
+
+    if (!originalRequest._retryCount) {
+      originalRequest._retryCount = 0;
+    }
+
     console.error("Response error:", axiosError.response?.data); // 디버깅을 위해 추가
 
-    // 여기서 에러 처리 로직 구현
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      // refreshToken을 쿠키에서 가져와 accessToken 갱신 로직 추가
-      const refreshToken = getCookie("refreshToken");
-      if (refreshToken) {
+    // 에러 처리 로직 구현
+    if (axiosError.response?.status === 401 && originalRequest._retryCount < MAX_RETRIES) {
+      originalRequest._retryCount += 1;
+
+      if (import.meta.env.DEV || import.meta.env.PROD) {
         try {
-          const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
-            },
-          });
-          const newAccessToken = response.headers["authorization"].split(" ")[1];
+          const storageToken = sessionStorage.getItem("accessToken");
+          originalRequest.headers["authorization"] = `Bearer ${storageToken}`;
 
-          // 새로운 토큰 저장 및 요청 헤더에 추가
-          setApiToken(newAccessToken);
-          originalRequest.headers["authorization"] = `Bearer ${newAccessToken}`;
-
-          // 원래 요청을 다시 시도
           return axiosInstance(originalRequest);
         } catch (refreshError) {
           console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
-          // 필요에 따라 로그아웃 처리 등 추가 작업 수행
+          // 로그아웃 처리
           try {
             await postLogout();
             console.log("Token refresh error - try logout:", refreshError);
-          } catch (error) {
-            console.error("Logout error:", refreshError);
+          } catch (logoutError) {
+            console.error("Logout error:", logoutError);
+          } finally {
+            alert("다시 로그인 해주시기 바랍니다.");
           }
+          return Promise.reject(refreshError);
         }
       }
-      return Promise.reject(axiosError);
+
+      // const refreshToken = sessionStorage.getItem("refreshToken");
+
+      // if (refreshToken) {
+      //   try {
+      //     const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
+      //       headers: {
+      //         Authorization: `Bearer ${refreshToken}`,
+      //       },
+      //     });
+      //     const newAccessToken = response.headers["authorization"].split(" ")[1];
+
+      //     // 새로운 토큰 저장 및 요청 헤더에 추가
+      //     setApiToken(newAccessToken);
+      //     originalRequest.headers["authorization"] = `Bearer ${newAccessToken}`;
+
+      //     // 원래 요청을 다시 시도
+      //     // return axiosInstance(originalRequest);
+      //   } catch (refreshError) {
+      //     console.error("Token refresh error:", refreshError); // 디버깅을 위해 추가
+      //     // 로그아웃 처리
+      //     try {
+      //       await postLogout();
+      //       console.log("Token refresh error - try logout:", refreshError);
+      //     } catch (logoutError) {
+      //       console.error("Logout error:", logoutError);
+      //     } finally {
+      //       alert("다시 로그인 해주시기 바랍니다.");
+      //     }
+      //     return Promise.reject(refreshError);
+      //   }
+      // } else {
+      //   console.error("No refresh token available");
+      //   await postLogout();
+      //   alert("다시 로그인 해주시기 바랍니다.");
+      //   return Promise.reject(axiosError);
+      // }
     }
-    return axiosError;
+    return Promise.reject(axiosError);
   },
 );
 

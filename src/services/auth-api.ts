@@ -11,11 +11,11 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
     );
 
     if (response.status === 500) {
-      // if (import.meta.env.DEV) {
-      //   sessionStorage.removeItem("accessToken");
-      //   sessionStorage.removeItem("accessTokenExpiration");
-      //   window.location.reload();
-      // }
+      if (import.meta.env.DEV || import.meta.env.PROD) {
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessTokenExpiration");
+        window.location.reload();
+      }
     }
 
     const accessTokenBearer = response.headers["authorization"] as string;
@@ -29,8 +29,9 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
 
     // refreshToken은 JavaScript를 통해 직접 접근 불가
     // const refreshToken = response.headers["Set-Cookie"];
+    // refreshToken을 빈 문자열로 반환하면 설정됨
 
-    return { accessToken, refreshToken: "" }; // refreshToken을 빈 문자열로 반환
+    return { accessToken, refreshToken: response.data.refreshToken };
   } catch (error) {
     console.error("Error logging in:", error);
     throw error;
@@ -88,11 +89,12 @@ export const postLogout = async () => {
   } catch (error) {
     console.log(error); // 디버깅 로그
   } finally {
-    // if (import.meta.env.DEV) {
-    //   sessionStorage.removeItem("accessToken");
-    //   sessionStorage.removeItem("accessTokenExpiration");
-    //   window.location.reload();
-    // }
+    if (import.meta.env.DEV || import.meta.env.PROD) {
+      sessionStorage.removeItem("accessToken");
+      sessionStorage.removeItem("accessTokenExpiration");
+      window.location.reload();
+    }
+    sessionStorage.removeItem("refreshToken");
     setApiToken("");
   }
 };

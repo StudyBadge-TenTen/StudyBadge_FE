@@ -83,7 +83,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
       const month = selectedMonth.split("-")[1];
       // 결과를 받아 상태로 저장
       if (accessToken && channelId && year && month) {
-        scheduleCalculator(accessToken, { channelId: Number(channelId), year, month }).then((response) => {
+        scheduleCalculator({ channelId: Number(channelId), year, month }).then((response) => {
           if (response) {
             console.log(response);
 

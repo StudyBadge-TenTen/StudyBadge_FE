@@ -40,9 +40,9 @@ const repeatFunction = (
 };
 
 // 화면에 보이는 년도/월에 해당하는 일정 객체들과 달력에 마크할 날짜리스트를 반환하는 함수
-const scheduleCalculator = async (accessToken: string | null, { channelId, year, month }: ScheduleParamsType) => {
+const scheduleCalculator = async ({ channelId, year, month }: ScheduleParamsType) => {
   try {
-    const scheduleList: ScheduleType[] = await getSchedules(accessToken, { channelId, year, month });
+    const scheduleList: ScheduleType[] = await getSchedules({ channelId, year, month });
     console.log(scheduleList);
 
     if (Array.isArray(scheduleList)) {

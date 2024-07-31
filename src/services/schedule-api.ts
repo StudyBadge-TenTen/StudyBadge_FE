@@ -28,11 +28,11 @@ const getAllSchedules = async (accessToken: string | null, channelId: number) =>
   }
 };
 
-const getSchedules = async (accessToken: string | null, { channelId, year, month }: ScheduleParamsType) => {
-  if (!accessToken) {
-    console.log("error: accessToken이 없습니다.");
-    return [];
-  }
+const getSchedules = async ({ channelId, year, month }: ScheduleParamsType) => {
+  // if (!accessToken) {
+  //   console.log("error: accessToken이 없습니다.");
+  //   return [];
+  // }
   const schedules = await fetchCall<ScheduleType[]>(
     `/api/study-channels/${channelId}/schedules?year=${year}&month=${month}`,
     "get",

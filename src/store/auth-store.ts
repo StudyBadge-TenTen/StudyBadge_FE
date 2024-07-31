@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import { postLogin, postLogout, postSignUp } from "../services/auth-api";
-import { AuthStoreType, LoginResponse, PasswordResetStore } from "../types/auth-type";
+import { AuthStoreType, PasswordResetStore } from "../types/auth-type";
 import { setApiToken } from "../services/common";
 import { CustomErrorType } from "@/types/common";
 
@@ -24,27 +24,31 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   login: async (email, password) => {
     try {
       const { accessToken, refreshToken } = await postLogin(email, password);
-      console.log("postLogin token:", accessToken);
+      console.log("postLogin token: ", accessToken, "posLogin refreshToken: ", refreshToken);
 
       set({ accessToken: accessToken, refreshToken: refreshToken });
 
+      if (refreshToken) {
+        sessionStorage.setItem("refreshToken", refreshToken);
+      }
+
       // dev 모드 시
-      // if (import.meta.env.DEV) {
-      //   const expirationTime = new Date().getTime() + 7200000; // 2시간
-      //   sessionStorage.setItem("accessToken", accessToken);
-      //   sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
-      // }
+      if (import.meta.env.DEV || import.meta.env.PROD) {
+        const expirationTime = new Date().getTime() + 7200000; // 2시간
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("accessTokenExpiration", expirationTime.toString());
+      }
       axios.defaults.headers.common["authorization"] = `Bearer ${accessToken}`;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorData = error.response?.data as CustomErrorType;
         alert(errorData.message);
       }
-      // if (import.meta.env.DEV) {
-      //   sessionStorage.removeItem("accessToken");
-      //   sessionStorage.removeItem("accessTokenExpiration");
-      //   window.location.reload();
-      // }
+      if (import.meta.env.DEV || import.meta.env.PROD) {
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessTokenExpiration");
+        window.location.reload();
+      }
       console.error("Login failed:", error);
       throw error;
     }
@@ -93,14 +97,23 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   //   }
   // },
 
-  refreshAccessToken: async () => {
+  refreshAccessToken: async (refreshToken: string) => {
     try {
-      const response = await axios.post<LoginResponse>(
+      const response = await axios.post(
         `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/token/re-issue`,
-        // { refreshToken: get().refreshToken },
-        {}, // 토큰 재발급시 refresh token을 쿠키로 받는다면 위 코드가 필요없다고 함
-        { withCredentials: true },
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
+          },
+        },
       );
+      // const response = await axios.post<LoginResponse>(
+      //   `${import.meta.env.DEV ? import.meta.env.VITE_APP_LOCAL_BASE_URL : import.meta.env.VITE_APP_PRODUCTION_BASE_URL}/api/token/re-issue`,
+      //   // { refreshToken: get().refreshToken },
+      //   {}, // 토큰 재발급시 refresh token을 쿠키로 받는다면 위 코드가 필요없다고 함
+      //   { withCredentials: true },
+      // );
 
       const accessTokenBearer = response.headers["authorization"] as string;
 
@@ -109,12 +122,12 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
 
         // 토큰을 설정합니다.
         setApiToken(accessToken);
-
         // 새로운 accessToken을 저장, refreshToken은 쿠키에 있고 App컴포넌트에 새로고침 시 받아오는 코드 있음
         set({ accessToken: accessToken });
       }
     } catch (error) {
       console.error("Error refreshing access token:", error);
+      alert("다시 로그인 해주시기 바랍니다.");
       throw error;
     }
   },
@@ -131,11 +144,11 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       console.error("Logout failed:", error);
       throw error;
     } finally {
-      // if (import.meta.env.DEV) {
-      //   sessionStorage.removeItem("accessToken");
-      //   sessionStorage.removeItem("accessTokenExpiration");
-      //   window.location.reload();
-      // }
+      if (import.meta.env.DEV || import.meta.env.PROD) {
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessTokenExpiration");
+        window.location.reload();
+      }
       setApiToken("");
     }
   },
