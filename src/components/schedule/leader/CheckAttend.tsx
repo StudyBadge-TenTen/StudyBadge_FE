@@ -68,7 +68,8 @@ const CheckAttend = ({ channelId, scheduleInfo }: { channelId: number; scheduleI
     return (
       <div className="flex flex-col justify-center items-center mt-2">
         <div className="h-28 flex flex-wrap">
-          {data &&
+          {!isLoading &&
+            data &&
             Array.isArray(data.studyMembers) &&
             data.studyMembers.map((member) => (
               <button
