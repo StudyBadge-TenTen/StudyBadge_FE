@@ -82,7 +82,7 @@ axiosInstance.interceptors.response.use(
         console.error("Token refresh error:", refreshError);
         await useAuthStore.getState().logout();
         alert("다시 로그인 해주시기 바랍니다.");
-        return Promise.reject(refreshError);
+        return;
       }
     }
     return Promise.reject(axiosError);

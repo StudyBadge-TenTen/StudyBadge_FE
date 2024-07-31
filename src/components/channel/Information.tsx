@@ -155,7 +155,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
             )}
           </p>
           <p className="text-Blue-2 p-2">
-            <b>카테고리:</b> 컴퓨터/IT/개발
+            <b>카테고리:</b> {data?.category}
           </p>
           <div className="w-full">
             <b className="inline-block text-Blue-2 pl-4 my-2">소개</b>

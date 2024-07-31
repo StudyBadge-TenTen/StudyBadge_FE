@@ -85,7 +85,6 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
 
       if (!refreshToken) {
         alert("다시 로그인 해주시기 바랍니다");
-        window.location.href = "/";
         return;
       }
 
@@ -105,7 +104,6 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       }
     } catch (error) {
       alert("다시 로그인 해주시기 바랍니다");
-      window.location.href = "/";
       return;
     }
   },

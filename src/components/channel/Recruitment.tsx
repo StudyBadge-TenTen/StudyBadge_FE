@@ -66,8 +66,15 @@ const Recruitment = (): JSX.Element => {
     }
   };
 
-  const handleConfirm = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, participationId: number) => {
+  const handleConfirm = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    channelId: number,
+    participationId: number,
+  ) => {
     const target = e.target as HTMLButtonElement;
+
+    // if (studyInfo.data?.capacity === studyInfo.data.)
+
     if (modalState.type === "YES") {
       if (target.classList.contains("yes-btn")) postApprove(Number(channelId), participationId);
     }
@@ -158,20 +165,20 @@ const Recruitment = (): JSX.Element => {
                         ) : (
                           <p className="text-sm text-Gray-3">이미 처리된 신청입니다.</p>
                         )}
-                        {modalState.isOpen && (
+                        {modalState.isOpen && channelId && participant.participationId && (
                           <Modal>
                             <div className="w-60 px-6 flex flex-col justify-center items-center text-center whitespace-pre-wrap">
                               {modalState.content}
                               <div className="flex justify-center items-center mt-10">
                                 <button
                                   className="yes-btn btn-blue w-10 mr-4"
-                                  onClick={(e) => handleConfirm(e, participant.participationId)}
+                                  onClick={(e) => handleConfirm(e, Number(channelId), participant.participationId)}
                                 >
                                   예
                                 </button>
                                 <button
                                   className="no-btn btn-blue"
-                                  onClick={(e) => handleConfirm(e, participant.participationId)}
+                                  onClick={(e) => handleConfirm(e, Number(channelId), participant.participationId)}
                                 >
                                   아니요
                                 </button>
