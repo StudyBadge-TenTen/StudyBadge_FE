@@ -123,7 +123,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                   Array.isArray(data.studyMembers) &&
                   data.studyMembers.map((member) => (
                     <div
-                      key={member.memberId}
+                      key={member.studyMemberId}
                       className={`w-[210px] h-80 border border-solid border-Gray-3 rounded-[50px] flex flex-col ${!isStudyEnd && data.leader ? "justify-between" : "justify-center"} items-center px-4 py-8 m-2 relative`}
                     >
                       {member.badgeLevel === "NONE" && <img src={NONE_BADGE} className="absolute w-16 right-8" />}
@@ -154,14 +154,14 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                       <button
                         id="subLeaderBtn"
                         className={`${(member.role === "LEADER" || member.role === "SUB_LEADER") && "hidden"} btn-blue px-3 py-2 w-28`}
-                        onClick={(e) => handleClick(e, member.memberId)}
+                        onClick={(e) => handleClick(e, member.studyMemberId)}
                       >
                         서브리더로 지정
                       </button>
                       <button
                         id="banishBtn"
                         className={`${member.role === "LEADER" && "hidden"} btn-red px-3 py-2 w-28`}
-                        onClick={(e) => handleClick(e, member.memberId)}
+                        onClick={(e) => handleClick(e, member.studyMemberId)}
                       >
                         퇴출
                       </button>

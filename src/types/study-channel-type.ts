@@ -87,6 +87,7 @@ interface MemberListPropsType {
 }
 
 interface StudyMemberType {
+  studyMemberId: number;
   memberId: number;
   name: string;
   imageUrl: string;
