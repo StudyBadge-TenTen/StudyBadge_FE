@@ -14,12 +14,8 @@ const Attendance = (): JSX.Element => {
 
   return (
     <>
-      {/* 일정을 등록하지 않은 상황에서 - 출석률을 모두 0으로? */}
-      {/* {allSchedules.data && allSchedules.data.length === 0 && (
-
-      )} */}
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 출석 현황</h2>
-      <div className="w-full h-[500px] overflow-y-scroll custom-scroll flex flex-col justify-center items-center">
+      <div className="w-full h-fit overflow-y-scroll custom-scroll flex flex-col justify-center items-center">
         {!isMember ? (
           <div className="w-full h-full"></div>
         ) : (
@@ -41,8 +37,11 @@ const Attendance = (): JSX.Element => {
               data &&
               Array.isArray(data) &&
               data.map((member) => (
-                <div key={member.studyMemberId} className="w-full h-fit px-2 py-4 flex justify-center items-center">
-                  <div className="flex flex-col justify-center items-center mr-10">
+                <div
+                  key={member.studyMemberId}
+                  className="w-full h-fit px-2 py-4 flex flex-col md:flex-row justify-center items-center"
+                >
+                  <div className="flex flex-col grow justify-center items-center md:mr-10">
                     {member.imageUrl ? (
                       <img
                         src={member.imageUrl}
@@ -56,7 +55,7 @@ const Attendance = (): JSX.Element => {
                     )}
                     <p className="text-lg text-Blue-2 font-bold">{member.name}</p>
                   </div>
-                  <div className="w-full flex flex-col sm:flex-row pr-6">
+                  <div className="w-full md:w-3/4 flex flex-col sm:flex-row pl-6 md:pr-6">
                     <span className="inline-block mr-8">{member.attendanceRatio}%</span>
                     <div className="w-full h-8 bg-Gray-1 relative z-10">
                       <motion.div

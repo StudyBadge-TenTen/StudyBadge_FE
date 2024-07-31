@@ -140,7 +140,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
       <div className="flex flex-col md:flex-row justify-center items-center">
         {/* 채널 이름/카테고리/소개 */}
         <div className="basic-info w-80 h-[393px] border border-solid border-Gray-3 rounded-[50px] p-4 mt-4 md:mt-0 md:ml-4 flex flex-col justify-center items-center">
-          <p className="text-Blue-2 p-1 border-b border-solid border-Gray-2 flex justify-center items-center">
+          <p className="text-Blue-2 p-1 border-b border-solid border-Gray-2 flex flex-wrap break-keep justify-center items-center">
             <b>이름:</b>{" "}
             {isEditMode ? (
               <input

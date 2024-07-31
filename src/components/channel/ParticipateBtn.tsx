@@ -1,18 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../common/Modal";
 import { postParticipate } from "@/services/channel-api";
 import { useNavigate, useParams } from "react-router";
 import { useApplicationList, useGetStudyInfo, useUserInfo } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
+import moment from "moment";
 
 const ParticipateBtn = (): JSX.Element => {
   const navigate = useNavigate();
   const { accessToken, isMember } = useAuthStore();
   const { channelId } = useParams();
   const [modalOpen, setModalInfo] = useState(false);
+  const [isStudyEnd, setIsStudyEnd] = useState(false);
   const { data } = useGetStudyInfo(Number(channelId));
   const userInfo = useUserInfo(accessToken);
   const applicationData = useApplicationList(accessToken);
+  const today = moment(new Date()).format("YYYY-MM-DD");
+
+  useEffect(() => {
+    if (data && new Date(data.endDate) < new Date(today)) {
+      setIsStudyEnd(() => true);
+    }
+  }, [data]);
 
   const handleClick = async (isModal: boolean) => {
     if (!isModal) {
@@ -31,7 +40,7 @@ const ParticipateBtn = (): JSX.Element => {
     }
   };
 
-  if (!accessToken || (data && data.leader)) return <></>;
+  if (isStudyEnd || !accessToken || (data && data.leader)) return <></>;
 
   if (isMember) {
     return <div className="btn-blue px-6 py-4 bg-Gray-3 hover:bg-Gray-3">소속된 스터디입니다.</div>;
