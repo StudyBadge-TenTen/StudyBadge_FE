@@ -5,6 +5,7 @@ import Modal from "../common/Modal";
 import { deleteAccount } from "@/services/profile-api";
 import usePageScrollTop from "../common/PageScrollTop";
 import { useAuthStore } from "@/store/auth-store";
+import { removeAccessToken, removeRefreshToken } from "@/utils/cookie";
 
 const PROFILE_TAB_LIST = [
   { kr: "내 정보", en: "myInfo" },
@@ -36,6 +37,8 @@ const ProfileTab = (): JSX.Element => {
 
   const handleDeleteClick = async () => {
     await deleteAccount();
+    removeAccessToken();
+    removeRefreshToken();
     navigate("/");
     window.location.reload();
   };
