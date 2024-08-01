@@ -34,11 +34,14 @@ const getStudyInfo = async (studyChannelId: number) => {
 
 const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
   try {
+    console.log("스터디 수정 데이터 전송 시도", studyChannelId, newStudyInfo);
     const response = await fetchCall<AxiosResponse | AxiosError>(
       `/api/study-channels/${studyChannelId}`,
       "put",
       newStudyInfo,
     );
+    console.log("스터디 수정 데이터 전송 완료");
+
     if (axios.isAxiosError(response)) {
       const error = response.response?.data as CustomErrorType;
       alert(error.message);

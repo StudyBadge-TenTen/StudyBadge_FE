@@ -2,6 +2,44 @@ import { ParticipationStatusType } from "@/types/profile-type";
 import { AuthStoreType } from "../types/auth-type";
 import { StudyCategoryType } from "@/types/study-channel-type";
 
+export const transTabName = (tabName: string) => {
+  let TabName;
+  switch (tabName) {
+    case "정보":
+      TabName = "information";
+      break;
+    case "일정":
+      TabName = "schedule";
+      break;
+    case "멤버":
+      TabName = "member";
+      break;
+    case "출석현황":
+      TabName = "attendance";
+      break;
+    case "모집":
+      TabName = "recruitment";
+      break;
+    case "information":
+      TabName = "정보";
+      break;
+    case "schedule":
+      TabName = "일정";
+      break;
+    case "member":
+      TabName = "멤버";
+      break;
+    case "attendance":
+      TabName = "출석현황";
+      break;
+    case "recruitment":
+      TabName = "모집";
+      break;
+  }
+
+  return TabName;
+};
+
 const nameToType = (formName: string) => {
   let name;
   switch (formName) {

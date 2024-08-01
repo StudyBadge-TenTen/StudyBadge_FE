@@ -13,9 +13,10 @@ import usePageScrollTop from "../common/PageScrollTop";
 import { getIsMember } from "@/services/channel-api";
 import { useAuthStore } from "@/store/auth-store";
 import Modal from "../common/Modal";
+import { transTabName } from "@/utils/transform-function";
 
 const ChannelBook = (): JSX.Element => {
-  const { channelId, selectedDateParam } = useParams();
+  const { channelId, selectedDateParam, tab } = useParams();
   const navigate = useNavigate();
   const state = useLocation().state;
 
@@ -36,6 +37,15 @@ const ChannelBook = (): JSX.Element => {
   usePageScrollTop();
 
   const today = moment(new Date()).format("YYYY-MM-DD");
+
+  useEffect(() => {
+    if (tab) {
+      const transTab = transTabName(tab);
+      if (transTab) {
+        setTabState(() => transTab);
+      }
+    }
+  }, [tab]);
 
   useEffect(() => {
     if (channelId && data) {
@@ -66,6 +76,9 @@ const ChannelBook = (): JSX.Element => {
       const newSelectedMonth = moment(selectedDateParam).format("YYYY-MM");
       setSelectedDate(selectedDateParam);
       setSelectedMonth(newSelectedMonth);
+      if (tabState !== "일정") {
+        setTabState(() => "일정");
+      }
     }
   }, [selectedDateParam, setSelectedDate, setSelectedMonth]);
 
@@ -77,42 +90,21 @@ const ChannelBook = (): JSX.Element => {
 
   useEffect(() => {
     if (state && state.tab) {
+      const transTab = transTabName(state.tab);
       if (state.edit) {
-        navigate(`/channel/${channelId}/${transTabName(state.tab)}/${transTabName(state.tab)}_edit`);
+        navigate(`/channel/${channelId}/${transTab}/${transTab}_edit`);
       } else {
-        navigate(`/channel/${channelId}/${transTabName(state.tab)}`);
+        navigate(`/channel/${channelId}/${transTab}`);
       }
     } else {
+      const transTab = transTabName(tabState);
       if (tabState === "일정") {
-        navigate(`/channel/${channelId}/${transTabName(tabState)}/${selectedDate}`);
+        navigate(`/channel/${channelId}/${transTab}/${selectedDate}`);
       } else {
-        navigate(`/channel/${channelId}/${transTabName(tabState)}`);
+        navigate(`/channel/${channelId}/${transTab}`);
       }
     }
   }, [tabState, state, channelId, selectedDate, navigate]);
-
-  const transTabName = (krTabName: string) => {
-    let enTabName;
-    switch (krTabName) {
-      case "정보":
-        enTabName = "information";
-        break;
-      case "일정":
-        enTabName = "schedule";
-        break;
-      case "멤버":
-        enTabName = "member";
-        break;
-      case "출석현황":
-        enTabName = "attendance";
-        break;
-      case "모집":
-        enTabName = "recruitment";
-        break;
-    }
-
-    return enTabName;
-  };
 
   if (data) {
     return (
