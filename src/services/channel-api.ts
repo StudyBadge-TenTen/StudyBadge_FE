@@ -167,7 +167,8 @@ const postParticipate = async (studyChannelId: number) => {
   } catch (error) {
     console.log(error);
     alert(
-      "해당 스터디에 신청을 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      "해당 스터디에 신청을 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다." +
+        error,
     );
   }
 };

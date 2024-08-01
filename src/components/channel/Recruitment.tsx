@@ -80,6 +80,7 @@ const Recruitment = (): JSX.Element => {
 
     if (modalState.type === "YES") {
       if (target.classList.contains("yes-btn")) {
+        // if (studyInfo.data?.capacity)
         try {
           await postApprove(Number(channelId), participateId);
         } catch (error) {

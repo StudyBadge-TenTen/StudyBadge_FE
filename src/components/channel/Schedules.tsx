@@ -2,20 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import Calendar from "../schedule/Calendar";
 import { useSelectedDateStore, useSelectedMonthStore } from "../../store/schedule-store";
-import {
-  AttendMemberType,
-  ScheduleCalcResponseType,
-  SchedulesPropsType,
-  ScheduleType,
-} from "../../types/schedule-type";
+import { ScheduleCalcResponseType, SchedulesPropsType, ScheduleType } from "../../types/schedule-type";
 import { getScheduleInfo, scheduleCalculator } from "../../utils/schedule-function";
 import AddScheduleBtn from "../schedule/leader/AddScheduleBtn";
 import moment from "moment";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAttendList } from "../../services/schedule-api";
+import { useQueryClient } from "@tanstack/react-query";
 import CheckAttend from "../schedule/leader/CheckAttend";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import { useAuthStore } from "@/store/auth-store";
+import { useGetAttendList } from "@/hooks/useQuery";
 
 const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsType): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
@@ -36,18 +31,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   const today = new Date();
   const todayString = moment(today).format("YYYY-MM-DD");
 
-  const { data, error, isLoading } = useQuery<AttendMemberType[], Error>({
-    queryKey: ["attendList", Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated, selectedDate, isEditMode],
-    queryFn: () =>
-      getAttendList(Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated ? "repeat" : "single", selectedDate),
-    enabled: !!channelId && !!scheduleInfo && !!selectedDate,
-  });
-
-  const [attendList, setAttendList] = useState<{
-    data: AttendMemberType[] | undefined;
-    error: Error | undefined | null;
-    isLoading: boolean;
-  }>({ data: undefined, error: undefined, isLoading: false });
+  const { data, error, isLoading } = useGetAttendList(Number(channelId), scheduleInfo, selectedDate, isEditMode);
 
   useEffect(() => {
     if (!isMember && !isLeader) return;
@@ -106,15 +90,9 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
     if (!isMember && !isLeader) return;
 
-    if (scheduleInfo && moment(selectedDate).isBefore(todayString) && data) {
-      // 일정이 있고, 지난 날짜의 일정일 때
-      setAttendList(() => ({ data: data, error: error, isLoading: isLoading }));
-      setCheckDay(() => false);
-    } else if (scheduleInfo && moment(selectedDate).isSame(todayString)) {
-      // 일정이 있고, 오늘일 때
+    if (scheduleInfo && moment(selectedDate).isSame(todayString)) {
       setCheckDay(() => true);
     } else {
-      setAttendList(() => ({ data: undefined, error: undefined, isLoading: false }));
       setCheckDay(() => false);
     }
 
@@ -233,8 +211,8 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                             scheduleId: scheduleInfo.id,
                             attendanceCheckDate: selectedDate,
                           }}
-                          originAttendList={attendList.data}
                           dataUpdate={handleAttendanceCheckComplete}
+                          nowAttendList={{ data, error, isLoading }}
                         />
                       )}
                       {!isEditMode && isLoading ? (
