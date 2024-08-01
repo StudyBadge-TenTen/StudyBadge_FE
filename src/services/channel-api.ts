@@ -39,6 +39,8 @@ const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRe
       "put",
       newStudyInfo,
     );
+    console.log("스터디 수정 데이터 전송");
+
     if (axios.isAxiosError(response)) {
       const error = response.response?.data as CustomErrorType;
       alert(error.message);

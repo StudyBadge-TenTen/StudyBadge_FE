@@ -102,14 +102,14 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 정보</h2>
       <div className="flex justify-end">
         {/* 리더에게만 보일 수정 버튼 */}
-        {isMember && data?.leader && !isStudyEnd && (
+        {isMember && data?.leader && !isStudyEnd && channelId && newStudyInfo && (
           <button
-            onClick={() => {
+            onClick={async () => {
               if (isEditMode) {
                 // 수정 데이터 put으로 서버에 전송
                 // console.log(newStudyInfo); // 디버깅 로그
 
-                putStudyInfo(Number(channelId), newStudyInfo);
+                await putStudyInfo(Number(channelId), newStudyInfo);
                 if (newSubLeader.id) {
                   postSubLeader(Number(channelId), { studyMemberId: newSubLeader.id });
                 }
