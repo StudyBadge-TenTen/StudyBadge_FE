@@ -11,6 +11,7 @@ import CheckAttend from "../schedule/leader/CheckAttend";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useGetAttendList } from "@/hooks/useQuery";
+import PersonIcon from "../common/PersonIcon";
 
 const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsType): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
@@ -196,7 +197,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                       {/* 조건 : 미종료스터디, 리더, 오늘, 출석체크비활성화 시 버튼 렌더링 */}
                       {!isStudyEnd && isLeader && checkDay && !isEditMode && (
                         <>
-                          <div className="flex justify-center items-center">
+                          <div className="flex justify-center items-center mb-2">
                             <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
                               출석체크
                             </button>
@@ -215,39 +216,43 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                           nowAttendList={{ data, error, isLoading }}
                         />
                       )}
-                      {!isEditMode && isLoading ? (
-                        <div className="skeleton w-full h-28 rounded-[30px] bg-Gray-1 animate-pulse"></div>
-                      ) : !isEditMode &&
-                        data &&
-                        Array.isArray(data) &&
-                        !data.find((object) => object.attendance === true) ? (
-                        <div className="text-center text-Gray-3">출석체크를 하지 않았습니다.</div>
-                      ) : (
-                        !isEditMode &&
-                        data &&
-                        Array.isArray(data) &&
-                        data.map(
-                          (member) =>
-                            member.attendance && (
-                              <div
-                                key={member.studyMemberId}
-                                className="member w-fit h-fit flex flex-col justify-center items-center mx-2"
-                              >
-                                {member.imageUrl ? (
-                                  <img
-                                    src={member.imageUrl}
-                                    alt="프로필이미지"
-                                    className="w-16 h-16 object-cover rounded-full bg-Gray-2"
-                                  />
-                                ) : (
-                                  <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
-                                )}
+                      <div className="flex flex-wrap justify-center items-center">
+                        {!isEditMode && isLoading ? (
+                          <div className="skeleton w-full h-28 rounded-[30px] bg-Gray-1 animate-pulse"></div>
+                        ) : !isEditMode &&
+                          data &&
+                          Array.isArray(data) &&
+                          !data.find((object) => object.attendance === true) ? (
+                          <div className="text-center text-Gray-3">출석체크를 하지 않았습니다.</div>
+                        ) : (
+                          !isEditMode &&
+                          data &&
+                          Array.isArray(data) &&
+                          data.map(
+                            (member) =>
+                              member.attendance && (
+                                <div
+                                  key={member.studyMemberId}
+                                  className="member w-fit h-fit flex flex-col justify-center items-center mx-2"
+                                >
+                                  {member.imageUrl ? (
+                                    <img
+                                      src={member.imageUrl}
+                                      alt="프로필이미지"
+                                      className="w-16 h-16 object-cover rounded-full bg-Gray-2"
+                                    />
+                                  ) : (
+                                    <div className="w-16 h-16 bg-Gray-2 rounded-full flex justify-center items-center">
+                                      <PersonIcon color="text-white" size={[45, 45]} />
+                                    </div>
+                                  )}
 
-                                <span>{member.name}</span>
-                              </div>
-                            ),
-                        )
-                      )}
+                                  <span>{member.name}</span>
+                                </div>
+                              ),
+                          )
+                        )}
+                      </div>
                     </>
                   </>
                 ) : (
