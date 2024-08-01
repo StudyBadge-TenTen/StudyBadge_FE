@@ -108,7 +108,6 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
               if (isEditMode) {
                 // 수정 데이터 put으로 서버에 전송
                 // console.log(newStudyInfo); // 디버깅 로그
-
                 await putStudyInfo(Number(channelId), newStudyInfo);
                 if (newSubLeader.id) {
                   postSubLeader(Number(channelId), { studyMemberId: newSubLeader.id });
