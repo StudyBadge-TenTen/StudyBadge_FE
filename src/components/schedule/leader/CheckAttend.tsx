@@ -9,10 +9,12 @@ const CheckAttend = ({
   channelId,
   scheduleInfo,
   originAttendList,
+  dataUpdate,
 }: {
   channelId: number;
   scheduleInfo: AttendScheduleInfoType;
   originAttendList: AttendMemberType[] | undefined;
+  dataUpdate: () => void;
 }) => {
   // console.log("CheckAttend props:", { channelId, scheduleInfo }); // 디버깅 로그
   const { accessToken } = useAuthStore();
@@ -97,6 +99,7 @@ const CheckAttend = ({
       };
       await postAttendList(channelId, postRequestBody);
       setIsEditMode(false);
+      dataUpdate();
     };
 
     return (

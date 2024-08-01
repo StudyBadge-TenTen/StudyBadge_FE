@@ -11,7 +11,7 @@ import {
 import { getScheduleInfo, scheduleCalculator } from "../../utils/schedule-function";
 import AddScheduleBtn from "../schedule/leader/AddScheduleBtn";
 import moment from "moment";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAttendList } from "../../services/schedule-api";
 import CheckAttend from "../schedule/leader/CheckAttend";
 import { useEditModeStore } from "../../store/edit-mode-store";
@@ -25,6 +25,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   const { selectedDate, setSelectedDate } = useSelectedDateStore();
   const { selectedMonth, setSelectedMonth } = useSelectedMonthStore();
   const { isEditMode, setIsEditMode } = useEditModeStore();
+  const queryClient = useQueryClient();
 
   const [marks, setMarks] = useState<string[]>([]);
   const [scheduleState, setScheduleState] = useState<ScheduleCalcResponseType>();
@@ -36,7 +37,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   const todayString = moment(today).format("YYYY-MM-DD");
 
   const { data, error, isLoading } = useQuery<AttendMemberType[], Error>({
-    queryKey: ["attendList", channelId, scheduleInfo, selectedDate, isEditMode],
+    queryKey: ["attendList", Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated, selectedDate, isEditMode],
     queryFn: () =>
       getAttendList(Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated ? "repeat" : "single", selectedDate),
     enabled: !!channelId && !!scheduleInfo && !!selectedDate,
@@ -133,6 +134,12 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     }
   }, [isMember, isLeader, selectedDate, data, error, isLoading, scheduleState]);
 
+  const handleAttendanceCheckComplete = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["attendList", Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated, selectedDate, isEditMode],
+    });
+  };
+
   return (
     <>
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-4">스터디 일정</h2>
@@ -227,6 +234,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                             attendanceCheckDate: selectedDate,
                           }}
                           originAttendList={attendList.data}
+                          dataUpdate={handleAttendanceCheckComplete}
                         />
                       )}
                       {!isEditMode && isLoading ? (
