@@ -60,10 +60,8 @@ axiosInstance.interceptors.response.use(
           try {
             await useAuthStore.getState().logout();
             alert("다시 로그인 해주시기 바랍니다.");
-            return;
           } catch (error) {
             console.log(error);
-            return;
           }
         }
 
@@ -88,10 +86,8 @@ axiosInstance.interceptors.response.use(
         try {
           await useAuthStore.getState().logout();
           alert("다시 로그인 해주시기 바랍니다.");
-          return;
         } catch (error) {
           console.log(error);
-          return;
         }
       }
     }
