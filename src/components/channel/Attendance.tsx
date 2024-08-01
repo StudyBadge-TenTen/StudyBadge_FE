@@ -15,7 +15,7 @@ const Attendance = (): JSX.Element => {
   return (
     <>
       <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 출석 현황</h2>
-      <div className="w-full h-fit overflow-y-scroll custom-scroll flex flex-col justify-center items-center">
+      <div className="w-full h-fit min-h-[500px] overflow-y-scroll custom-scroll flex flex-col justify-center items-center">
         {!isMember ? (
           <div className="w-full h-full"></div>
         ) : (
