@@ -31,6 +31,10 @@ const CheckAttend = ({
   }, [attendList]);
 
   useEffect(() => {
+    console.log("nowAttendList: ", nowAttendList);
+  }, [nowAttendList]);
+
+  useEffect(() => {
     console.log("CheckAttend 렌더링", channelId, scheduleInfo);
   }, [channelId, scheduleInfo]);
 
@@ -49,14 +53,14 @@ const CheckAttend = ({
       const attendList = nowAttendList.data.map((member) => {
         return { studyMemberId: member.studyMemberId, isAttendance: member.attendance };
       });
-      setAttendList(() => [...attendList]);
+      setAttendList(() => attendList);
       return;
     }
     if (memberListData.data) {
       const attendList = memberListData.data.studyMembers.map((member) => {
         return { studyMemberId: member.studyMemberId, isAttendance: false };
       });
-      setAttendList(() => [...attendList]);
+      setAttendList(() => attendList);
       // console.log("멤버 데이터:", data); // 디버깅 로그
       // console.log("초기 출석 리스트:", attendList); // 디버깅 로그
     } else {

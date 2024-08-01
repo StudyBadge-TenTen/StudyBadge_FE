@@ -5,6 +5,7 @@ interface NotificationType {
   content: string;
   url: string;
   isRead: boolean;
+  createdAt: string;
   // 이건 백엔드 api :/api/study-channels/%d/schedules/date?year=%d&month=%d
 }
 
