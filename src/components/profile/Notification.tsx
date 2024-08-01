@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth-store";
 import { useEffect, useState } from "react";
 import Pagination from "../common/Pagination";
+import moment from "moment";
 
 const Notification = (): JSX.Element => {
   const { accessToken } = useAuthStore();
@@ -46,7 +47,10 @@ const Notification = (): JSX.Element => {
               className="w-full h-fit bg-Gray-1 rounded-[10px] flex flex-col justify-center items-center text-Blue-2 px-8 py-4 pb-10 mb-2"
             >
               <div className="w-full flex justify-between items-center text-Gray-4 text-sm mb-4">
-                <span>{noti.notificationType}</span>
+                <div className="flex justify-center items-center">
+                  <span className="inline-block mr-2">{noti.notificationType}</span>
+                  <span>{`${moment(new Date(noti.createdAt)).format("YYYY-MM-DD")} ${moment(new Date(noti.createdAt)).format("hh:mm:ss")}`}</span>
+                </div>
                 {noti.isRead ? <span>읽음</span> : <span className="text-Red-2">new</span>}
               </div>
               <div className="flex justify-center items-center text-Blue-2 text-sm">
