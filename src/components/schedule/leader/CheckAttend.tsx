@@ -4,6 +4,7 @@ import { useEditModeStore } from "../../../store/edit-mode-store";
 import { postAttendList } from "../../../services/schedule-api";
 import { AttendMemberType, AttendScheduleInfoType, PostAttendObjectType } from "../../../types/schedule-type";
 import { useAuthStore } from "@/store/auth-store";
+import PersonIcon from "@/components/common/PersonIcon";
 
 const CheckAttend = ({
   channelId,
@@ -126,7 +127,9 @@ const CheckAttend = ({
                     className="w-16 h-16 object-cover rounded-full bg-Gray-2"
                   />
                 ) : (
-                  <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
+                  <div className="w-16 h-16 bg-Gray-2 rounded-full flex justify-center items-center">
+                    <PersonIcon color="text-white" size={[45, 45]} />
+                  </div>
                 )}
                 <span>{member.name}</span>
                 {attendList &&
