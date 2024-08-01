@@ -48,9 +48,14 @@ const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRe
     }
   } catch (error) {
     console.log(error);
-    alert(
-      "스터디 정보 변경에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-    );
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      alert(customError.message);
+    } else {
+      alert(
+        "스터디 정보 변경에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      );
+    }
   }
 };
 
@@ -126,9 +131,14 @@ const postApprove = async (studyChannelId: number, participationId: number) => {
     }
   } catch (error) {
     console.log(error);
-    alert(
-      "해당 멤버의 신청을 수락하는 것에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-    );
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      alert(customError.message);
+    } else {
+      alert(
+        "해당 멤버의 신청을 수락하는 것에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      );
+    }
   }
 };
 
@@ -146,9 +156,14 @@ const postReject = async (studyChannelId: number, participationId: number) => {
     }
   } catch (error) {
     console.log(error);
-    alert(
-      "해당 멤버의 신청을 거절하는 것에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-    );
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      alert(customError.message);
+    } else {
+      alert(
+        "해당 멤버의 신청을 거절하는 것에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      );
+    }
   }
 };
 
@@ -165,11 +180,16 @@ const postParticipate = async (studyChannelId: number) => {
       alert("해당 스터디에 성공적으로 신청이 접수되었습니다");
     }
   } catch (error) {
-    console.log(error);
-    alert(
-      "해당 스터디에 신청을 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다." +
-        error,
-    );
+    if (axios.isAxiosError(error)) {
+      const responseError = error.response?.data as CustomErrorType;
+      alert(responseError.message);
+    } else {
+      console.log(error);
+      alert(
+        "해당 스터디에 신청을 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다." +
+          error,
+      );
+    }
   }
 };
 
@@ -187,9 +207,14 @@ const postBanish = async (studyChannelId: number, studyMemberId: number) => {
     }
   } catch (error) {
     console.log(error);
-    alert(
-      "해당 멤버의 퇴출에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-    );
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      alert(customError.message);
+    } else {
+      alert(
+        "해당 멤버의 퇴출에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+      );
+    }
   }
 };
 
