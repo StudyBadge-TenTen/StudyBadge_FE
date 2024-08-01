@@ -36,7 +36,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   const todayString = moment(today).format("YYYY-MM-DD");
 
   const { data, error, isLoading } = useQuery<AttendMemberType[], Error>({
-    queryKey: ["attendList", channelId, scheduleInfo, selectedDate],
+    queryKey: ["attendList", channelId, scheduleInfo, selectedDate, isEditMode],
     queryFn: () =>
       getAttendList(Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated ? "repeat" : "single", selectedDate),
     enabled: !!channelId && !!scheduleInfo && !!selectedDate,
@@ -52,22 +52,6 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     if (!isMember && !isLeader) return;
     return () => setIsEditMode(false);
   }, []);
-
-  // useEffect(() => {
-  //   console.log("isEditMode: ", isEditMode); // 디버깅 로그
-  // }, [isEditMode]);
-
-  // useEffect(() => {
-  //   console.log("checkDay: ", checkDay);
-  // }, [checkDay]);
-
-  useEffect(() => {
-    console.log(attendList);
-  }, [attendList]);
-
-  // useEffect(() => {
-  //   console.log("isStudyEnd: ", isStudyEnd);
-  // }, [isStudyEnd]);
 
   // 최초 로드 시 selectedDateParam 값이 있으면 상태를 업데이트
   useEffect(() => {
@@ -147,7 +131,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
         setIsLoadingState(() => false);
       }
     }
-  }, [isMember, isLeader, selectedDate, data, error, isLoading, scheduleInfo, scheduleState]);
+  }, [isMember, isLeader, selectedDate, data, error, isLoading, scheduleState]);
 
   return (
     <>
@@ -245,37 +229,37 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                           originAttendList={attendList.data}
                         />
                       )}
-                      {!attendList || (Array.isArray(attendList.data) && attendList.data?.length === 0) ? (
-                        <div className="text-center text-Gray-3">출석체크를 하지 않았습니다.</div>
-                      ) : attendList.isLoading ? (
+                      {!isEditMode && isLoading ? (
                         <div className="skeleton w-full h-28 rounded-[30px] bg-Gray-1 animate-pulse"></div>
+                      ) : !isEditMode &&
+                        data &&
+                        Array.isArray(data) &&
+                        !data.find((object) => object.attendance === true) ? (
+                        <div className="text-center text-Gray-3">출석체크를 하지 않았습니다.</div>
                       ) : (
-                        attendList && (
-                          <div className="h-28 flex flex-wrap">
-                            {attendList.data &&
-                              Array.isArray(attendList.data) &&
-                              attendList.data.map(
-                                (member) =>
-                                  member.attendance && (
-                                    <div
-                                      key={member.studyMemberId}
-                                      className="member w-fit h-fit flex flex-col justify-center items-center mx-2"
-                                    >
-                                      {member.imageUrl ? (
-                                        <img
-                                          src={member.imageUrl}
-                                          alt="프로필이미지"
-                                          className="w-16 h-16 object-cover rounded-full bg-Gray-2"
-                                        />
-                                      ) : (
-                                        <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
-                                      )}
+                        !isEditMode &&
+                        data &&
+                        Array.isArray(data) &&
+                        data.map(
+                          (member) =>
+                            member.attendance && (
+                              <div
+                                key={member.studyMemberId}
+                                className="member w-fit h-fit flex flex-col justify-center items-center mx-2"
+                              >
+                                {member.imageUrl ? (
+                                  <img
+                                    src={member.imageUrl}
+                                    alt="프로필이미지"
+                                    className="w-16 h-16 object-cover rounded-full bg-Gray-2"
+                                  />
+                                ) : (
+                                  <div className="w-16 h-16 bg-Gray-2 rounded-full"></div>
+                                )}
 
-                                      <span>{member.name}</span>
-                                    </div>
-                                  ),
-                              )}
-                          </div>
+                                <span>{member.name}</span>
+                              </div>
+                            ),
                         )
                       )}
                     </>
