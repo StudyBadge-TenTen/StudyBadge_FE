@@ -56,7 +56,7 @@ const Attendance = (): JSX.Element => {
                     <p className="text-lg text-Blue-2 font-bold">{member.name}</p>
                   </div>
                   <div className="w-full md:w-3/4 flex flex-col sm:flex-row pl-6 md:pr-6">
-                    <span className="inline-block mr-8">{member.attendanceRatio}%</span>
+                    <span className="inline-block mr-8">{Math.round(member.attendanceRatio)}%</span>
                     <div className="w-full h-8 bg-Gray-1 relative z-10">
                       <motion.div
                         initial={{ scaleX: 0 }}
