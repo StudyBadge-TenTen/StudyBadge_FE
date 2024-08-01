@@ -9,8 +9,8 @@ import {
 import { getAttendance, getMemberList, getRecruitment, getStudyInfo } from "../services/channel-api";
 import { getApplicationList, getMyStudy, getProfile } from "@/services/profile-api";
 import { MyStudyType, UserInfoType } from "@/types/profile-type";
-import { getAllSchedules } from "@/services/schedule-api";
-import { ScheduleType } from "@/types/schedule-type";
+import { getAllSchedules, getAttendList } from "@/services/schedule-api";
+import { AttendMemberType, ScheduleType } from "@/types/schedule-type";
 
 export const useUserInfo = (accessToken: string | null) => {
   const { data, isLoading, error } = useQuery<UserInfoType, Error>({
@@ -80,6 +80,21 @@ export const useMyStudy = (accessToken: string | null) => {
     queryKey: ["allSchedules"],
     queryFn: () => getMyStudy(),
     enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
+  });
+  return { data, error, isLoading };
+};
+
+export const useGetAttendList = (
+  channelId: number,
+  scheduleInfo: ScheduleType | undefined,
+  selectedDate: string,
+  isEditMode: boolean,
+) => {
+  const { data, error, isLoading } = useQuery<AttendMemberType[], Error>({
+    queryKey: ["attendList", Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated, selectedDate, isEditMode],
+    queryFn: () =>
+      getAttendList(Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated ? "repeat" : "single", selectedDate),
+    enabled: !!channelId && !!scheduleInfo && !!selectedDate,
   });
   return { data, error, isLoading };
 };

@@ -137,7 +137,7 @@ const Profile = (): JSX.Element => {
             )}
             {/* 이용자가 소속된 스터디 채널 개수대로 렌더링 */}
             {!myStudy ? (
-              <div className="border border-solid border-Gray-3 w-full h-32 p-10 rounded-[30px] flex flex-col sm:flex-row justify-between items-center mt-10">
+              <div className="border border-solid border-Gray-3 w-full h-32 p-10 rounded-[30px] flex flex-col justify-between items-center mt-10">
                 <p>loading...</p>
               </div>
             ) : (
@@ -146,7 +146,7 @@ const Profile = (): JSX.Element => {
                 <Link
                   to={`/channel/${studyChannel.studyId}/schedule/${selectedDate}`}
                   key={studyChannel.studyId}
-                  className="border border-solid border-Gray-3 w-full h-fit p-10 rounded-[30px] flex flex-col sm:flex-row justify-center items-center mt-10 flex-wrap"
+                  className="border border-solid border-Gray-3 w-full h-fit p-10 rounded-[30px] flex flex-col justify-center items-center mt-10 flex-wrap"
                 >
                   <div className="flex items-center">
                     <h3 className="font-bold text-xl md:text-2xl text-Blue-2">{studyChannel.studyName}</h3>

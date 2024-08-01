@@ -10,6 +10,8 @@ import Modal from "../common/Modal";
 import { useGetStudyInfo, useRecruitment } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
 import PersonIcon from "../common/PersonIcon";
+import axios from "axios";
+import { CustomErrorType } from "@/types/common";
 
 const Recruitment = (): JSX.Element => {
   const { accessToken } = useAuthStore();
@@ -52,8 +54,13 @@ const Recruitment = (): JSX.Element => {
       try {
         await postRecruitStart(Number(channelId));
       } catch (error) {
-        console.log(error);
-        alert("모집 오픈에 문제가 발생하였습니다.");
+        if (axios.isAxiosError(error)) {
+          const customError = error.response?.data as CustomErrorType;
+          alert(customError.message);
+        } else {
+          console.log(error);
+          alert("모집 오픈에 문제가 발생하였습니다.");
+        }
       }
     }
   };
@@ -80,6 +87,7 @@ const Recruitment = (): JSX.Element => {
 
     if (modalState.type === "YES") {
       if (target.classList.contains("yes-btn")) {
+        // if (studyInfo.data?.capacity)
         try {
           await postApprove(Number(channelId), participateId);
         } catch (error) {

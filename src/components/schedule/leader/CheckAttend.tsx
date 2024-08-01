@@ -8,17 +8,17 @@ import { useAuthStore } from "@/store/auth-store";
 const CheckAttend = ({
   channelId,
   scheduleInfo,
-  originAttendList,
   dataUpdate,
+  nowAttendList,
 }: {
   channelId: number;
   scheduleInfo: AttendScheduleInfoType;
-  originAttendList: AttendMemberType[] | undefined;
   dataUpdate: () => void;
+  nowAttendList: { data: AttendMemberType[] | undefined; error: Error | null; isLoading: boolean };
 }) => {
   // console.log("CheckAttend props:", { channelId, scheduleInfo }); // 디버깅 로그
   const { accessToken } = useAuthStore();
-  const { data, error, isLoading } = useMemberList(channelId, accessToken);
+  const memberListData = useMemberList(channelId, accessToken);
   const [attendList, setAttendList] = useState<PostAttendObjectType[]>([]);
   const { setIsEditMode } = useEditModeStore();
 
@@ -35,25 +35,25 @@ const CheckAttend = ({
   }, [channelId, scheduleInfo]);
 
   useEffect(() => {
-    if (error) {
-      console.error("멤버 리스트를 불러오는 데 실패하였습니다.", error);
+    if (memberListData.error) {
+      console.error("멤버 리스트를 불러오는 데 실패하였습니다.", memberListData.error);
     } else {
       // console.log(data); // 디버깅 로그
     }
-  }, [data, error]);
+  }, [memberListData.data, memberListData.error]);
 
   useEffect(() => {
     // console.log("CheckAttend useEffect", { data, error, isLoading }); // 디버깅 로그
     // 기존에 출석리스트가 있다면 셋
-    if (originAttendList) {
-      const attendList = originAttendList.map((member) => {
+    if (nowAttendList.data) {
+      const attendList = nowAttendList.data.map((member) => {
         return { studyMemberId: member.studyMemberId, isAttendance: member.attendance };
       });
       setAttendList(() => [...attendList]);
       return;
     }
-    if (data) {
-      const attendList = data.studyMembers.map((member) => {
+    if (memberListData.data) {
+      const attendList = memberListData.data.studyMembers.map((member) => {
         return { studyMemberId: member.studyMemberId, isAttendance: false };
       });
       setAttendList(() => [...attendList]);
@@ -62,24 +62,25 @@ const CheckAttend = ({
     } else {
       console.log("멤버 리스트 데이터가 없습니다");
     }
-  }, [channelId, data, originAttendList]);
+  }, [channelId, memberListData.data, nowAttendList.data]);
 
   // useEffect(() => {
   //   console.log(attendList); // 디버깅로그
   // }, [attendList]);
 
-  if (isLoading) {
+  if (memberListData.isLoading) {
     return <div className="text-Gray-3 text-center">멤버 리스트를 로딩중입니다...</div>;
   }
-  if (error) {
+  if (memberListData.error) {
     return (
       <div className="text-Gray-3 text-center">
-        멤버 리스트를 불러오는 데 실패하였습니다. errorName:{error.name}. errorMessage:{error.message}
+        멤버 리스트를 불러오는 데 실패하였습니다. errorName:{memberListData.error.name}. errorMessage:
+        {memberListData.error.message}
       </div>
     );
   }
 
-  if (!isLoading && data) {
+  if (!memberListData.isLoading && memberListData.data) {
     const handleCheckClick = (studyMemberId: number) => {
       const newPostAttendList = attendList.map((attendObj) => {
         if (attendObj.studyMemberId === studyMemberId) {
@@ -105,10 +106,10 @@ const CheckAttend = ({
     return (
       <div className="flex flex-col justify-center items-center mt-2">
         <div className="h-28 flex flex-wrap">
-          {!isLoading &&
-            data &&
-            Array.isArray(data.studyMembers) &&
-            data.studyMembers.map((member) => (
+          {!memberListData.isLoading &&
+            memberListData.data &&
+            Array.isArray(memberListData.data.studyMembers) &&
+            memberListData.data.studyMembers.map((member) => (
               <button
                 key={member.studyMemberId}
                 onClick={() => handleCheckClick(member.studyMemberId)}

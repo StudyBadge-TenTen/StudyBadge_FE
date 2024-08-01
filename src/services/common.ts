@@ -57,9 +57,14 @@ axiosInstance.interceptors.response.use(
 
         if (!refreshToken) {
           console.error("No refresh token available");
-          await useAuthStore.getState().logout();
-          alert("다시 로그인 해주시기 바랍니다.");
-          return;
+          try {
+            await useAuthStore.getState().logout();
+            alert("다시 로그인 해주시기 바랍니다.");
+            return;
+          } catch (error) {
+            console.log(error);
+            return;
+          }
         }
 
         const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
@@ -80,9 +85,14 @@ axiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("Token refresh error:", refreshError);
-        await useAuthStore.getState().logout();
-        alert("다시 로그인 해주시기 바랍니다.");
-        return;
+        try {
+          await useAuthStore.getState().logout();
+          alert("다시 로그인 해주시기 바랍니다.");
+          return;
+        } catch (error) {
+          console.log(error);
+          return;
+        }
       }
     }
     return Promise.reject(axiosError);
