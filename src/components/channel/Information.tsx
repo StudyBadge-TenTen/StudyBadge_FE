@@ -106,6 +106,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
           <button
             onClick={async () => {
               if (isEditMode) {
+                console.log("정보 수정 저장 버튼 클릭");
                 // 수정 데이터 put으로 서버에 전송
                 // console.log(newStudyInfo); // 디버깅 로그
                 await putStudyInfo(Number(channelId), newStudyInfo);
