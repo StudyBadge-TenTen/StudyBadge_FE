@@ -20,7 +20,7 @@ const CheckAttend = ({
   const { accessToken } = useAuthStore();
   const memberListData = useMemberList(channelId, accessToken);
   const [attendList, setAttendList] = useState<PostAttendObjectType[]>([]);
-  const { setIsEditMode } = useEditModeStore();
+  const { isEditMode, setIsEditMode } = useEditModeStore();
 
   useEffect(() => {
     return () => setIsEditMode(false);
@@ -62,7 +62,7 @@ const CheckAttend = ({
     } else {
       console.log("멤버 리스트 데이터가 없습니다");
     }
-  }, [channelId, memberListData.data, nowAttendList.data]);
+  }, [channelId, memberListData.data, nowAttendList.data, isEditMode]);
 
   // useEffect(() => {
   //   console.log(attendList); // 디버깅로그
