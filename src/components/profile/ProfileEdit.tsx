@@ -75,8 +75,16 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   // 이미지를 미리보기로 보여줄 함수
   const previewImage = () => {
     if (imageInputRef && imageInputRef.current && imageInputRef.current.files) {
+      const IMG_MAX_SIZE = 1024 * 1024;
       const img = imageInputRef.current.files[0];
-      setImageFile(() => img);
+
+      if (img.size > IMG_MAX_SIZE) {
+        imageInputRef.current.files = null;
+        alert("프로필 이미지는 1MB 이내로 가능합니다.");
+        return;
+      } else {
+        setImageFile(() => img);
+      }
 
       const reader = new FileReader();
       reader.readAsDataURL(img);
