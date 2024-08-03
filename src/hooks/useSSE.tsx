@@ -52,7 +52,6 @@ export const useSSE = () => {
     const onMessage = (ev: MessageEvent) => {
       if (!accessToken) return;
 
-      // console.log("Event received: ", ev.data); // 디버깅 로그 추가
       try {
         const parsedData = JSON.parse(ev.data);
         // 추가해야할 코드 : 더미 데이터일 경우 return
@@ -68,14 +67,12 @@ export const useSSE = () => {
           setNewNotification(newNotification);
         }
       } catch (error) {
-        console.log("useSSE onMessage error");
-        console.error("Failed to parse event data: ", error);
+        console.log("useSSE onMessage error: ", error);
       }
     };
 
     const onError = (err: Event) => {
-      console.log("useSSE onError error");
-      console.log("Error receiving notifications", err);
+      console.log("useSSE onError error: ", err);
 
       if (eventSource) {
         eventSource.close();

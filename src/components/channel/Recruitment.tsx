@@ -5,7 +5,7 @@ import GOLD_BADGE from "../../assets/GOLD-BADGE_PNG.png";
 import { useParams } from "react-router";
 import { postApprove, postRecruitEnd, postRecruitStart, postReject } from "../../services/channel-api";
 import { BAN_COUNT } from "../../constants/ban-count";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "../common/Modal";
 import { useGetStudyInfo, useRecruitment } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
@@ -25,10 +25,6 @@ const Recruitment = (): JSX.Element => {
     type: "",
     content: "",
   });
-
-  useEffect(() => {
-    // console.log(studyInfo.data);
-  }, [studyInfo]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
@@ -53,6 +49,7 @@ const Recruitment = (): JSX.Element => {
     if (channelId) {
       try {
         await postRecruitStart(Number(channelId));
+        window.location.reload();
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const customError = error.response?.data as CustomErrorType;
@@ -70,8 +67,13 @@ const Recruitment = (): JSX.Element => {
       try {
         await postRecruitEnd(Number(channelId));
       } catch (error) {
-        console.log(error);
-        alert("모집 마감에 문제가 발생하였습니다.");
+        if (axios.isAxiosError(error)) {
+          const customError = error.response?.data as CustomErrorType;
+          alert(customError.message);
+        } else {
+          console.log(error);
+          alert("모집 오픈에 문제가 발생하였습니다.");
+        }
       }
     }
   };

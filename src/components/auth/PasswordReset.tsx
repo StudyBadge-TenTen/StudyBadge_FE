@@ -15,7 +15,6 @@ const PasswordReset: React.FC = () => {
     e.preventDefault();
     try {
       const response = await postVerificationEmail(email ?? userEmail);
-      // console.log(response);
       if (axios.isAxiosError(response)) {
         const error = response.response?.data as CustomErrorType;
         alert(error.message);
@@ -23,7 +22,10 @@ const PasswordReset: React.FC = () => {
         alert("이메일로 인증 코드가 발송되었습니다. 확인부탁드립니다.");
       }
     } catch (error: any) {
-      if (error) alert("오류가 발생했습니다. 나중에 다시 시도해 주세요.");
+      if (error) {
+        console.log(error);
+        alert("오류가 발생했습니다. 나중에 다시 시도해 주세요.");
+      }
     }
   };
 

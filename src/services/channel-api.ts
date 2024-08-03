@@ -44,7 +44,7 @@ const getStudyInfo = async (studyChannelId: number) => {
 
 const putStudyInfo = async (studyChannelId: number, newStudyInfo: StudyInfoPutRequestType) => {
   try {
-    console.log("스터디 수정 데이터 전송 시도", studyChannelId, newStudyInfo);
+    // console.log("스터디 수정 데이터 전송 시도", studyChannelId, newStudyInfo);
     const response = await fetchCall<AxiosResponse | AxiosError>(
       `/api/study-channels/${studyChannelId}`,
       "put",
@@ -103,16 +103,26 @@ const postSubLeader = async (studyChannelId: number, requestBody: { studyMemberI
 };
 
 const getAttendance = async (studyChannelId: number) => {
-  const attendance = await fetchCall<AttendanceResponseType[] | AxiosError>(
-    `/api/study-channels/${studyChannelId}/attendances`,
-    "get",
-  );
-  if (axios.isAxiosError(attendance)) {
-    const error = attendance.response?.data as CustomErrorType;
-    console.log(error);
-    return [];
-  } else {
-    return attendance ?? [];
+  try {
+    const attendance = await fetchCall<AttendanceResponseType[] | AxiosError>(
+      `/api/study-channels/${studyChannelId}/attendances`,
+      "get",
+    );
+    if (axios.isAxiosError(attendance)) {
+      const error = attendance.response?.data as CustomErrorType;
+      console.log(error);
+      return [];
+    } else {
+      return attendance ?? [];
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      console.log(customError);
+      return [];
+    } else {
+      return [];
+    }
   }
 };
 

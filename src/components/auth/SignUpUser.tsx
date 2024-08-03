@@ -12,10 +12,6 @@ const SignUp: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const authStore = useAuthStore();
 
-  // useEffect(() => {
-  //   console.log(authStore);
-  // }, [authStore]);
-
   const validateForm = (): boolean => {
     let result = true;
     if (!authStore.email) {
@@ -59,7 +55,6 @@ const SignUp: React.FC = () => {
     if (!validateForm()) return;
     try {
       const response = await authStore.signUp();
-      // console.log("signUp()호출 결과 : " + response); // 서버 응답 체크 로그
       if (!response) {
         alert("회원가입이 완료되었습니다.");
         authStore.reset();

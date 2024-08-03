@@ -3,13 +3,11 @@ import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/auth-store";
 import { useAttendanceList } from "@/hooks/useQuery";
 import PersonIcon from "../common/PersonIcon";
-// import { useAllSchedules } from "@/hooks/useQuery";
 
 const Attendance = (): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
   const skeleton = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
-  // const allSchedules = useAllSchedules(Number(channelId), accessToken);
   const { data, error, isLoading } = useAttendanceList(Number(channelId), accessToken, isMember);
 
   return (

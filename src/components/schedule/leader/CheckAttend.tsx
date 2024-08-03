@@ -17,7 +17,6 @@ const CheckAttend = ({
   dataUpdate: () => void;
   nowAttendList: { data: AttendMemberType[] | undefined; error: Error | null; isLoading: boolean };
 }) => {
-  // console.log("CheckAttend props:", { channelId, scheduleInfo }); // 디버깅 로그
   const { accessToken } = useAuthStore();
   const memberListData = useMemberList(channelId, accessToken);
   const [attendList, setAttendList] = useState<PostAttendObjectType[]>([]);
@@ -28,22 +27,10 @@ const CheckAttend = ({
   }, []);
 
   useEffect(() => {
-    console.log("attendList: ", attendList);
-  }, [attendList]);
-
-  useEffect(() => {
-    console.log("nowAttendList: ", nowAttendList);
-  }, [nowAttendList]);
-
-  useEffect(() => {
-    console.log("CheckAttend 렌더링", channelId, scheduleInfo);
-  }, [channelId, scheduleInfo]);
-
-  useEffect(() => {
     if (memberListData.error) {
       console.error("멤버 리스트를 불러오는 데 실패하였습니다.", memberListData.error);
     } else {
-      // console.log(data); // 디버깅 로그
+      // console.log("memberListData: ", memberListData.data); // 디버깅 로그
     }
   }, [memberListData.data, memberListData.error]);
 
@@ -62,16 +49,10 @@ const CheckAttend = ({
         return { studyMemberId: member.studyMemberId, isAttendance: false };
       });
       setAttendList(() => attendList);
-      // console.log("멤버 데이터:", data); // 디버깅 로그
-      // console.log("초기 출석 리스트:", attendList); // 디버깅 로그
     } else {
       console.log("멤버 리스트 데이터가 없습니다");
     }
   }, [channelId, memberListData.data, nowAttendList.data, isEditMode]);
-
-  // useEffect(() => {
-  //   console.log(attendList); // 디버깅로그
-  // }, [attendList]);
 
   if (memberListData.isLoading) {
     return <div className="text-Gray-3 text-center">멤버 리스트를 로딩중입니다...</div>;

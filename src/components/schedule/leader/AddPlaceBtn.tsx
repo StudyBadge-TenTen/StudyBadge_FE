@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LocationSelector from "../../map/LocationSelect";
 
 interface AddPlaceBtnPropsType {
@@ -7,15 +7,10 @@ interface AddPlaceBtnPropsType {
   studyChannelId: number;
 }
 
-const AddPlaceBtn = ({ setPlaceId, originPlaceId, studyChannelId }: AddPlaceBtnPropsType): JSX.Element => {
+const AddPlaceBtn = ({ setPlaceId, studyChannelId }: AddPlaceBtnPropsType): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  // 기존 장소 id
-  useEffect(() => {
-    // console.log(originPlaceId);
-  }, [originPlaceId]);
 
   return (
     <div className="w-full px-6 mt-8">

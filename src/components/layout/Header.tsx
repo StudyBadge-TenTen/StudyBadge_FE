@@ -30,23 +30,6 @@ const Header = (): JSX.Element => {
     }
   }, [setNewNotification]);
 
-  // useEffect(() => {
-  //   if (newIcon) {
-  //     localStorage.setItem(NEW_NOTI_ICON, "true");
-  //     const newNotificationJSON = sessionStorage.getItem(NEW_NOTIFICATION);
-  //     if (newNotificationJSON) {
-  //       const newNotification = JSON.parse(newNotificationJSON) as NotificationType;
-  //       setNewMessage(newNotification.content);
-  //       setNewToast(true);
-
-  //       setTimeout(() => {
-  //         setNewToast(false);
-  //         setNewMessage("");
-  //       }, 5000);
-  //     }
-  //   }
-  // }, [newIcon]);
-
   useEffect(() => {
     if (newNotification) {
       setNewIcon(() => true);
