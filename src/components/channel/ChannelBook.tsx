@@ -104,17 +104,17 @@ const ChannelBook = (): JSX.Element => {
         {isStudyEnd && endModal && (
           <Modal>
             해당 스터디 채널은 종료되었습니다.
-            {isMember && data.attendanceRatio && data.refundsAmount && (
+            {isMember && data && (
               <div className="flex flex-col justify-center items-center my-8">
                 <span className="text-lg">
-                  출석률 : <b>{Math.round(data.attendanceRatio)}</b>%
+                  출석률 : <b>{Math.round(data.attendanceRatio ?? 0)}</b>%
                 </span>
                 <span className="text-lg">
                   환급금 : <b>{data.refundsAmount.toLocaleString()}</b>원
                 </span>
               </div>
             )}
-            <button onClick={() => setEndModal(() => false)} className="btn-blue">
+            <button onClick={() => setEndModal(() => false)} className="btn-blue mt-2">
               확인
             </button>
           </Modal>
