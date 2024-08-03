@@ -11,6 +11,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
   const skeletonList = [1, 2, 3, 4, 5];
   const [latestPointList, setLatestPointList] = useState<PointHistoryType[]>([]);
   const [page, setPage] = useState(1);
+  const [cancelPayKey, setCancelPayKey] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const paymentQuery = useQuery<PaymentHistoryType[], Error>({
     queryKey: ["paymentList", type, page],
@@ -49,8 +50,9 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     return true;
   };
 
-  const handleCancelClick = async (isModal: boolean, paymentKey?: string) => {
-    if (!isModal) {
+  const handleCancelClick = async (isModal: boolean, paymentKey: string) => {
+    if (!isModal && paymentKey) {
+      setCancelPayKey(() => paymentKey);
       setModalOpen(() => true);
       return;
     }
@@ -87,17 +89,17 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
                     <div className="flex items-center">
                       {isPossibleCancel(data) ? (
                         <>
-                          <button className="btn-red px-2 py-1 mr-4" onClick={() => handleCancelClick(false)}>
+                          <button
+                            className="btn-red px-2 py-1 mr-4"
+                            onClick={() => handleCancelClick(false, data.paymentKey)}
+                          >
                             결제취소
                           </button>
                           {modalOpen && (
                             <Modal>
                               해당 결제를 취소하시겠습니까?
                               <div className="flex justify-center items-center mt-4">
-                                <button
-                                  onClick={() => handleCancelClick(true, data.paymentKey)}
-                                  className="btn-blue w-10"
-                                >
+                                <button onClick={() => handleCancelClick(true, cancelPayKey)} className="btn-blue w-10">
                                   예
                                 </button>
                                 <button onClick={() => setModalOpen(() => false)} className="btn-blue w-10 ml-2">
