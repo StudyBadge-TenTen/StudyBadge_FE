@@ -1,6 +1,13 @@
 import axios, { AxiosError } from "axios";
-import { getAccessToken, getRefreshToken, setAccessToken } from "../utils/cookie";
+import {
+  getAccessToken,
+  getRefreshToken,
+  removeAccessToken,
+  removeRefreshToken,
+  setAccessToken,
+} from "../utils/cookie";
 import { useAuthStore } from "@/store/auth-store";
+import { postLogout } from "./auth-api";
 
 export const API_BASE_URL = import.meta.env.DEV
   ? import.meta.env.VITE_APP_LOCAL_BASE_URL
@@ -58,10 +65,14 @@ axiosInstance.interceptors.response.use(
         if (!refreshToken) {
           console.error("No refresh token available");
           try {
-            await useAuthStore.getState().logout();
             alert("다시 로그인 해주시기 바랍니다.");
           } catch (error) {
             console.log(error);
+          } finally {
+            removeAccessToken();
+            removeRefreshToken();
+            window.location.reload();
+            return Promise.reject(axiosError); // 요청 중단
           }
         }
 
@@ -84,10 +95,15 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error("Token refresh error:", refreshError);
         try {
-          await useAuthStore.getState().logout();
+          await postLogout();
           alert("다시 로그인 해주시기 바랍니다.");
         } catch (error) {
           console.log(error);
+        } finally {
+          removeAccessToken();
+          removeRefreshToken();
+          window.location.reload();
+          return Promise.reject(axiosError); // 요청 중단
         }
       }
     }

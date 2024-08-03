@@ -48,7 +48,7 @@ const ChannelBook = (): JSX.Element => {
   }, [tab]);
 
   useEffect(() => {
-    if (channelId && data) {
+    if (accessToken && channelId && data) {
       getIsMember(Number(channelId)).then((isMemberData) => setIsMember(isMemberData));
 
       if (new Date(data.endDate) < new Date(today)) {
@@ -57,7 +57,7 @@ const ChannelBook = (): JSX.Element => {
         setEndModal(() => true);
       }
     }
-  }, [channelId, data]);
+  }, [accessToken, channelId, data]);
 
   useEffect(() => {
     if (!accessToken) {
