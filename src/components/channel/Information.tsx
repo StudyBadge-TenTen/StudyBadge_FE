@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { newSubLeaderStateType } from "../../types/study-channel-type";
 import { postSubLeader, putStudyInfo } from "../../services/channel-api";
@@ -31,20 +31,15 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
 
   useEffect(() => {
     return () => setIsEditMode(false);
-  }, []);
+  }, [setIsEditMode]);
 
   useEffect(() => {
     if (!isEditMode) {
       navigate(`/channel/${channelId}/information`);
     }
-  }, [isEditMode]);
+  }, [isEditMode, navigate, channelId]);
 
   useEffect(() => {
-    //channelId를 이용해 채널 정보 get api호출
-    // "정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더", "지역" 이 순서로
-    // studyDetailList에 저장
-    // console.log(data); // 디버깅 로그
-
     if (data) {
       const detailList = [
         data.capacity,
@@ -58,44 +53,172 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
       if (data.meetingType === "OFFLINE") {
         detailList.push(data.region);
       }
-      setStudyDetailList(() => detailList);
-      // console.log("Updated studyDetailList:", detailList); // 디버깅로그
-    } else {
+      setStudyDetailList(detailList);
+    } else if (error) {
       console.log("No data:", error);
     }
-  }, [channelId, data]);
+  }, [data, error]);
 
   useEffect(() => {
     if (location.pathname.includes("information_edit")) {
       setIsEditMode(true);
       if (data) {
-        setNewStudyInfo(() => ({
+        setNewStudyInfo({
           name: data.studyChannelName,
           description: data.studyChannelDescription,
           chattingUrl: data.chattingUrl ?? "",
-        }));
+        });
       }
     }
-  }, [location, data]);
+  }, [location.pathname, data, setIsEditMode]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (e.target.id === "studyNameEdit") {
-      setNewStudyInfo((origin) => ({
-        ...origin,
-        name: e.target.value,
-      }));
-    } else if (e.target.id === "descriptionEdit") {
-      setNewStudyInfo((origin) => ({
-        ...origin,
-        description: e.target.value,
-      }));
-    } else if (e.target.id === "chattingUrlEdit") {
-      setNewStudyInfo((origin) => ({
-        ...origin,
-        chattingUrl: e.target.value,
-      }));
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setNewStudyInfo((prev) => ({
+      ...prev,
+      [id.replace("Edit", "")]: value,
+    }));
+  }, []);
+
+  const handleSave = useCallback(async () => {
+    if (channelId) {
+      await putStudyInfo(Number(channelId), newStudyInfo);
+      if (newSubLeader.id) {
+        await postSubLeader(Number(channelId), { studyMemberId: newSubLeader.id });
+      }
+      setIsEditMode(false);
+      window.location.reload();
     }
-  };
+  }, [channelId, newStudyInfo, newSubLeader]);
+
+  const handleCancel = useCallback(() => {
+    setIsEditMode(false);
+    setNewSubLeader({ id: undefined, name: "" });
+    navigate(`/channel/${channelId}/information`);
+  }, [channelId, navigate, setIsEditMode]);
+
+  const handleModalClose = useCallback(() => {
+    setNewSubLeader({ id: undefined, name: "" });
+    setModal(false);
+  }, []);
+
+  const handleModalOpen = useCallback(() => {
+    setModal(true);
+  }, []);
+
+  const memoizedStudyDetailList = useMemo(() => {
+    if (!isLoading && data && studyDetailList) {
+      return studyDetailList.map((detail, index) => (
+        <span
+          key={index}
+          className={`inline-block w-full text-sm overflow-x-scroll whitespace-nowrap break-all scrollbar-hide ${data?.chattingUrl === detail && "text-Gray-4 text-xs"}`}
+        >
+          {index === 3
+            ? detail?.toLocaleString()
+            : detail !== null
+              ? index === 6 && newSubLeader.id
+                ? newSubLeader.name
+                : detail !== ""
+                  ? detail
+                  : "아직 링크를 등록하지 않았습니다."
+              : "해당 스터디 멤버에게만 공개"}
+          {isEditMode && data?.subLeaderName === detail && (
+            <>
+              <button onClick={handleModalOpen} className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4">
+                변경
+              </button>
+              {modal && (
+                <Modal>
+                  <MemberList isStudyEnd={isStudyEnd} setNewSubLeader={setNewSubLeader} setModal={setModal} />
+                  <button onClick={handleModalClose} className="cancel-btn btn-blue">
+                    취소
+                  </button>
+                </Modal>
+              )}
+            </>
+          )}
+        </span>
+      ));
+    }
+  }, [
+    studyDetailList,
+    isLoading,
+    data,
+    newSubLeader,
+    isEditMode,
+    modal,
+    handleModalOpen,
+    handleModalClose,
+    isStudyEnd,
+  ]);
+
+  // useEffect(() => {
+  //   return () => setIsEditMode(false);
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!isEditMode) {
+  //     navigate(`/channel/${channelId}/information`);
+  //   }
+  // }, [isEditMode]);
+
+  // useEffect(() => {
+  //   //channelId를 이용해 채널 정보 get api호출
+  //   // "정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더", "지역" 이 순서로
+  //   // studyDetailList에 저장
+  //   // console.log(data); // 디버깅 로그
+
+  //   if (data) {
+  //     const detailList = [
+  //       data.capacity,
+  //       data.meetingType,
+  //       data.chattingUrl,
+  //       data.deposit,
+  //       `${data.startDate} ~ ${data.endDate}`,
+  //       data.leaderName,
+  //       data.subLeaderName,
+  //     ];
+  //     if (data.meetingType === "OFFLINE") {
+  //       detailList.push(data.region);
+  //     }
+  //     setStudyDetailList(() => detailList);
+  //     // console.log("Updated studyDetailList:", detailList); // 디버깅로그
+  //   } else {
+  //     console.log("No data:", error);
+  //   }
+  // }, [channelId, data]);
+
+  // useEffect(() => {
+  //   if (location.pathname.includes("information_edit")) {
+  //     setIsEditMode(true);
+  //     if (data) {
+  //       setNewStudyInfo(() => ({
+  //         name: data.studyChannelName,
+  //         description: data.studyChannelDescription,
+  //         chattingUrl: data.chattingUrl ?? "",
+  //       }));
+  //     }
+  //   }
+  // }, [location, data]);
+
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   if (e.target.id === "studyNameEdit") {
+  //     setNewStudyInfo((origin) => ({
+  //       ...origin,
+  //       name: e.target.value,
+  //     }));
+  //   } else if (e.target.id === "descriptionEdit") {
+  //     setNewStudyInfo((origin) => ({
+  //       ...origin,
+  //       description: e.target.value,
+  //     }));
+  //   } else if (e.target.id === "chattingUrlEdit") {
+  //     setNewStudyInfo((origin) => ({
+  //       ...origin,
+  //       chattingUrl: e.target.value,
+  //     }));
+  //   }
+  // };
 
   return (
     <>
@@ -104,35 +227,16 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
         {/* 리더에게만 보일 수정 버튼 */}
         {isMember && data?.leader && !isStudyEnd && channelId && newStudyInfo && (
           <button
-            onClick={async () => {
-              if (isEditMode) {
-                console.log("정보 수정 저장 버튼 클릭");
-                // 수정 데이터 put으로 서버에 전송
-                // console.log(newStudyInfo); // 디버깅 로그
-                await putStudyInfo(Number(channelId), newStudyInfo);
-                if (newSubLeader.id) {
-                  postSubLeader(Number(channelId), { studyMemberId: newSubLeader.id });
-                }
-                setIsEditMode(false);
-                window.location.reload();
-              } else {
-                navigate("information_edit", { state: { tab: "정보", edit: true } });
-              }
-            }}
+            onClick={
+              isEditMode ? handleSave : () => navigate("information_edit", { state: { tab: "정보", edit: true } })
+            }
             className="btn-blue mb-4"
           >
             {isEditMode ? "저장" : "정보수정"}
           </button>
         )}
         {isEditMode && (
-          <button
-            onClick={() => {
-              setIsEditMode(false);
-              setNewSubLeader(() => ({ id: undefined, name: "" }));
-              navigate(`/channel/${channelId}/information`);
-            }}
-            className="btn-blue self-end ml-2 mb-4"
-          >
+          <button onClick={handleCancel} className="btn-blue self-end ml-2 mb-4">
             취소
           </button>
         )}
@@ -195,64 +299,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
               ? infoTitles.map((title) => (
                   <div key={`skeleton_${title}`} className="w-full h-4 bg-Gray-1 rounded-[50px] animate-pulse"></div>
                 ))
-              : !isLoading &&
-                data &&
-                studyDetailList &&
-                studyDetailList.map((detail, index) =>
-                  data?.chattingUrl === detail && isEditMode ? (
-                    <input
-                      key={`edit${index}`}
-                      id="chattingUrlEdit"
-                      name="chattingUrlEdit"
-                      className="input h-7 text-sm"
-                      value={newStudyInfo.chattingUrl}
-                      onChange={handleInputChange}
-                    ></input>
-                  ) : (
-                    <span
-                      key={index}
-                      className={`inline-block w-full text-sm overflow-x-scroll whitespace-nowrap break-all scrollbar-hide ${data?.chattingUrl === detail && "text-Gray-4 text-xs"}`}
-                    >
-                      {index === 3
-                        ? detail?.toLocaleString()
-                        : detail !== null
-                          ? index === 6 && newSubLeader.id
-                            ? newSubLeader.name
-                            : detail !== ""
-                              ? detail
-                              : "아직 링크를 등록하지 않았습니다."
-                          : "해당 스터디 멤버에게만 공개"}
-                      {isEditMode && data?.subLeaderName === detail && (
-                        <>
-                          <button
-                            onClick={() => setModal(() => true)}
-                            className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4"
-                          >
-                            변경
-                          </button>
-                          {modal && (
-                            <Modal>
-                              <MemberList
-                                isStudyEnd={isStudyEnd}
-                                setNewSubLeader={setNewSubLeader}
-                                setModal={setModal}
-                              />
-                              <button
-                                onClick={() => {
-                                  setNewSubLeader(() => ({ name: "", id: undefined }));
-                                  setModal(() => false);
-                                }}
-                                className="cancel-btn btn-blue"
-                              >
-                                취소
-                              </button>
-                            </Modal>
-                          )}
-                        </>
-                      )}
-                    </span>
-                  ),
-                )}
+              : memoizedStudyDetailList}
           </div>
         </div>
       </div>

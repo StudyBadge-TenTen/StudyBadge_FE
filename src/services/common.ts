@@ -28,7 +28,33 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = getAccessToken();
     if (accessToken) {
+      // accessToken이 있으면 헤더에 넣기
       config.headers["authorization"] = `Bearer ${accessToken}`;
+    } else {
+      // 없으면 재발급 시도
+      const refreshToken = getRefreshToken();
+      if (refreshToken) {
+        try {
+          const response = await axios.post(`${API_BASE_URL}/api/token/re-issue`, null, {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${refreshToken}`,
+            },
+          });
+
+          const accessTokenBearer = response.headers["authorization"] as string;
+
+          if (accessTokenBearer) {
+            const newAccessToken = accessTokenBearer.replace("Bearer ", "");
+            setAccessToken(newAccessToken);
+            useAuthStore.getState().setField("accessToken", newAccessToken);
+            config.headers["authorization"] = `Bearer ${newAccessToken}`;
+          }
+        } catch (error) {
+          console.log("토큰을 발급받지 못했습니다.");
+          console.log(error);
+        }
+      }
     }
     // console.log("Request config:", config); // 디버깅을 위해 추가
     return config;

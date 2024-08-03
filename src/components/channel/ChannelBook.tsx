@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Schedules from "./Schedules";
 import Information from "./Information";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -21,7 +21,6 @@ const ChannelBook = (): JSX.Element => {
   const state = useLocation().state;
 
   const [tabState, setTabState] = useState("정보");
-  const memberTab = ["정보", "일정", "멤버", "출석현황"];
   const [isStudyEnd, setIsStudyEnd] = useState(false);
   const [endModal, setEndModal] = useState(false);
 
@@ -34,77 +33,137 @@ const ChannelBook = (): JSX.Element => {
   //   queryFn: () => getIsMember(Number(channelId)),
   //   enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
   // });
+  const memberTab = ["정보", "일정", "멤버", "출석현황"];
+  const transTab = useMemo(() => transTabName(tab ?? "information"), [tab]);
   usePageScrollTop();
 
-  const today = moment(new Date()).format("YYYY-MM-DD");
+  // const today = moment(new Date()).format("YYYY-MM-DD");
 
+  // URL에서 탭 상태 설정
   useEffect(() => {
-    if (tab) {
-      const transTab = transTabName(tab);
-      if (transTab) {
-        setTabState(() => transTab);
-      }
+    if (transTab && transTab !== tabState) {
+      setTabState(transTab);
     }
-  }, [tab]);
+  }, [transTab]);
 
+  // 상태 변경 시 URL 설정
+  useEffect(() => {
+    const navigateToTab = () => {
+      const transTab = transTabName(tabState);
+      if (transTab !== tab) {
+        if (tabState === "일정" && selectedDate) {
+          navigate(`/channel/${channelId}/${transTab}/${selectedDate}`, { replace: true });
+        } else {
+          navigate(`/channel/${channelId}/${transTab}`, { replace: true });
+        }
+      }
+    };
+    navigateToTab();
+  }, [tabState, selectedDate, tab, navigate, channelId]);
+
+  // 기본 데이터 설정
   useEffect(() => {
     if (accessToken && channelId && data) {
       getIsMember(Number(channelId)).then((isMemberData) => setIsMember(isMemberData));
-
-      if (new Date(data.endDate) < new Date(today)) {
-        // 개인 출석률과 환급금 정산내역 api 호출
-        setIsStudyEnd(() => true);
-        setEndModal(() => true);
+      if (new Date(data.endDate) < new Date()) {
+        setIsStudyEnd(true);
+        setEndModal(true);
       }
     }
-  }, [accessToken, channelId, data]);
+  }, [accessToken, channelId, data, setIsMember]);
 
+  // AccessToken이 없는 경우 회원 상태를 false로 설정
   useEffect(() => {
     if (!accessToken) {
       setIsMember(false);
     }
   }, [accessToken, setIsMember]);
 
-  // useEffect(() => {
-  //   if (isMemberData !== undefined && isMemberData.data && isMember !== isMemberData.data) {
-  //     setIsMember(isMemberData.data);
-  //   }
-  // }, [data, channelId, isMemberData, isMember, setIsMember]);
-
+  // selectedDateParam 설정
   useEffect(() => {
     if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {
-      const newSelectedMonth = moment(selectedDateParam).format("YYYY-MM");
       setSelectedDate(selectedDateParam);
-      setSelectedMonth(newSelectedMonth);
+      setSelectedMonth(moment(selectedDateParam).format("YYYY-MM"));
       if (tabState !== "일정") {
-        setTabState(() => "일정");
+        setTabState("일정");
       }
     }
   }, [selectedDateParam, setSelectedDate, setSelectedMonth]);
 
+  // 상태에서 탭 설정
   useEffect(() => {
     if (state && state.tab) {
-      setTabState(() => state.tab);
+      setTabState(state.tab);
     }
   }, [state]);
 
-  useEffect(() => {
-    if (state && state.tab) {
-      const transTab = transTabName(state.tab);
-      if (state.edit) {
-        navigate(`/channel/${channelId}/${transTab}/${transTab}_edit`);
-      } else {
-        navigate(`/channel/${channelId}/${transTab}`);
-      }
-    } else {
-      const transTab = transTabName(tabState);
-      if (tabState === "일정") {
-        navigate(`/channel/${channelId}/${transTab}/${selectedDate}`);
-      } else {
-        navigate(`/channel/${channelId}/${transTab}`);
-      }
-    }
-  }, [tabState, state, channelId, selectedDate, navigate]);
+  // useEffect(() => {
+  //   if (tab) {
+  //     const transTab = transTabName(tab);
+  //     if (transTab) {
+  //       setTabState(() => transTab);
+  //     }
+  //   }
+  // }, [tab]);
+
+  // useEffect(() => {
+  //   if (accessToken && channelId && data) {
+  //     getIsMember(Number(channelId)).then((isMemberData) => setIsMember(isMemberData));
+
+  //     if (new Date(data.endDate) < new Date(today)) {
+  //       // 개인 출석률과 환급금 정산내역 api 호출
+  //       setIsStudyEnd(() => true);
+  //       setEndModal(() => true);
+  //     }
+  //   }
+  // }, [accessToken, channelId, data]);
+
+  // useEffect(() => {
+  //   if (!accessToken) {
+  //     setIsMember(false);
+  //   }
+  // }, [accessToken, setIsMember]);
+
+  // // useEffect(() => {
+  // //   if (isMemberData !== undefined && isMemberData.data && isMember !== isMemberData.data) {
+  // //     setIsMember(isMemberData.data);
+  // //   }
+  // // }, [data, channelId, isMemberData, isMember, setIsMember]);
+
+  // useEffect(() => {
+  //   if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {
+  //     const newSelectedMonth = moment(selectedDateParam).format("YYYY-MM");
+  //     setSelectedDate(selectedDateParam);
+  //     setSelectedMonth(newSelectedMonth);
+  //     if (tabState !== "일정") {
+  //       setTabState(() => "일정");
+  //     }
+  //   }
+  // }, [selectedDateParam, setSelectedDate, setSelectedMonth]);
+
+  // useEffect(() => {
+  //   if (state && state.tab) {
+  //     setTabState(() => state.tab);
+  //   }
+  // }, [state]);
+
+  // useEffect(() => {
+  //   if (state && state.tab) {
+  //     const transTab = transTabName(state.tab);
+  //     if (state.edit) {
+  //       navigate(`/channel/${channelId}/${transTab}/${transTab}_edit`);
+  //     } else {
+  //       navigate(`/channel/${channelId}/${transTab}`);
+  //     }
+  //   } else {
+  //     const transTab = transTabName(tabState);
+  //     if (tabState === "일정") {
+  //       navigate(`/channel/${channelId}/${transTab}/${selectedDate}`);
+  //     } else {
+  //       navigate(`/channel/${channelId}/${transTab}`);
+  //     }
+  //   }
+  // }, [tabState, state, channelId, selectedDate, navigate]);
 
   if (data) {
     return (

@@ -10,7 +10,6 @@ import { useLocation, useNavigate } from "react-router";
 import { MyStudyType } from "../../types/profile-type";
 import { useEditModeStore } from "../../store/edit-mode-store";
 import { Link } from "react-router-dom";
-import { useSelectedDateStore } from "@/store/schedule-store";
 import { motion } from "framer-motion";
 import { useMyStudy, useUserInfo } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
@@ -24,7 +23,6 @@ const Profile = (): JSX.Element => {
   const [chargeAmount, setChargeAmount] = useState(10000);
   const [myStudy, setMyStudy] = useState<MyStudyType[]>([]);
   const { isEditMode, setIsEditMode } = useEditModeStore();
-  const { selectedDate } = useSelectedDateStore();
   const { accessToken } = useAuthStore();
   const { data, isLoading, error } = useUserInfo(accessToken);
   const myStudyData = useMyStudy(accessToken);
@@ -144,7 +142,7 @@ const Profile = (): JSX.Element => {
               Array.isArray(myStudy) &&
               myStudy.map((studyChannel) => (
                 <Link
-                  to={`/channel/${studyChannel.studyId}/schedule/${selectedDate}`}
+                  to={`/channel/${studyChannel.studyId}/information`}
                   key={studyChannel.studyId}
                   className="border border-solid border-Gray-3 w-full h-fit p-10 rounded-[30px] flex flex-col justify-center items-center mt-10 flex-wrap"
                 >
