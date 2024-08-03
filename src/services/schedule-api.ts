@@ -57,18 +57,26 @@ const postSchedule = async (
 ) => {
   let response;
 
-  if (repeatState === "NONE") {
-    response = await fetchCall<ResponseType>(
-      `/api/study-channels/${studyChannelId}/single-schedules`,
-      "post",
-      scheduleInfo,
-    );
-  } else {
-    response = await fetchCall<ResponseType>(
-      `/api/study-channels/${studyChannelId}/repeat-schedules`,
-      "post",
-      scheduleInfo,
-    );
+  try {
+    if (repeatState === "NONE") {
+      response = await fetchCall<ResponseType>(
+        `/api/study-channels/${studyChannelId}/single-schedules`,
+        "post",
+        scheduleInfo,
+      );
+    } else {
+      response = await fetchCall<ResponseType>(
+        `/api/study-channels/${studyChannelId}/repeat-schedules`,
+        "post",
+        scheduleInfo,
+      );
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      alert(customError.message);
+    }
+    return error;
   }
 
   return response;
@@ -77,14 +85,26 @@ const postSchedule = async (
 const putSchedule = async (studyChannelId: number, newScheduleInfo: NewScheduleType, isAfterEvent?: boolean) => {
   let response;
 
-  if (isAfterEvent === undefined) {
-    response = await fetchCall<ResponseType>(`/api/study-channels/${studyChannelId}/schedules`, "put", newScheduleInfo);
-  } else {
-    response = await fetchCall<ResponseType>(
-      `/api/study-channels/${studyChannelId}/schedules/isAfterEvent?Same=${isAfterEvent}`,
-      "put",
-      newScheduleInfo,
-    );
+  try {
+    if (isAfterEvent === undefined) {
+      response = await fetchCall<ResponseType>(
+        `/api/study-channels/${studyChannelId}/schedules`,
+        "put",
+        newScheduleInfo,
+      );
+    } else {
+      response = await fetchCall<ResponseType>(
+        `/api/study-channels/${studyChannelId}/schedules/isAfterEvent?Same=${isAfterEvent}`,
+        "put",
+        newScheduleInfo,
+      );
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      alert(customError.message);
+    }
+    return error;
   }
 
   return response;
@@ -97,18 +117,26 @@ const deleteSchedule = async (
 ) => {
   let response;
 
-  if (isAfterEvent === undefined) {
-    response = await fetchCall<ResponseType>(
-      `/api/study-channels/${studyChannelId}/schedules`,
-      "delete",
-      deleteRequestBody,
-    );
-  } else {
-    response = await fetchCall<ResponseType>(
-      `/api/study-channels/${studyChannelId}/schedules/isAfterEvent?Same=${isAfterEvent}`,
-      "delete",
-      deleteRequestBody,
-    );
+  try {
+    if (isAfterEvent === undefined) {
+      response = await fetchCall<ResponseType>(
+        `/api/study-channels/${studyChannelId}/schedules`,
+        "delete",
+        deleteRequestBody,
+      );
+    } else {
+      response = await fetchCall<ResponseType>(
+        `/api/study-channels/${studyChannelId}/schedules/isAfterEvent?Same=${isAfterEvent}`,
+        "delete",
+        deleteRequestBody,
+      );
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      alert(customError.message);
+    }
+    return error;
   }
 
   return response;

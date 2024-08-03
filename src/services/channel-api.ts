@@ -11,9 +11,19 @@ import { fetchCall } from "./common";
 import { CustomErrorType } from "@/types/common";
 
 const getIsMember = async (studyChannelId: number) => {
-  const response = await fetchCall<boolean>(`/api/study-channels/${studyChannelId}/check`, "get");
-
-  return response ?? false;
+  try {
+    const response = await fetchCall<boolean>(`/api/study-channels/${studyChannelId}/check`, "get");
+    if (axios.isAxiosError(response)) {
+      const error = response.response?.data as CustomErrorType;
+      alert(error.message);
+      return false;
+    } else {
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 };
 
 const postStudyChannel = async (requestBody: postStudyRequestType) => {

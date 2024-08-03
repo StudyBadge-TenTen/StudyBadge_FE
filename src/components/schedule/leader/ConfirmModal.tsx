@@ -5,6 +5,7 @@ import { deleteSchedule, postSchedule, putSchedule } from "../../../services/sch
 import { ConfirmModalPropsType } from "../../../types/schedule-type";
 import { useUserInfo } from "@/hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
+import axios from "axios";
 
 const ConfirmModal = ({
   channelId,
@@ -39,13 +40,16 @@ const ConfirmModal = ({
     try {
       if (!originInfo) {
         // 일정 생성일 때
+        let response;
         if (target.classList.contains("yes")) {
-          await postSchedule(Number(channelId), newSchedule, repeatState);
-          // const response = await postSchedule(Number(channelId), newSchedule, repeatState);
-          // console.log(response); // 디버깅로그
+          response = await postSchedule(Number(channelId), newSchedule, repeatState);
           console.log("post schedule");
 
-          navigate(`/channel/${channelId}/schedule/${selectedDate}`);
+          if (axios.isAxiosError(response)) {
+            return;
+          } else {
+            navigate(`/channel/${channelId}/schedule/${selectedDate}`);
+          }
         } else if (target.classList.contains("no")) {
           setModalInfo(() => ({
             isOpen: false,
@@ -54,29 +58,20 @@ const ConfirmModal = ({
           }));
           return;
         }
-      }
-      // 일정 변경 저장일 때
-      else if (modalInfo.modalFor === "EDIT" && originInfo) {
+      } else if (modalInfo.modalFor === "EDIT" && originInfo) {
+        let response;
         if (modalInfo.isAfterCheck) {
           if (target.classList.contains("yes")) {
-            await putSchedule(Number(channelId), newSchedule, true);
-            // const response = await putSchedule(Number(channelId), newSchedule, true);
-            // console.log(response); // 디버깅로그
+            response = await putSchedule(Number(channelId), newSchedule, true);
             console.log("put schedule");
           } else if (target.classList.contains("no")) {
-            await putSchedule(Number(channelId), newSchedule, false);
-            // const response = await putSchedule(Number(channelId), newSchedule, false);
-            // console.log(response); // 디버깅로그
+            response = await putSchedule(Number(channelId), newSchedule, false);
             console.log("put schedule");
           }
-          navigate(`/channel/${channelId}/schedule/${selectedDate}`);
         } else {
           if (target.classList.contains("yes")) {
-            await putSchedule(Number(channelId), newSchedule);
-            // const response = await putSchedule(Number(channelId), newSchedule);
-            // console.log(response); // 디버깅로그
+            response = await putSchedule(Number(channelId), newSchedule);
             console.log("put schedule");
-            navigate(`/channel/${channelId}/schedule/${selectedDate}`);
           } else if (target.classList.contains("no")) {
             setModalInfo(() => ({
               isOpen: false,
@@ -86,34 +81,31 @@ const ConfirmModal = ({
             return;
           }
         }
+        if (axios.isAxiosError(response)) {
+          return;
+        } else {
+          navigate(`/channel/${channelId}/schedule/${selectedDate}`);
+        }
       } else if (modalInfo.modalFor === "DELETE") {
+        let response;
         if (originInfo && userInfo.data) {
           const deleteRequestBody = {
             memberId: userInfo.data.memberId,
             scheduleId: originInfo.id,
             selectedDate: selectedDate,
           };
-          // 일정 삭제일 때
           if (modalInfo.isAfterCheck) {
             if (target.classList.contains("yes")) {
-              await deleteSchedule(Number(channelId), deleteRequestBody, true);
-              // const response = await deleteSchedule(Number(channelId), deleteRequestBody, true);
-              // console.log(response); // 디버깅로그
+              response = await deleteSchedule(Number(channelId), deleteRequestBody, true);
               console.log("delete schedule");
             } else if (target.classList.contains("no")) {
-              await deleteSchedule(Number(channelId), deleteRequestBody, false);
-              // const response = await deleteSchedule(Number(channelId), deleteRequestBody, false);
-              // console.log(response); // 디버깅로그
+              response = await deleteSchedule(Number(channelId), deleteRequestBody, false);
               console.log("delete schedule");
             }
-            navigate(`/channel/${channelId}/schedule/${selectedDate}`);
           } else {
             if (target.classList.contains("yes")) {
-              await deleteSchedule(Number(channelId), deleteRequestBody);
-              // const response = await deleteSchedule(Number(channelId), deleteRequestBody);
-              // console.log(response); // 디버깅로그
+              response = await deleteSchedule(Number(channelId), deleteRequestBody);
               console.log("delete schedule");
-              navigate(`/channel/${channelId}/schedule/${selectedDate}`);
             } else if (target.classList.contains("no")) {
               setModalInfo(() => ({
                 isOpen: false,
@@ -122,6 +114,11 @@ const ConfirmModal = ({
               }));
               return;
             }
+          }
+          if (axios.isAxiosError(response)) {
+            return;
+          } else {
+            navigate(`/channel/${channelId}/schedule/${selectedDate}`);
           }
         }
       }
