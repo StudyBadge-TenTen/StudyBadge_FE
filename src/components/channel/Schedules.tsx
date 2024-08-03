@@ -112,13 +112,13 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   return (
     <>
-      {isMember && marks.length === 0 && (
+      {isMember && scheduleState?.scheduleList.length !== 0 && marks.length === 0 && (
         <svg
           width="150"
           height="150"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin absolute top-1/3 left-[42%] z-50"
+          className={`animate-spin absolute top-1/3 left-[42%] z-50`}
         >
           <path d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity=".25" />
           <path
