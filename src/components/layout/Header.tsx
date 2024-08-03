@@ -102,7 +102,10 @@ const Header = (): JSX.Element => {
             src={LOGO}
             className="h-24 md:h-16 cursor-pointer"
             alt="STUDY-BADGE-LOGO"
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/");
+              window.location.reload();
+            }}
           />
           <form className="hidden md:inline-block w-1/2 mx-8" onSubmit={handleSubmit}>
             <input
