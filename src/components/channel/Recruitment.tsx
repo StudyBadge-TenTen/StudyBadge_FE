@@ -166,7 +166,7 @@ const Recruitment = (): JSX.Element => {
                             className="object-cover w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-Gray-1 mr-6"
                           />
                         ) : (
-                          <div className="w-20 h-20 rounded-full bg-Gray-3 flex justify-center items-center">
+                          <div className="w-20 h-20 rounded-full bg-Gray-3 flex justify-center items-center mr-6">
                             <PersonIcon color="text-white" size={[60, 60]} />
                           </div>
                         )}
