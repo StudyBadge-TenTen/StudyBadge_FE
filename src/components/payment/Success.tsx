@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { postSuccessResponse } from "../../services/payment-api";
 import Modal from "../common/Modal";
@@ -18,20 +17,6 @@ const Success = (): JSX.Element => {
     queryFn: () => postSuccessResponse(paymentKey ?? "", orderId ?? "", Number(amount)),
     enabled: !!paymentKey && !!orderId && !!amount,
   });
-
-  useEffect(() => {
-    async function confirm() {
-      try {
-        // if (data) {
-        //   console.log(data); // 디버깅로그
-        // }
-      } catch (error: any) {
-        console.error("Error fetching data:", error);
-        navigate(`/paymentFail/?message=${error.message}&code=${error.code}`);
-      }
-    }
-    confirm();
-  }, [searchParams]);
 
   return (
     <Modal>

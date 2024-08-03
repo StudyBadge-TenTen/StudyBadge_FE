@@ -30,10 +30,6 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
     content: "",
   });
 
-  // useEffect(() => {
-  //   console.log(error);
-  // }, [error]);
-
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, studyMemberId: number) => {
     setStudyMemberId(() => studyMemberId);
 

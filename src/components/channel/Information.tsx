@@ -48,7 +48,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
         data.deposit,
         `${data.startDate} ~ ${data.endDate}`,
         data.leaderName,
-        data.subLeaderName,
+        `${data.leaderName === data.subLeaderName ? "미정" : data.subLeaderName}`,
       ];
       if (data.meetingType === "OFFLINE") {
         detailList.push(data.region);
@@ -74,10 +74,17 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
-    setNewStudyInfo((prev) => ({
-      ...prev,
-      [id.replace("Edit", "")]: value,
-    }));
+    if (id === "studyNameEdit") {
+      setNewStudyInfo((prev) => ({
+        ...prev,
+        name: value,
+      }));
+    } else if (id === "descriptionEdit") {
+      setNewStudyInfo((prev) => ({
+        ...prev,
+        description: value,
+      }));
+    }
   }, []);
 
   const handleSave = useCallback(async () => {
@@ -122,7 +129,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
                   ? detail
                   : "아직 링크를 등록하지 않았습니다."
               : "해당 스터디 멤버에게만 공개"}
-          {isEditMode && data?.subLeaderName === detail && (
+          {isEditMode && index === 6 && (
             <>
               <button onClick={handleModalOpen} className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4">
                 변경
@@ -151,74 +158,6 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
     handleModalClose,
     isStudyEnd,
   ]);
-
-  // useEffect(() => {
-  //   return () => setIsEditMode(false);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!isEditMode) {
-  //     navigate(`/channel/${channelId}/information`);
-  //   }
-  // }, [isEditMode]);
-
-  // useEffect(() => {
-  //   //channelId를 이용해 채널 정보 get api호출
-  //   // "정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더", "지역" 이 순서로
-  //   // studyDetailList에 저장
-  //   // console.log(data); // 디버깅 로그
-
-  //   if (data) {
-  //     const detailList = [
-  //       data.capacity,
-  //       data.meetingType,
-  //       data.chattingUrl,
-  //       data.deposit,
-  //       `${data.startDate} ~ ${data.endDate}`,
-  //       data.leaderName,
-  //       data.subLeaderName,
-  //     ];
-  //     if (data.meetingType === "OFFLINE") {
-  //       detailList.push(data.region);
-  //     }
-  //     setStudyDetailList(() => detailList);
-  //     // console.log("Updated studyDetailList:", detailList); // 디버깅로그
-  //   } else {
-  //     console.log("No data:", error);
-  //   }
-  // }, [channelId, data]);
-
-  // useEffect(() => {
-  //   if (location.pathname.includes("information_edit")) {
-  //     setIsEditMode(true);
-  //     if (data) {
-  //       setNewStudyInfo(() => ({
-  //         name: data.studyChannelName,
-  //         description: data.studyChannelDescription,
-  //         chattingUrl: data.chattingUrl ?? "",
-  //       }));
-  //     }
-  //   }
-  // }, [location, data]);
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //   if (e.target.id === "studyNameEdit") {
-  //     setNewStudyInfo((origin) => ({
-  //       ...origin,
-  //       name: e.target.value,
-  //     }));
-  //   } else if (e.target.id === "descriptionEdit") {
-  //     setNewStudyInfo((origin) => ({
-  //       ...origin,
-  //       description: e.target.value,
-  //     }));
-  //   } else if (e.target.id === "chattingUrlEdit") {
-  //     setNewStudyInfo((origin) => ({
-  //       ...origin,
-  //       chattingUrl: e.target.value,
-  //     }));
-  //   }
-  // };
 
   return (
     <>

@@ -14,8 +14,6 @@ const SocialLoginCallback = ({ first }: { first: boolean }): JSX.Element => {
 
     try {
       if (accessToken) {
-        // console.log(accessToken); // 디버깅 로그 추가
-
         setAccessToken(accessToken);
         setField("accessToken", accessToken);
         if (first) {

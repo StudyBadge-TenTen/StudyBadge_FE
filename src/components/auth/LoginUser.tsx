@@ -26,13 +26,11 @@ const LoginUser: React.FC = () => {
 
     try {
       await login(email, password);
-      // console.log("로그인 성공");
       reset();
       navigate("/");
-      // window.location.reload();
     } catch (error) {
-      // console.error("로그인 실패:", error);
-      console.log(error);
+      console.error("로그인 실패:", error);
+      // console.log(error);
     }
   };
 

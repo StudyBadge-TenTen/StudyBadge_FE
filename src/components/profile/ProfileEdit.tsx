@@ -4,6 +4,7 @@ import { BANK_LIST } from "../../constants/bank-list";
 import axios from "axios";
 import { useAuthStore } from "../../store/auth-store";
 import { useNavigate } from "react-router";
+import { CustomErrorType } from "@/types/common";
 
 const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
@@ -161,11 +162,20 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         withCredentials: true,
       });
 
-      console.log(response.data);
+      if (axios.isAxiosError(response)) {
+        const error = response.response?.data as CustomErrorType;
+        alert(error.message);
+        return;
+      }
       navigate("/profile/myInfo");
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
+      if (axios.isAxiosError(error)) {
+        const customError = error.response?.data as CustomErrorType;
+        alert(customError.message);
+        return;
+      }
     }
   };
 

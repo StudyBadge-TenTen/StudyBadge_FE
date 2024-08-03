@@ -14,19 +14,18 @@ const KingOfAttendance = () => {
   const { data, error, isLoading } = useAttendanceList(Number(channelId), accessToken, isMember);
 
   useEffect(() => {
-    // console.log(data);
-
     if (channelId && Array.isArray(data)) {
       const ratioList = data.map((attendanceInfo) => attendanceInfo.attendanceRatio);
       const bestAttendanceRatio = Math.max(...ratioList);
-      // console.log(bestAttendanceRatio);
-
       const newBestMembers = data.filter((attendanceInfo) => attendanceInfo.attendanceRatio === bestAttendanceRatio);
-      // console.log(newBestMembers);
 
       setBestMembers(() => [...newBestMembers]);
     }
   }, [channelId, data]);
+
+  if (!isMember) {
+    return <div className="text-white">해당 스터디 멤버에게만 공개되는 컨텐츠입니다.</div>;
+  }
 
   if (bestMembers) {
     if (bestMembers.length === 0) {

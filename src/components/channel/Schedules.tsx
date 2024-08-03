@@ -104,85 +104,6 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     }
   }, [isMember, isLeader, selectedDate, scheduleState, todayString]);
 
-  // useEffect(() => {
-  //   if (!isMember && !isLeader) return;
-  //   return () => setIsEditMode(false);
-  // }, []);
-
-  // // 최초 로드 시 selectedDateParam 값이 있으면 상태를 업데이트
-  // useEffect(() => {
-  //   if (!isMember && !isLeader) return;
-  //   if (selectedDateParam && moment(selectedDateParam, "YYYY-MM-DD", true).isValid()) {
-  //     const newSelectedMonth = moment(selectedDateParam).format("YYYY-MM");
-  //     setSelectedDate(selectedDateParam);
-  //     setSelectedMonth(newSelectedMonth);
-  //   } else {
-  //     const todayString = moment(today).format("YYYY-MM-DD");
-  //     const todayMonthString = moment(today).format("YYYY-MM");
-  //     setSelectedDate(todayString);
-  //     setSelectedMonth(todayMonthString);
-  //   }
-  // }, [isMember, selectedDateParam]);
-
-  // // selectedDate가 변경될 때마다 URL을 업데이트
-  // useEffect(() => {
-  //   if (!isMember && !isLeader) return;
-  //   if (selectedDate && selectedDate !== selectedDateParam) {
-  //     navigate(`/channel/${channelId}/schedule/${selectedDate}`, { replace: true });
-  //   }
-  // }, [isMember, selectedDate, navigate, channelId, selectedDateParam]);
-
-  // useEffect(() => {
-  //   if (!isMember && !isLeader) return;
-  //   //month상태가 바뀔 때마다 scheduleCalculator()호출해 일정들 가져오기
-  //   if (channelId) {
-  //     const year = selectedMonth.split("-")[0];
-  //     const month = selectedMonth.split("-")[1];
-  //     // 결과를 받아 상태로 저장
-  //     if (accessToken && channelId && year && month) {
-  //       scheduleCalculator({ channelId: Number(channelId), year, month }).then((response) => {
-  //         if (response) {
-  //           // console.log(response);
-
-  //           response.scheduleMarks.map((schedule) => {
-  //             setMarks((marks) => [...marks, ...schedule.marks]);
-  //           });
-  //           setScheduleState(() => response);
-  //         }
-  //       });
-  //     }
-  //   }
-  // }, [isMember, channelId, selectedMonth, setMarks, setScheduleState, accessToken]);
-
-  // // 선택하는 날짜가 바뀔 때마다 날짜에 해당되는 일정정보를 set하기 위해
-  // useEffect(() => {
-  //   // console.log("useQuery 결과:", { data, error, isLoading }); // 디버깅 로그
-  //   // console.log("isMember: ", isMember, ", isLeader: ", isLeader);
-
-  //   if (!isMember && !isLeader) return;
-
-  //   if (scheduleInfo && moment(selectedDate).isSame(todayString)) {
-  //     setCheckDay(() => true);
-  //   } else {
-  //     setCheckDay(() => false);
-  //   }
-
-  //   if (scheduleState && scheduleState.scheduleList.length !== 0) {
-  //     setIsLoadingState(() => true);
-  //     try {
-  //       getScheduleInfo(selectedDate, scheduleState.scheduleList, scheduleState.scheduleMarks).then((response) => {
-  //         if (response.result) {
-  //           setScheduleInfo(() => response.scheduleInfo);
-  //         } else setScheduleInfo(() => undefined);
-  //       });
-  //     } catch (error) {
-  //       console.log("error: 일정을 불러오는데 실패하였습니다.", error);
-  //     } finally {
-  //       setIsLoadingState(() => false);
-  //     }
-  //   }
-  // }, [isMember, isLeader, selectedDate, data, error, isLoading, scheduleState]);
-
   const handleAttendanceCheckComplete = () => {
     queryClient.invalidateQueries({
       queryKey: ["attendList", Number(channelId), scheduleInfo?.id, scheduleInfo?.repeated, selectedDate, isEditMode],
@@ -191,7 +112,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   return (
     <>
-      {marks.length === 0 && (
+      {isMember && marks.length === 0 && (
         <svg
           width="150"
           height="150"

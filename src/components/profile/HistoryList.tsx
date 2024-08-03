@@ -29,11 +29,6 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   console.log(paymentQuery.data);
-  //   console.log(pointQuery.data);
-  // }, [paymentQuery.data, pointQuery.data]);
-
   const isPossibleCancel = (data: PaymentHistoryType) => {
     const paymentDate = new Date(data.createdAt);
 

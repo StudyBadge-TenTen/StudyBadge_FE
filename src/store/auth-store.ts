@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   login: async (email, password) => {
     try {
       const { accessToken, refreshToken } = await postLogin(email, password);
-      console.log("postLogin token: ", accessToken, "posLogin refreshToken: ", refreshToken);
+      // console.log("postLogin token: ", accessToken, "posLogin refreshToken: ", refreshToken);
 
       set({ accessToken: accessToken, refreshToken: refreshToken });
 

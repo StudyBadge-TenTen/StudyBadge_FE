@@ -28,14 +28,11 @@ const Profile = (): JSX.Element => {
   const myStudyData = useMyStudy(accessToken);
 
   useEffect(() => {
-    // console.log(accessToken); // accessToken 확인용 디버깅 코드
-
     return () => setIsEditMode(false); // 클린업 함수로 변경
   }, []);
 
   useEffect(() => {
     if (data) {
-      // console.log(data); // 디버깅 로그
       try {
         if (myStudyData && myStudyData.data) {
           setMyStudy(() => myStudyData.data ?? []);
