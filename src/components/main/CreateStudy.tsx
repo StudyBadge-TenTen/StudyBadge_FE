@@ -98,19 +98,19 @@ const CreateStudy: React.FC = () => {
       }
     } catch (error) {
       console.error("Failed to create study:", error);
-      if (axios.isAxiosError(error)) {
-        const customError = error.response?.data as CustomErrorType;
-        alert(customError.message);
-      }
       if (userInfo && userInfo.data && study) {
         if (userInfo.data.point < study.deposit) {
           alert("포인트가 부족합니다.");
           navigate("/profile/myInfo");
         }
+      } else if (axios.isAxiosError(error)) {
+        const customError = error.response?.data as CustomErrorType;
+        alert(customError.message);
+      } else {
+        alert(
+          "스터디 채널 생성에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+        );
       }
-      alert(
-        "스터디 채널 생성에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-      );
     }
   };
 
