@@ -95,28 +95,28 @@ const Filter = (): JSX.Element => {
         <div className="flex flex-wrap sm:flex-nowrap justify-center items-center mt-2">
           <button
             id="computerCategory"
-            className={`btn-blue sm:rounded-r-none text-xs md:text-sm break-keep ml-2 ${filter.category === "IT" && "bg-Blue-1"}`}
+            className={`btn-blue sm:rounded-r-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 ${filter.category === "IT" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
           >
             컴퓨터/IT/개발
           </button>
           <button
             id="languageCategory"
-            className={`btn-blue sm:rounded-none text-xs md:text-sm break-keep ml-1 ${filter.category === "LANGUAGE" && "bg-Blue-1"}`}
+            className={`btn-blue sm:rounded-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 ${filter.category === "LANGUAGE" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
           >
             언어/어학
           </button>
           <button
             id="employmentCategory"
-            className={`btn-blue sm:rounded-none text-xs md:text-sm break-keep ml-1 ${filter.category === "EMPLOYMENT" && "bg-Blue-1"}`}
+            className={`btn-blue sm:rounded-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 ${filter.category === "EMPLOYMENT" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
           >
             취업/이직
           </button>
           <button
             id="selfDevelopCategory"
-            className={`btn-blue sm:rounded-l-none text-xs md:text-sm break-keep ml-1 mt-2 sm:mt-0 ${filter.category === "SELF_DEVELOPMENT" && "bg-Blue-1"}`}
+            className={`btn-blue sm:rounded-l-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 mt-2 xs:mt-0 ${filter.category === "SELF_DEVELOPMENT" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
           >
             자기계발
