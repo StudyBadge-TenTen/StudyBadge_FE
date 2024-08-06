@@ -21,17 +21,18 @@ const Success = (): JSX.Element => {
   return (
     <Modal>
       {isLoading ? (
-        <div className="w-60 h-60 flex justify-center items-center">결제응답을 기다리는 중입니다...</div>
+        <div className="w-60 h-fit flex justify-center items-center">결제응답을 기다리는 중입니다...</div>
       ) : error ? (
-        <div className="">
+        <div className="w-60 h-fit">
           서버 응답에 문제가 발생하였습니다. error name:{error.name}. error message:{error.message}
         </div>
       ) : (
         data && (
-          <div className="w-60 h-60 result wrapper flex flex-col justify-center items-center">
+          <div className="w-60 h-fit result wrapper flex flex-col justify-center items-center">
             <h2 className="text-2xl font-bold text-center mb-4">결제가 완료되었습니다</h2>
-            <p>{`주문번호: ${data.orderId}`}</p>
-            <p className="mb-2">
+            <p>{`<주문번호>`}</p>
+            <p>{data.orderId}</p>
+            <p className="my-4">
               결제 금액:
               <b>{" " + Number(searchParams.get("amount")).toLocaleString()}</b>원
             </p>
