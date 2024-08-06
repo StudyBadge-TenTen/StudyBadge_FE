@@ -17,7 +17,11 @@ const Footer = (): JSX.Element => {
             GITHUB
           </a>{" "}
           | <a href="mailto:studybadge04@gmail.com">GMAIL</a> |{" "}
-          <a href="http://tenten-studybadge.notion.site" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://tenten-studybadge.notion.site/StudyBadge-88869c57effe4ef2a33ea393c594bcf4?pvs=4"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             NOTION
           </a>
         </div>
