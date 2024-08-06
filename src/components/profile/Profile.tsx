@@ -143,9 +143,9 @@ const Profile = (): JSX.Element => {
                   key={studyChannel.studyId}
                   className="border border-solid border-Gray-3 w-full h-fit p-10 rounded-[30px] flex flex-col justify-center items-center mt-10 flex-wrap"
                 >
-                  <div className="flex items-center">
+                  <div className="flex flex-col-reverse sm:flex-row items-center mb-2 sm:mb-0">
                     <h3 className="font-bold text-xl md:text-2xl text-Blue-2">{studyChannel.studyName}</h3>
-                    {studyChannel.role === "LEADER" && <span className="ml-8 font-bold text-Red-2">리더</span>}
+                    {studyChannel.role === "LEADER" && <span className="sm:ml-8 font-bold text-Red-2">리더</span>}
                   </div>
                   <div className="w-full md:w-[70%] flex justify-center items-center flex-wrap">
                     <span className="inline-block w-fit text-Blue-2 text-sm md:text-base mr-4">출석률</span>

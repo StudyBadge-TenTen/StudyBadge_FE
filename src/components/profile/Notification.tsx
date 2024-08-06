@@ -44,12 +44,12 @@ const Notification = (): JSX.Element => {
               to={noti.url}
               key={noti.notificationId}
               onClick={() => handleClick(noti.notificationId)}
-              className="w-full h-fit bg-Gray-1 rounded-[10px] flex flex-col justify-center items-center text-Blue-2 px-8 py-4 pb-10 mb-2"
+              className="w-full h-fit bg-Gray-1 rounded-[10px] flex flex-col justify-center items-center text-Blue-2 px-8 py-10 sm:pt-4 sm:pb-10 mb-2"
             >
               <div className="w-full flex justify-between items-center text-Gray-4 text-sm mb-4">
-                <div className="flex justify-center items-center">
-                  <span className="inline-block mr-2">{noti.notificationType}</span>
-                  <span>{`${moment(new Date(noti.createdAt)).format("YYYY-MM-DD")} ${moment(new Date(noti.createdAt)).format("hh:mm:ss")}`}</span>
+                <div className="flex flex-col sm:flex-row justify-center items-center">
+                  <span className="inline-block mr-2 text-xs sm:text-sm">{noti.notificationType}</span>
+                  <span className="text-xs sm:text-sm">{`${moment(new Date(noti.createdAt)).format("YYYY-MM-DD")} ${moment(new Date(noti.createdAt)).format("hh:mm:ss")}`}</span>
                 </div>
                 {noti.isRead ? <span>읽음</span> : <span className="text-Red-2">new</span>}
               </div>

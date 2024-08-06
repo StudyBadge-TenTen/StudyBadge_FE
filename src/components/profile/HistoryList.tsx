@@ -149,10 +149,10 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
       return (
         <>
           <div className="w-full h-fit min-h-96">
-            {pointQuery.data.map((data) => (
+            {pointQuery.data.map((data, index) => (
               <div
-                key={new Date(data.createdAt).toDateString()}
-                className="h-16 border-b border-solid border-Gray-2 p-4 flex flex-col sm:flex-row justify-between items-center justify-between items-center"
+                key={`${index}_${new Date(data.createdAt).toDateString()}`}
+                className="h-fit sm:h-16 border-b border-solid border-Gray-2 p-4 flex flex-col sm:flex-row justify-between items-center justify-between items-center"
               >
                 <span className="text-sm text-Gray-4 text-center">
                   날짜: {moment(data.createdAt).format("YYYY-MM-DD")} / 시간: {moment(data.createdAt).format("hh:mm")}
