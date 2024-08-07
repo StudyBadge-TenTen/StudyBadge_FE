@@ -6,9 +6,9 @@ import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import { PaymentHistoryType, PointHistoryType } from "../../types/profile-type";
 import Modal from "../common/Modal";
+import { skeletonList } from "@/constants/skeletonList";
 
 const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
-  const skeletonList = [1, 2, 3, 4, 5];
   const [latestPointList, setLatestPointList] = useState<PointHistoryType[]>([]);
   const [page, setPage] = useState(1);
   const [cancelPayKey, setCancelPayKey] = useState("");
