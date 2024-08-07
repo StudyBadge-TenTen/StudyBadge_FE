@@ -19,7 +19,10 @@ const banishContent = `해당 멤버를 스터디에서 퇴출시키겠습니까
 const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsType): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
   const { channelId } = useParams();
-  const [studyMemberId, setStudyMemberId] = useState<number>();
+  const [studyMemberId, setStudyMemberId] = useState<{ name: string; id: undefined | number }>({
+    name: "",
+    id: undefined,
+  });
   const { data, error, isLoading } = useQuery<MemberListResponseType, AxiosError>({
     queryKey: ["memberList", channelId],
     queryFn: () => getMemberList(Number(channelId)),
@@ -31,8 +34,14 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
     content: "",
   });
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, studyMemberId: number) => {
-    setStudyMemberId(() => studyMemberId);
+  const handleClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    studyMemberId: number,
+    memberName?: string,
+  ) => {
+    if (memberName) {
+      setStudyMemberId(() => ({ name: memberName, id: studyMemberId }));
+    }
 
     const target = e.target as HTMLButtonElement;
     if (target.id === "subLeaderBtn") {
@@ -143,7 +152,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                       <button
                         id="subLeaderBtn"
                         className={`${(member.role === "LEADER" || member.role === "SUB_LEADER") && "hidden"} btn-blue px-3 py-2 w-28`}
-                        onClick={(e) => handleClick(e, member.studyMemberId)}
+                        onClick={(e) => handleClick(e, member.studyMemberId, member.name)}
                       >
                         서브리더로 지정
                       </button>
@@ -161,7 +170,9 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                             <div className="flex justify-center items-center mt-10">
                               <button
                                 className="yes-btn btn-blue w-10 mr-4"
-                                onClick={(e) => handleConfirm(e, studyMemberId, member.name)}
+                                onClick={(e) =>
+                                  handleConfirm(e, studyMemberId.id ?? member.studyMemberId, studyMemberId.name)
+                                }
                               >
                                 예
                               </button>
