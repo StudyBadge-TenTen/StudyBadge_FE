@@ -23,12 +23,22 @@ const Header = (): JSX.Element => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
 
+  let toastTimeout: NodeJS.Timeout | undefined = undefined;
+
   useEffect(() => {
+    return () => clearTimeout(toastTimeout);
+  }, []);
+
+  useEffect(() => {
+    const storedNewIcon = localStorage.getItem(NEW_NOTI_ICON);
+    if (storedNewIcon) {
+      setNewIcon(() => true);
+    }
     const storedNewNoti = localStorage.getItem(NEW_NOTIFICATION);
     if (storedNewNoti) {
       setNewNotification(JSON.parse(storedNewNoti));
     }
-  }, [setNewNotification]);
+  }, [setNewIcon, setNewNotification]);
 
   useEffect(() => {
     if (newNotification) {
@@ -37,7 +47,7 @@ const Header = (): JSX.Element => {
       setNewMessage(newNotification.content);
       setNewToast(true);
 
-      setTimeout(() => {
+      toastTimeout = setTimeout(() => {
         sessionStorage.removeItem(NEW_NOTIFICATION);
         setNewToast(false);
         setNewMessage("");
