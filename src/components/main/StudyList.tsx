@@ -8,6 +8,7 @@ import Filter from "./Filter";
 import { useQuery } from "@tanstack/react-query";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { StudyListResponseType } from "../../types/study-channel-type";
+import { skeletonList } from "@/constants/skeletonList";
 // import { useAuthStore } from "@/store/auth-store";
 
 const StudyList = (): JSX.Element => {
@@ -23,7 +24,6 @@ const StudyList = (): JSX.Element => {
     queryKey: ["studyList", filter.category, filter.keyword, filter.order, filter.page, filter.status, filter.type],
     queryFn: () => getStudyList(filter),
   });
-  const skeletonList = [1, 2, 3, 4, 5, 6];
   const element = document.getElementById("root");
 
   // useEffect(() => {

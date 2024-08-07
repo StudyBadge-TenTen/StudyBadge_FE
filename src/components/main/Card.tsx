@@ -1,27 +1,9 @@
+import { categoryEnToKr } from "@/utils/transform-function";
 import { StudyCategoryType, StudyListObjectType } from "../../types/study-channel-type";
 import { useNavigate } from "react-router";
 
 const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element => {
   const navigate = useNavigate();
-
-  const renderCategory = (category: StudyCategoryType) => {
-    let categoryKr;
-    switch (category) {
-      case "IT":
-        categoryKr = "컴퓨터/IT/개발";
-        break;
-      case "LANGUAGE":
-        categoryKr = "언어/어학";
-        break;
-      case "EMPLOYMENT":
-        categoryKr = "취업/이직";
-        break;
-      case "SELF_DEVELOPMENT":
-        categoryKr = "자기계발";
-        break;
-    }
-    return categoryKr;
-  };
 
   return (
     <div
@@ -33,7 +15,7 @@ const Card = ({ studyInfo }: { studyInfo: StudyListObjectType }): JSX.Element =>
           {studyInfo.meetingType === "ONLINE" ? "온라인" : "오프라인"}
         </div>
         <div className="badge-basic bg-Blue-2 text-white">
-          {renderCategory(studyInfo.category as StudyCategoryType)}
+          {categoryEnToKr(studyInfo.category as StudyCategoryType)}
         </div>
       </div>
       <div className="study-period text-xs">

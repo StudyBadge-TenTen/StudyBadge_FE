@@ -147,7 +147,9 @@ const ChannelBook = (): JSX.Element => {
           <div className="w-[400px] md:w-[768px] lg:w-[854px] h-fit flex flex-col px-4 py-8 md:p-8 relative">
             {!isMember && tabState !== "정보" && (
               <div className="w-full h-full absolute top-0 left-0 bg-Gray-2 opacity-60 rounded-b-[50px] flex justify-center items-center">
-                <p className="text-2xl font-bold opacity-100">해당 스터디 멤버에게만 공개되는 컨텐츠입니다.</p>
+                <p className="px-10 sm:px-0 sm:text-2xl font-bold opacity-100">
+                  해당 스터디 멤버에게만 공개되는 컨텐츠입니다.
+                </p>
               </div>
             )}
             {tabState === "정보" && <Information isStudyEnd={isStudyEnd} />}

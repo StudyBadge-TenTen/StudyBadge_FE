@@ -13,10 +13,14 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
   const { channelId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [studyDetailList, setStudyDetailList] = useState<(string | number | null)[]>();
-  const { isEditMode, setIsEditMode } = useEditModeStore();
-  const infoTitles = ["정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더"];
+
   const { data, error, isLoading } = useGetStudyInfo(Number(channelId));
+
+  const { isMember } = useAuthStore();
+  const { isEditMode, setIsEditMode } = useEditModeStore();
+
+  const [modal, setModal] = useState(false);
+  const [studyDetailList, setStudyDetailList] = useState<(string | number | null)[]>();
   const [newStudyInfo, setNewStudyInfo] = useState({
     name: "",
     description: "",
@@ -26,8 +30,8 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
     name: data?.subLeaderName ?? "",
     id: undefined,
   });
-  const [modal, setModal] = useState(false);
-  const { isMember } = useAuthStore();
+
+  const infoTitles = ["정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더"];
 
   useEffect(() => {
     return () => setIsEditMode(false);

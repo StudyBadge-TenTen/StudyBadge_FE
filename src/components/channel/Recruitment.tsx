@@ -12,10 +12,11 @@ import { useAuthStore } from "@/store/auth-store";
 import PersonIcon from "../common/PersonIcon";
 import axios from "axios";
 import { CustomErrorType } from "@/types/common";
+import { skeletonList } from "@/constants/skeletonList";
+import RecruitSkeleton from "../skeleton/RecruitSkeleton";
 
 const Recruitment = (): JSX.Element => {
   const { accessToken } = useAuthStore();
-  const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
   const studyInfo = useGetStudyInfo(Number(channelId));
   const { data, error, isLoading } = useRecruitment(Number(channelId), accessToken);
@@ -142,13 +143,7 @@ const Recruitment = (): JSX.Element => {
           </div>
           <div className="h-[85%] bg-white rounded-b-[50px] px-4 py-4 sm:px-14 sm:py-10">
             <div className="h-full overflow-y-scroll custom-scroll px-4">
-              {isLoading &&
-                skeletonList.map((value) => (
-                  <div
-                    key={`skeleton_${value}`}
-                    className="w-full h-40 border border-solid border-Gray-3 bg-white rounded-[30px] mb-2 animate-pulse"
-                  ></div>
-                ))}
+              {isLoading && skeletonList.map((value) => <RecruitSkeleton key={`skeleton_${value}`} />)}
               {!isLoading &&
                 data &&
                 data.participants &&

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/auth-store";
 import { useAttendanceList } from "@/hooks/useQuery";
 import PersonIcon from "../common/PersonIcon";
+import AttendanceSkeleton from "../skeleton/AttendanceSkeleton";
 
 const Attendance = (): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
@@ -18,19 +19,7 @@ const Attendance = (): JSX.Element => {
           <div className="w-full h-full"></div>
         ) : (
           <>
-            {isLoading &&
-              skeleton.map((value) => (
-                <div
-                  key={`skeleton_${value}`}
-                  className="w-full h-fit px-2 py-4 flex justify-center items-center animate-pulse"
-                >
-                  <div className="flex flex-col justify-center items-center mr-10">
-                    <div className="w-28 h-28 rounded-full bg-Gray-1"></div>
-                  </div>
-                  <span className="inline-block mr-8"></span>
-                  <div className="w-full h-8 bg-Gray-1 rounded-[30px] relative"></div>
-                </div>
-              ))}
+            {isLoading && skeleton.map((value) => <AttendanceSkeleton key={`skeleton_${value}`} />)}
             {!isLoading &&
               data &&
               Array.isArray(data) &&
