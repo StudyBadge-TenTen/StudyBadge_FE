@@ -25,7 +25,7 @@ const CreateStudy: React.FC = () => {
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === "createStartDate") {
-      if (!moment(e.target.value).isAfter(today) || moment(e.target.value).isSame(today)) {
+      if (!moment(e.target.value).isAfter(today) && !moment(e.target.value).isSame(today)) {
         alert("스터디 시작 날짜는 현재 날짜 이후로 지정할 수 있습니다.");
         study.setField("startDate", today);
       } else {
