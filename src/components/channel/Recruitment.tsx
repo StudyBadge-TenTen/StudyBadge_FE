@@ -67,6 +67,7 @@ const Recruitment = (): JSX.Element => {
     if (channelId) {
       try {
         await postRecruitEnd(Number(channelId));
+        window.location.reload();
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const customError = error.response?.data as CustomErrorType;
