@@ -202,14 +202,14 @@ const Recruitment = (): JSX.Element => {
                               {modalState.content}
                               <div className="flex justify-center items-center mt-10">
                                 <button
-                                  id={`${participant.participationId}-modal-yes`}
+                                  id={`${participateId}-modal-yes`}
                                   className="yes-btn btn-blue w-10 mr-4"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
                                 >
                                   예
                                 </button>
                                 <button
-                                  id={`${participant.participationId}-modal-no`}
+                                  id={`${participateId}-modal-no`}
                                   className="no-btn btn-blue"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
                                 >
