@@ -9,6 +9,8 @@ import { useGetStudyInfo } from "../../hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
 import { categoryEnToKr } from "@/utils/transform-function";
 
+// 추후 코드 리팩토링 가능하면 시도
+
 const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
   const { channelId } = useParams();
   const navigate = useNavigate();
