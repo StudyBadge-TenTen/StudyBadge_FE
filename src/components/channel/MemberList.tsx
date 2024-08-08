@@ -19,7 +19,7 @@ const banishContent = `해당 멤버를 스터디에서 퇴출시키겠습니까
 const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsType): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
   const { channelId } = useParams();
-  const [studyMemberId, setStudyMemberId] = useState<{ name: string; id: undefined | number }>({
+  const [studyMemberState, setStudyMemberState] = useState<{ name: string; id: undefined | number }>({
     name: "",
     id: undefined,
   });
@@ -39,8 +39,12 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
     studyMemberId: number,
     memberName?: string,
   ) => {
-    if (memberName) {
-      setStudyMemberId(() => ({ name: memberName, id: studyMemberId }));
+    if (studyMemberId) {
+      if (memberName) {
+        setStudyMemberState(() => ({ name: memberName, id: studyMemberId }));
+      } else {
+        setStudyMemberState((origin) => ({ ...origin, id: studyMemberId }));
+      }
     }
 
     const target = e.target as HTMLButtonElement;
@@ -163,7 +167,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                       >
                         퇴출
                       </button>
-                      {modalState.isOpen && studyMemberId && (
+                      {modalState.isOpen && studyMemberState && (
                         <Modal>
                           <div className="w-60 px-6 flex flex-col justify-center items-center text-center whitespace-pre-wrap">
                             {modalState.content}
@@ -171,7 +175,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                               <button
                                 className="yes-btn btn-blue w-10 mr-4"
                                 onClick={(e) =>
-                                  handleConfirm(e, studyMemberId.id ?? member.studyMemberId, studyMemberId.name)
+                                  handleConfirm(e, studyMemberState.id ?? member.studyMemberId, studyMemberState.name)
                                 }
                               >
                                 예
