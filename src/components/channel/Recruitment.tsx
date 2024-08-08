@@ -73,7 +73,7 @@ const Recruitment = (): JSX.Element => {
           alert(customError.message);
         } else {
           console.log(error);
-          alert("모집 오픈에 문제가 발생하였습니다.");
+          alert("모집 마감에 문제가 발생하였습니다.");
         }
       }
     }
