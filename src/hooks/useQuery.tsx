@@ -14,7 +14,7 @@ import { AttendMemberType, ScheduleType } from "@/types/schedule-type";
 
 export const useUserInfo = (accessToken: string | null) => {
   const { data, isLoading, error } = useQuery<UserInfoType, Error>({
-    queryKey: ["UserInfo"],
+    queryKey: ["UserInfo", accessToken],
     queryFn: () => getProfile(),
     enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
   });
@@ -50,7 +50,7 @@ export const useRecruitment = (channelId: number, accessToken: string | null) =>
 
 export const useApplicationList = (accessToken: string | null) => {
   const { data, error, isLoading } = useQuery({
-    queryKey: ["participation"],
+    queryKey: ["participation", accessToken],
     queryFn: () => getApplicationList(),
     enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
   });
@@ -77,7 +77,7 @@ export const useAllSchedules = (channelId: number, accessToken: string | null) =
 
 export const useMyStudy = (accessToken: string | null) => {
   const { data, error, isLoading } = useQuery<MyStudyType[], Error>({
-    queryKey: ["allSchedules"],
+    queryKey: ["allSchedules", accessToken],
     queryFn: () => getMyStudy(),
     enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
   });
