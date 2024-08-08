@@ -40,46 +40,45 @@ const getMyStudy = async () => {
 };
 
 const getPaymentsHistory = async (page: number, size: number) => {
-  const paymentsHistory = await fetchCall<PaymentHistoryType[] | AxiosError>(
-    `/api/payments/history?page=${page}&size=${size}`,
-    "get",
-  );
-  if (axios.isAxiosError(paymentsHistory)) {
-    if (paymentsHistory.response?.status === 404) {
-      return [];
-    } else {
-      const error = paymentsHistory.response?.data as CustomErrorType;
-      if (error.errorCode === "NOT_FOUND_PAYMENT") {
+  try {
+    const paymentsHistory = await fetchCall<PaymentHistoryType[]>(
+      `/api/payments/history?page=${page}&size=${size}`,
+      "get",
+    );
+    return paymentsHistory ?? [];
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      if (customError.errorCode === "NOT_FOUND_PAYMENT") {
         return [];
       } else {
-        console.log(error.message);
+        alert(error.message);
         return [];
       }
+    } else {
+      console.log(error);
+      return [];
     }
-  } else {
-    return paymentsHistory ?? [];
   }
 };
 
 const getPointHistory = async (page: number, size: number) => {
-  const pointHistory = await fetchCall<PointHistoryType[] | AxiosError>(
-    `/api/points/my-point?page=${page}&size=${size}`,
-    "get",
-  );
-  if (axios.isAxiosError(pointHistory)) {
-    if (pointHistory.response?.status === 404) {
-      return [];
-    } else {
-      const error = pointHistory.response?.data as CustomErrorType;
-      if (error.errorCode === "NOT_FOUND_POINT") {
+  try {
+    const pointHistory = await fetchCall<PointHistoryType[]>(`/api/points/my-point?page=${page}&size=${size}`, "get");
+    return pointHistory ?? [];
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const customError = error.response?.data as CustomErrorType;
+      if (customError.errorCode === "NOT_FOUND_POINT") {
         return [];
       } else {
-        console.log(error.message);
+        alert(error.message);
         return [];
       }
+    } else {
+      console.log(error);
+      return [];
     }
-  } else {
-    return pointHistory ?? [];
   }
 };
 
