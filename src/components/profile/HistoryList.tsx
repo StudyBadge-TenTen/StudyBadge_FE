@@ -16,10 +16,12 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
   const paymentQuery = useQuery<PaymentHistoryType[], Error>({
     queryKey: ["paymentList", type, page],
     queryFn: () => getPaymentsHistory(page, HISTORY_LENGTH_PER_PAGE),
+    enabled: type === "PAYMENT",
   });
   const pointQuery = useQuery<PointHistoryType[], Error>({
     queryKey: ["pointList", type, page],
     queryFn: () => getPointHistory(page, HISTORY_LENGTH_PER_PAGE),
+    enabled: type === "POINT",
   });
 
   useEffect(() => {
@@ -72,6 +74,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
   if (type === "PAYMENT") {
     if (paymentQuery.data && Array.isArray(paymentQuery.data)) {
       if (paymentQuery.data.length === 0) return <div>결제 내역이 존재하지 않습니다.</div>;
+
       return (
         <>
           <div className="w-full h-fit min-h-96">

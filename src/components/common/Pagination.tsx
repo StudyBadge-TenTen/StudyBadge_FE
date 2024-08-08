@@ -61,8 +61,11 @@ const Pagination = ({
         }
       }
       if (type === "HISTORY" && setPage) {
-        if (!historyList || historyList.length === 0) return;
-        else setPage(() => Number(target.innerText));
+        if (!historyList || historyList.length === 0) {
+          return;
+        } else {
+          setPage(() => Number(target.innerText));
+        }
       }
       if (type === "NOTIFICATION" && setPage) {
         setPage(() => Number(target.innerText));
