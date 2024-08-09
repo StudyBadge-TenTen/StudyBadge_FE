@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStudyStore } from "../../store/study-store";
-import { koreanRegions } from "../common/KoreanRegions";
+import { KOREAN_REGIONS } from "../../constants/korean-regions";
 import moment from "moment";
 import { postStudyChannel } from "../../services/channel-api";
 import { PENALTY_SYSTEM } from "../../constants/penalty-system-info";
@@ -201,7 +201,7 @@ const CreateStudy: React.FC = () => {
               required
             >
               <option value="">시/도 선택</option>
-              {koreanRegions.map((region) => (
+              {KOREAN_REGIONS.map((region) => (
                 <option key={region.name} value={region.name}>
                   {region.name}
                 </option>
@@ -218,13 +218,11 @@ const CreateStudy: React.FC = () => {
                 required
               >
                 <option value="">구/군 선택</option>
-                {koreanRegions
-                  .find((region) => region.name === selectedRegion.region)
-                  ?.districts.map((district) => (
-                    <option key={district} value={district}>
-                      {district}
-                    </option>
-                  ))}
+                {KOREAN_REGIONS.find((region) => region.name === selectedRegion.region)?.districts.map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
               </select>
             )}
           </div>

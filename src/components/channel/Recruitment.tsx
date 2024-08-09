@@ -12,7 +12,7 @@ import { useAuthStore } from "@/store/auth-store";
 import PersonIcon from "../common/PersonIcon";
 import axios from "axios";
 import { CustomErrorType } from "@/types/common";
-import { skeletonList } from "@/constants/skeletonList";
+import { SKELETON_LIST } from "@/constants/skeleton-list";
 import RecruitSkeleton from "../skeleton/RecruitSkeleton";
 
 const Recruitment = (): JSX.Element => {
@@ -144,7 +144,7 @@ const Recruitment = (): JSX.Element => {
           </div>
           <div className="h-[85%] bg-white rounded-b-[50px] px-4 py-4 sm:px-14 sm:py-10">
             <div className="h-full overflow-y-scroll custom-scroll px-4">
-              {isLoading && skeletonList.map((value) => <RecruitSkeleton key={`skeleton_${value}`} />)}
+              {isLoading && SKELETON_LIST.map((value) => <RecruitSkeleton key={`skeleton_${value}`} />)}
               {!isLoading &&
                 data &&
                 data.participants &&
