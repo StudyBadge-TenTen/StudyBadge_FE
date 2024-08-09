@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/auth-store";
 import PersonIcon from "../common/PersonIcon";
 
 const KingOfAttendance = () => {
-  // todo: params에서 channelId를 가져와 멤버별 출석현황 조회 -> 가장 높은 출석률 값 구하기 -> 해당 출석률인 멤버들 렌더링
+  // params에서 channelId를 가져와 멤버별 출석현황 조회 -> 가장 높은 출석률 값 구하기 -> 해당 출석률인 멤버들 렌더링
   const { accessToken, isMember } = useAuthStore();
   const { channelId } = useParams();
   const [bestMembers, setBestMembers] = useState<AttendanceResponseType[]>();

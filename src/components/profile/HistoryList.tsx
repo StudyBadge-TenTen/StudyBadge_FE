@@ -6,7 +6,7 @@ import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import { PaymentHistoryType, PointHistoryType } from "../../types/profile-type";
 import Modal from "../common/Modal";
-import { skeletonList } from "@/constants/skeletonList";
+import { SKELETON_LIST } from "@/constants/skeleton-list";
 
 const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
   const [latestPointList, setLatestPointList] = useState<PointHistoryType[]>([]);
@@ -133,7 +133,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     } else if (paymentQuery.isLoading) {
       return (
         <div className="w-full h-fit min-h-96 flex flex-col justify-center items-center">
-          {skeletonList.map((value) => (
+          {SKELETON_LIST.map((value) => (
             <div key={`skeleton_${value}`} className="w-full h-4 bg-Gray-1 my-6 rounded-[50px] animate-pulse"></div>
           ))}
         </div>
@@ -199,7 +199,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
     } else if (pointQuery.isLoading) {
       return (
         <div className="w-full h-fit min-h-96 flex flex-col justify-center items-center">
-          {skeletonList.map((value) => (
+          {SKELETON_LIST.map((value) => (
             <div key={`skeleton_${value}`} className="w-full h-4 bg-Gray-1 my-6 rounded-[50px] animate-pulse"></div>
           ))}
         </div>

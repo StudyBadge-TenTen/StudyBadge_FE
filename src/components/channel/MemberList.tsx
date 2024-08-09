@@ -12,7 +12,7 @@ import { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth-store";
 import PersonIcon from "../common/PersonIcon";
 import MemberSkeleton from "../skeleton/MemberSkeleton";
-import { skeletonList } from "@/constants/skeletonList";
+import { SKELETON_LIST } from "@/constants/skeleton-list";
 
 const banishContent = `해당 멤버를 스터디에서 퇴출시키겠습니까?\n(퇴출 시 총 예치금에서 퇴출 멤버가 지불한 예치금을 전액 제외합니다.)`;
 
@@ -120,7 +120,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                   </div>
                 ))}
               {isLoading
-                ? skeletonList.map((value) => <MemberSkeleton key={`skeleton_${value}`} />)
+                ? SKELETON_LIST.map((value) => <MemberSkeleton key={`skeleton_${value}`} />)
                 : !isLoading &&
                   Array.isArray(data.studyMembers) &&
                   data.studyMembers.map((member) => (
@@ -212,7 +212,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                   </div>
                 ))}
               {isLoading
-                ? skeletonList.map((value) => <MemberSkeleton key={`skeleton_${value}`} />)
+                ? SKELETON_LIST.map((value) => <MemberSkeleton key={`skeleton_${value}`} />)
                 : !isLoading &&
                   Array.isArray(data.studyMembers) &&
                   data.studyMembers.map((member) => (

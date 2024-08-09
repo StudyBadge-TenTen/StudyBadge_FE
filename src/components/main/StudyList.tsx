@@ -8,7 +8,7 @@ import Filter from "./Filter";
 import { useQuery } from "@tanstack/react-query";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { StudyListResponseType } from "../../types/study-channel-type";
-import { skeletonList } from "@/constants/skeletonList";
+import { SKELETON_LIST } from "@/constants/skeleton-list";
 // import { useAuthStore } from "@/store/auth-store";
 
 const StudyList = (): JSX.Element => {
@@ -143,7 +143,7 @@ const StudyList = (): JSX.Element => {
       </div>
       <div className="study-cards-container w-full flex justify-center items-center flex-wrap">
         {/* 받은 채널 리스트의 길이만큼 map을 이용해 Card 생성 or 스켈레톤 렌더링 */}
-        {isLoading && skeletonList.map((card) => <CardSkeleton key={card} />)}
+        {isLoading && SKELETON_LIST.map((card) => <CardSkeleton key={card} />)}
         {!isLoading &&
           data &&
           Array.isArray(studyList) &&

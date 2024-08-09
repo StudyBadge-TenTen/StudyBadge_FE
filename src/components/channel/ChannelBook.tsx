@@ -28,16 +28,9 @@ const ChannelBook = (): JSX.Element => {
   const { data } = useGetStudyInfo(Number(channelId));
   const { selectedDate, setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
-  // const isMemberData = useQuery<boolean, AxiosError>({
-  //   queryKey: ["isMember", channelId],
-  //   queryFn: () => getIsMember(Number(channelId)),
-  //   enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
-  // });
   const memberTab = ["정보", "일정", "멤버", "출석현황"];
   const transTab = useMemo(() => transTabName(tab ?? "information"), [tab]);
   usePageScrollTop();
-
-  // const today = moment(new Date()).format("YYYY-MM-DD");
 
   // URL에서 탭 상태 설정
   useEffect(() => {
