@@ -24,8 +24,17 @@ const CustomOverlay = ({
   selectedCafe,
 }: CustomOverlayProps): JSX.Element => {
   const handleButtonClick = async (e: React.MouseEvent<HTMLButtonElement>, selectedCafe: LocateType) => {
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+
     if (selectedCafe) {
+      // 서버로 장소 등록
       await handlePlaceSelect(e, studyChannelId, selectedCafe);
+
+      // 커스텀 오버레이와 맵 모달이 닫히도록
+      onClose();
+      if (modalCloseBtn) {
+        modalCloseBtn.click();
+      }
     }
   };
 
