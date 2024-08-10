@@ -137,6 +137,7 @@ const ConfirmModal = ({
             <div className="my-8">이후 일정에도 적용하시겠습니까?</div>
             <div className="flex justify-center items-center">
               <button
+                type="button"
                 onClick={(e) =>
                   handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
                 }
@@ -145,6 +146,7 @@ const ConfirmModal = ({
                 예
               </button>
               <button
+                type="button"
                 onClick={(e) =>
                   handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
                 }
@@ -154,6 +156,7 @@ const ConfirmModal = ({
               </button>
             </div>
             <button
+              type="button"
               onClick={(e) =>
                 handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
               }
@@ -167,6 +170,7 @@ const ConfirmModal = ({
             <div className="my-8">일정을 {modalInfo.modalFor === "EDIT" ? "저장" : "삭제"}하시겠습니까?</div>
             <div className="flex justify-center items-center">
               <button
+                type="button"
                 onClick={(e) =>
                   handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
                 }
@@ -175,6 +179,7 @@ const ConfirmModal = ({
                 예
               </button>
               <button
+                type="button"
                 onClick={(e) =>
                   handleModalBtnClick(e, { channelId, originInfo, modalInfo, setModalInfo, newSchedule, repeatState })
                 }

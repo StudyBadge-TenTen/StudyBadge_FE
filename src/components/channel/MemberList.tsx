@@ -11,14 +11,18 @@ import Modal from "../common/Modal";
 import { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth-store";
 import PersonIcon from "../common/PersonIcon";
+import MemberSkeleton from "../skeleton/MemberSkeleton";
+import { SKELETON_LIST } from "@/constants/skeleton-list";
 
 const banishContent = `해당 멤버를 스터디에서 퇴출시키겠습니까?\n(퇴출 시 총 예치금에서 퇴출 멤버가 지불한 예치금을 전액 제외합니다.)`;
 
 const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsType): JSX.Element => {
   const { accessToken, isMember } = useAuthStore();
-  const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
-  const [studyMemberId, setStudyMemberId] = useState<number>();
+  const [studyMemberState, setStudyMemberState] = useState<{ name: string; id: undefined | number }>({
+    name: "",
+    id: undefined,
+  });
   const { data, error, isLoading } = useQuery<MemberListResponseType, AxiosError>({
     queryKey: ["memberList", channelId],
     queryFn: () => getMemberList(Number(channelId)),
@@ -30,8 +34,18 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
     content: "",
   });
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, studyMemberId: number) => {
-    setStudyMemberId(() => studyMemberId);
+  const handleClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    studyMemberId: number,
+    memberName?: string,
+  ) => {
+    if (studyMemberId) {
+      if (memberName) {
+        setStudyMemberState(() => ({ name: memberName, id: studyMemberId }));
+      } else {
+        setStudyMemberState((origin) => ({ ...origin, id: studyMemberId }));
+      }
+    }
 
     const target = e.target as HTMLButtonElement;
     if (target.id === "subLeaderBtn") {
@@ -58,16 +72,16 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
     const target = e.target as HTMLButtonElement;
     if (modalState.type === "SUB_LEADER") {
       if (target.classList.contains("yes-btn")) {
+        if (setNewSubLeader && setModal) {
+          setNewSubLeader(() => ({ name: memberName, id: studyMemberId }));
+          setModalState((origin) => ({
+            ...origin,
+            isOpen: false,
+          }));
+          setModal(() => false);
+          return;
+        }
         await postSubLeader(Number(channelId), { studyMemberId: studyMemberId });
-      }
-      if (setNewSubLeader && setModal) {
-        setNewSubLeader(() => ({ name: memberName, id: studyMemberId }));
-        setModalState((origin) => ({
-          ...origin,
-          isOpen: false,
-        }));
-        setModal(() => false);
-        return;
       }
     }
     if (modalState.type === "BANISH") {
@@ -80,6 +94,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
   };
 
   if (!isMember) {
+    // 멤버가 아닐 때
     return (
       <>
         <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 멤버</h2>
@@ -89,6 +104,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
       </>
     );
   } else {
+    // 리더일 때
     if (!isStudyEnd && data && data.leader) {
       return (
         <>
@@ -104,17 +120,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                   </div>
                 ))}
               {isLoading
-                ? skeletonList.map((value) => (
-                    <div
-                      key={`skeleton_${value}`}
-                      className="w-60 h-80 border border-solid border-Gray-3 bg-Gray-1 rounded-[50px] flex flex-col justify-between items-center px-4 py-8 m-2 animate-pulse"
-                    >
-                      <div className="w-28 h-28 bg-Gray-2 rounded-full"></div>
-                      <div className="w-1/3 h-4 bg-Gray-2 rounded-[50px]"></div>
-                      <div className="w-2/3 h-4 bg-Gray-2 rounded-[50px]"></div>
-                      <div className="w-2/3 h-4 bg-Gray-2 rounded-[50px]"></div>
-                    </div>
-                  ))
+                ? SKELETON_LIST.map((value) => <MemberSkeleton key={`skeleton_${value}`} />)
                 : !isLoading &&
                   Array.isArray(data.studyMembers) &&
                   data.studyMembers.map((member) => (
@@ -148,31 +154,37 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                       </div>
                       {/* 리더에게만 보여질 버튼 */}
                       <button
+                        type="button"
                         id="subLeaderBtn"
                         className={`${(member.role === "LEADER" || member.role === "SUB_LEADER") && "hidden"} btn-blue px-3 py-2 w-28`}
-                        onClick={(e) => handleClick(e, member.studyMemberId)}
+                        onClick={(e) => handleClick(e, member.studyMemberId, member.name)}
                       >
                         서브리더로 지정
                       </button>
                       <button
+                        type="button"
                         id="banishBtn"
                         className={`${member.role === "LEADER" && "hidden"} btn-red px-3 py-2 w-28`}
                         onClick={(e) => handleClick(e, member.studyMemberId)}
                       >
                         퇴출
                       </button>
-                      {modalState.isOpen && studyMemberId && (
+                      {modalState.isOpen && studyMemberState && (
                         <Modal>
                           <div className="w-60 px-6 flex flex-col justify-center items-center text-center whitespace-pre-wrap">
                             {modalState.content}
                             <div className="flex justify-center items-center mt-10">
                               <button
+                                type="button"
                                 className="yes-btn btn-blue w-10 mr-4"
-                                onClick={(e) => handleConfirm(e, studyMemberId, member.name)}
+                                onClick={(e) =>
+                                  handleConfirm(e, studyMemberState.id ?? member.studyMemberId, studyMemberState.name)
+                                }
                               >
                                 예
                               </button>
                               <button
+                                type="button"
                                 className="no-btn btn-blue"
                                 onClick={() => setModalState((origin) => ({ ...origin, isOpen: false }))}
                               >
@@ -189,6 +201,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
         </>
       );
     } else if (!isStudyEnd && data) {
+      // 리더가 아닐 때
       return (
         <>
           <h2 className="text-2xl font-bold text-Blue-2 text-center mb-2">스터디 멤버</h2>
@@ -203,17 +216,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                   </div>
                 ))}
               {isLoading
-                ? skeletonList.map((value) => (
-                    <div
-                      key={`skeleton_${value}`}
-                      className="w-60 h-80 border border-solid border-Gray-3 bg-Gray-1 rounded-[50px] flex flex-col justify-between items-center px-4 py-8 m-2 animate-pulse"
-                    >
-                      <div className="w-28 h-28 bg-Gray-2 rounded-full"></div>
-                      <div className="w-1/3 h-4 bg-Gray-2 rounded-[50px]"></div>
-                      <div className="w-2/3 h-4 bg-Gray-2 rounded-[50px]"></div>
-                      <div className="w-2/3 h-4 bg-Gray-2 rounded-[50px]"></div>
-                    </div>
-                  ))
+                ? SKELETON_LIST.map((value) => <MemberSkeleton key={`skeleton_${value}`} />)
                 : !isLoading &&
                   Array.isArray(data.studyMembers) &&
                   data.studyMembers.map((member) => (

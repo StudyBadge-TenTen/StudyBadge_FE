@@ -5,6 +5,7 @@ const GoBack = (): JSX.Element => {
 
   return (
     <button
+      type="button"
       onClick={() => navigate("/")}
       className="text-Blue-2 font-bold flex justify-center items-center self-start ml-10 sm:ml-20"
     >

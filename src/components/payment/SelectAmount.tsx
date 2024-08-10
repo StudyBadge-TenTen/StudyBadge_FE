@@ -28,10 +28,10 @@ const SelectAmount = ({ setConfirm, chargeAmount, setChargeAmount }: SelectAmoun
           onChange={handleAmountChange}
           className="border border-solid border-Gray-2 p-3 rounded-[10px] mt-4"
         />
-        <button className="btn-blue mt-8" onClick={() => setConfirm(() => true)}>
+        <button type="button" className="btn-blue mt-8" onClick={() => setConfirm(() => true)}>
           결제하기
         </button>
-        <button className="mt-8 self-center text-Red-2" onClick={() => navigate("/profile/myInfo")}>
+        <button type="button" className="mt-8 self-center text-Red-2" onClick={() => navigate("/profile/myInfo")}>
           취소
         </button>
       </Modal>

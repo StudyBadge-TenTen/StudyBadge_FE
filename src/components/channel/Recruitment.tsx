@@ -12,10 +12,11 @@ import { useAuthStore } from "@/store/auth-store";
 import PersonIcon from "../common/PersonIcon";
 import axios from "axios";
 import { CustomErrorType } from "@/types/common";
+import { SKELETON_LIST } from "@/constants/skeleton-list";
+import RecruitSkeleton from "../skeleton/RecruitSkeleton";
 
 const Recruitment = (): JSX.Element => {
   const { accessToken } = useAuthStore();
-  const skeletonList = [1, 2, 3, 4, 5];
   const { channelId } = useParams();
   const studyInfo = useGetStudyInfo(Number(channelId));
   const { data, error, isLoading } = useRecruitment(Number(channelId), accessToken);
@@ -66,13 +67,14 @@ const Recruitment = (): JSX.Element => {
     if (channelId) {
       try {
         await postRecruitEnd(Number(channelId));
+        window.location.reload();
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const customError = error.response?.data as CustomErrorType;
           alert(customError.message);
         } else {
           console.log(error);
-          alert("모집 오픈에 문제가 발생하였습니다.");
+          alert("모집 마감에 문제가 발생하였습니다.");
         }
       }
     }
@@ -123,7 +125,7 @@ const Recruitment = (): JSX.Element => {
             <div className="h-full overflow-y-scroll custom-scroll px-4 flex flex-col justify-center items-center">
               <p className="text-Gray-3">현재 모집 마감 상태입니다</p>
               <p className="text-Gray-3">멤버를 모집하시겠습니까?</p>
-              <button onClick={() => handleRecruitStart()} className="btn-blue w-24 mt-8">
+              <button type="button" onClick={() => handleRecruitStart()} className="btn-blue w-24 mt-8">
                 모집 시작
               </button>
             </div>
@@ -142,13 +144,7 @@ const Recruitment = (): JSX.Element => {
           </div>
           <div className="h-[85%] bg-white rounded-b-[50px] px-4 py-4 sm:px-14 sm:py-10">
             <div className="h-full overflow-y-scroll custom-scroll px-4">
-              {isLoading &&
-                skeletonList.map((value) => (
-                  <div
-                    key={`skeleton_${value}`}
-                    className="w-full h-40 border border-solid border-Gray-3 bg-white rounded-[30px] mb-2 animate-pulse"
-                  ></div>
-                ))}
+              {isLoading && SKELETON_LIST.map((value) => <RecruitSkeleton key={`skeleton_${value}`} />)}
               {!isLoading &&
                 data &&
                 data.participants &&
@@ -166,7 +162,7 @@ const Recruitment = (): JSX.Element => {
                             className="object-cover w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-Gray-1 mr-6"
                           />
                         ) : (
-                          <div className="w-20 h-20 rounded-full bg-Gray-3 flex justify-center items-center">
+                          <div className="w-20 h-20 rounded-full bg-Gray-3 flex justify-center items-center mr-6">
                             <PersonIcon color="text-white" size={[60, 60]} />
                           </div>
                         )}
@@ -183,6 +179,7 @@ const Recruitment = (): JSX.Element => {
                         {participant.participationStatus === "APPROVE_WAITING" ? (
                           <div className="flex mt-2">
                             <button
+                              type="button"
                               id={`${participant.participationId}-noBtn`}
                               onClick={handleClick}
                               className="no-btn btn-blue w-10 mr-4"
@@ -190,6 +187,7 @@ const Recruitment = (): JSX.Element => {
                               거절
                             </button>
                             <button
+                              type="button"
                               id={`${participant.participationId}-yesBtn`}
                               onClick={handleClick}
                               className="yes-btn btn-blue w-10 "
@@ -206,14 +204,16 @@ const Recruitment = (): JSX.Element => {
                               {modalState.content}
                               <div className="flex justify-center items-center mt-10">
                                 <button
-                                  id={`${participant.participationId}-modal-yes`}
+                                  type="button"
+                                  id={`${participateId}-modal-yes`}
                                   className="yes-btn btn-blue w-10 mr-4"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
                                 >
                                   예
                                 </button>
                                 <button
-                                  id={`${participant.participationId}-modal-no`}
+                                  type="button"
+                                  id={`${participateId}-modal-no`}
                                   className="no-btn btn-blue"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
                                 >
@@ -235,7 +235,7 @@ const Recruitment = (): JSX.Element => {
                 </p>
               )}
               <div className="w-full flex justify-center items-center">
-                <button onClick={() => handleRecruitEnd()} className="btn-blue w-24 mt-8">
+                <button type="button" onClick={() => handleRecruitEnd()} className="btn-blue w-24 mt-8">
                   모집마감
                 </button>
               </div>

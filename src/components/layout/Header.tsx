@@ -23,12 +23,22 @@ const Header = (): JSX.Element => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
 
+  let toastTimeout: NodeJS.Timeout | undefined = undefined;
+
   useEffect(() => {
+    return () => clearTimeout(toastTimeout);
+  }, []);
+
+  useEffect(() => {
+    const storedNewIcon = localStorage.getItem(NEW_NOTI_ICON);
+    if (storedNewIcon) {
+      setNewIcon(() => true);
+    }
     const storedNewNoti = localStorage.getItem(NEW_NOTIFICATION);
     if (storedNewNoti) {
       setNewNotification(JSON.parse(storedNewNoti));
     }
-  }, [setNewNotification]);
+  }, [setNewIcon, setNewNotification]);
 
   useEffect(() => {
     if (newNotification) {
@@ -37,7 +47,7 @@ const Header = (): JSX.Element => {
       setNewMessage(newNotification.content);
       setNewToast(true);
 
-      setTimeout(() => {
+      toastTimeout = setTimeout(() => {
         sessionStorage.removeItem(NEW_NOTIFICATION);
         setNewToast(false);
         setNewMessage("");
@@ -86,7 +96,11 @@ const Header = (): JSX.Element => {
       />
       <section className="header w-full h-32 flex justify-center items-center bg-white fixed z-40 top-0 shadow-md">
         <div className="w-[1025px] flex justify-between md:justify-center items-center">
-          <button onClick={() => setSearchOpen((origin) => !origin)} className="search-btn md:hidden ml-8">
+          <button
+            type="button"
+            onClick={() => setSearchOpen((origin) => !origin)}
+            className="search-btn md:hidden ml-8"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -102,7 +116,10 @@ const Header = (): JSX.Element => {
             src={LOGO}
             className="h-24 md:h-16 cursor-pointer"
             alt="STUDY-BADGE-LOGO"
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/");
+              window.location.reload();
+            }}
           />
           <form className="hidden md:inline-block w-1/2 mx-8" onSubmit={handleSubmit}>
             <input
@@ -117,6 +134,7 @@ const Header = (): JSX.Element => {
             <div className="flex justify-center items-center">
               <ProfileBtn />
               <button
+                type="button"
                 className="bell-btn hidden md:inline-block mr-4 relative"
                 onClick={() => handleBellBtnClick(accessToken)}
               >
@@ -137,11 +155,15 @@ const Header = (): JSX.Element => {
               </button>
             </div>
             {accessToken ? (
-              <button className={`hidden md:inline-block btn-blue`} onClick={async () => setModalOpen(() => true)}>
+              <button
+                type="button"
+                className={`hidden md:inline-block btn-blue`}
+                onClick={async () => setModalOpen(() => true)}
+              >
                 로그아웃
               </button>
             ) : (
-              <button className={`hidden md:inline-block btn-blue`} onClick={() => navigate("/login")}>
+              <button type="button" className={`hidden md:inline-block btn-blue`} onClick={() => navigate("/login")}>
                 로그인
               </button>
             )}
@@ -149,10 +171,10 @@ const Header = (): JSX.Element => {
               <Modal>
                 정말 로그아웃 하시겠습니까?
                 <div className="flex justify-center items-center mt-4">
-                  <button onClick={() => handleLogoutClick()} className="btn-blue w-10">
+                  <button type="button" onClick={() => handleLogoutClick()} className="btn-blue w-10">
                     예
                   </button>
-                  <button onClick={() => setModalOpen(false)} className="btn-blue w-10 ml-2">
+                  <button type="button" onClick={() => setModalOpen(false)} className="btn-blue w-10 ml-2">
                     아니요
                   </button>
                 </div>

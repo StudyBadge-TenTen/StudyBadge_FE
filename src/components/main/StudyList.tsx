@@ -3,15 +3,17 @@ import Pagination from "../common/Pagination";
 import Card from "./Card";
 import { initialFilter, useFilterStore, useStudyListStore } from "../../store/study-store";
 import { getStudyList } from "../../services/study-list-api";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import Filter from "./Filter";
 import { useQuery } from "@tanstack/react-query";
 import CardSkeleton from "../skeleton/CardSkeleton";
 import { StudyListResponseType } from "../../types/study-channel-type";
+import { SKELETON_LIST } from "@/constants/skeleton-list";
 // import { useAuthStore } from "@/store/auth-store";
 
 const StudyList = (): JSX.Element => {
   // const { accessToken } = useAuthStore();
+  const params = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { studyList, setStudyList } = useStudyListStore();
@@ -22,28 +24,49 @@ const StudyList = (): JSX.Element => {
     queryKey: ["studyList", filter.category, filter.keyword, filter.order, filter.page, filter.status, filter.type],
     queryFn: () => getStudyList(filter),
   });
-  const skeletonList = [1, 2, 3, 4, 5, 6];
+  const element = document.getElementById("root");
 
   // useEffect(() => {
   //   console.log("Current accessToken in state:", accessToken);
   // }, [accessToken]);
 
-  // 경로가 바뀔 때마다
   useEffect(() => {
-    // 상단 로고를 클릭해 처음 상태로 돌아가는 것을 구현하기 위한 초기화 코드입니다
-    if (location.pathname === "/") {
-      const element = document.getElementById("root");
-      if (element) {
-        element.scrollIntoView();
-      }
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem("scrollPosition", window.scrollY.toString());
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  // 필터가 바뀔 때마다 최상단으로 이동하지 않도록
+  useEffect(() => {
+    if (
+      location.pathname === "/" ||
+      (params.type === "ALL" &&
+        params.status === "ALL" &&
+        params.category === "ALL" &&
+        params.keyword === "NONE" &&
+        params.order === "RECENT" &&
+        params.page === "1")
+    ) {
       setFilter(initialFilter);
+      window.scrollTo(0, 0);
+    } else {
+      const savedPosition = sessionStorage.getItem("scrollPosition");
+      if (savedPosition) {
+        window.scrollTo(0, parseInt(savedPosition, 10));
+      }
     }
-  }, [location]);
+  }, [location, params, element]);
 
   // 필터와 키워드 상태가 바뀔 때마다
   useEffect(() => {
     const { type, category, status, order, page, keyword } = filter;
-    const newLocation = `/${type ?? "ALL"}/${status ?? "ALL"}/${category ?? "ALL"}/${keyword ?? "NONE"}/${order ?? "ALL"}/${page}`;
+    const newLocation = `/${type ?? "ALL"}/${status ?? "ALL"}/${category ?? "ALL"}/${keyword ?? "NONE"}/${order ?? "RECENT"}/${page}`;
 
     if (data) {
       setStudyList(data.studyChannels);
@@ -120,7 +143,7 @@ const StudyList = (): JSX.Element => {
       </div>
       <div className="study-cards-container w-full flex justify-center items-center flex-wrap">
         {/* 받은 채널 리스트의 길이만큼 map을 이용해 Card 생성 or 스켈레톤 렌더링 */}
-        {isLoading && skeletonList.map((card) => <CardSkeleton key={card} />)}
+        {isLoading && SKELETON_LIST.map((card) => <CardSkeleton key={card} />)}
         {!isLoading &&
           data &&
           Array.isArray(studyList) &&

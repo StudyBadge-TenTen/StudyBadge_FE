@@ -97,7 +97,7 @@ const Checkout = ({
 
   return (
     <div className="outside-modal fixed top-0 left-0 w-screen h-screen bg-Gray-3 bg-opacity-25 z-40 flex justify-center items-center">
-      <div className="w-[550px] min-h-[600px] p-8 bg-white opacity-100 border border-solid border-Gray-2 rounded-[30px] fixed z-50 flex flex-col">
+      <div className="w-[320px] md:w-[550px] h-[450px] md:h-[620px] p-8 bg-white opacity-100 border border-solid border-Gray-2 rounded-[30px] fixed z-50 flex flex-col overflow-y-scroll scrollbar-hide">
         <h2 className="text-2xl font-bold self-center">스터디 뱃지 포인트 충전</h2>
         {/* 결제 UI, 이용약관 UI 영역 */}
         <div id="payment-widget" />
@@ -105,6 +105,7 @@ const Checkout = ({
         {/* 결제하기 버튼 */}
         <div className="flex justify-center mt-[30px]">
           <button
+            type="button"
             id="cancelBtn"
             className="button btn-blue mr-8"
             onClick={() => {
@@ -114,7 +115,7 @@ const Checkout = ({
           >
             취소하기
           </button>
-          <button id="paymentBtn" className="button btn-blue" onClick={() => handlePayClick()}>
+          <button type="button" id="paymentBtn" className="button btn-blue" onClick={() => handlePayClick()}>
             결제하기
           </button>
         </div>

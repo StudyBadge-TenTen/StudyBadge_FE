@@ -9,14 +9,20 @@ import { useGetStudyInfo } from "../../hooks/useQuery";
 import { useAuthStore } from "@/store/auth-store";
 import { categoryEnToKr } from "@/utils/transform-function";
 
+// 추후 코드 리팩토링 가능하면 시도
+
 const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
   const { channelId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [studyDetailList, setStudyDetailList] = useState<(string | number | null)[]>();
-  const { isEditMode, setIsEditMode } = useEditModeStore();
-  const infoTitles = ["정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더"];
+
   const { data, error, isLoading } = useGetStudyInfo(Number(channelId));
+
+  const { isMember } = useAuthStore();
+  const { isEditMode, setIsEditMode } = useEditModeStore();
+
+  const [modal, setModal] = useState(false);
+  const [studyDetailList, setStudyDetailList] = useState<(string | number | null)[]>();
   const [newStudyInfo, setNewStudyInfo] = useState({
     name: "",
     description: "",
@@ -26,8 +32,8 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
     name: data?.subLeaderName ?? "",
     id: undefined,
   });
-  const [modal, setModal] = useState(false);
-  const { isMember } = useAuthStore();
+
+  const infoTitles = ["정원", "방식", "커뮤니케이션", "예치금", "기간", "리더", "서브리더"];
 
   useEffect(() => {
     return () => setIsEditMode(false);
@@ -131,13 +137,17 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
               : "해당 스터디 멤버에게만 공개"}
           {isEditMode && index === 6 && (
             <>
-              <button onClick={handleModalOpen} className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4">
+              <button
+                type="button"
+                onClick={handleModalOpen}
+                className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4"
+              >
                 변경
               </button>
               {modal && (
                 <Modal>
                   <MemberList isStudyEnd={isStudyEnd} setNewSubLeader={setNewSubLeader} setModal={setModal} />
-                  <button onClick={handleModalClose} className="cancel-btn btn-blue">
+                  <button type="button" onClick={handleModalClose} className="cancel-btn btn-blue">
                     취소
                   </button>
                 </Modal>
@@ -166,6 +176,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
         {/* 리더에게만 보일 수정 버튼 */}
         {isMember && data?.leader && !isStudyEnd && channelId && newStudyInfo && (
           <button
+            type="button"
             onClick={
               isEditMode ? handleSave : () => navigate("information_edit", { state: { tab: "정보", edit: true } })
             }
@@ -175,7 +186,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
           </button>
         )}
         {isEditMode && (
-          <button onClick={handleCancel} className="btn-blue self-end ml-2 mb-4">
+          <button type="button" onClick={handleCancel} className="btn-blue self-end ml-2 mb-4">
             취소
           </button>
         )}

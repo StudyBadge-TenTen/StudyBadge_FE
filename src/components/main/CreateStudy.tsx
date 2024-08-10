@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStudyStore } from "../../store/study-store";
-import { koreanRegions } from "../common/KoreanRegions";
+import { KOREAN_REGIONS } from "../../constants/korean-regions";
 import moment from "moment";
 import { postStudyChannel } from "../../services/channel-api";
 import { PENALTY_SYSTEM } from "../../constants/penalty-system-info";
@@ -25,7 +25,7 @@ const CreateStudy: React.FC = () => {
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === "createStartDate") {
-      if (!moment(e.target.value).isAfter(today) || moment(e.target.value).isSame(today)) {
+      if (!moment(e.target.value).isAfter(today) && !moment(e.target.value).isSame(today)) {
         alert("스터디 시작 날짜는 현재 날짜 이후로 지정할 수 있습니다.");
         study.setField("startDate", today);
       } else {
@@ -98,19 +98,19 @@ const CreateStudy: React.FC = () => {
       }
     } catch (error) {
       console.error("Failed to create study:", error);
-      if (axios.isAxiosError(error)) {
-        const customError = error.response?.data as CustomErrorType;
-        alert(customError.message);
-      }
       if (userInfo && userInfo.data && study) {
         if (userInfo.data.point < study.deposit) {
           alert("포인트가 부족합니다.");
           navigate("/profile/myInfo");
         }
+      } else if (axios.isAxiosError(error)) {
+        const customError = error.response?.data as CustomErrorType;
+        alert(customError.message);
+      } else {
+        alert(
+          "스터디 채널 생성에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+        );
       }
-      alert(
-        "스터디 채널 생성에 실패하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-      );
     }
   };
 
@@ -201,7 +201,7 @@ const CreateStudy: React.FC = () => {
               required
             >
               <option value="">시/도 선택</option>
-              {koreanRegions.map((region) => (
+              {KOREAN_REGIONS.map((region) => (
                 <option key={region.name} value={region.name}>
                   {region.name}
                 </option>
@@ -218,13 +218,11 @@ const CreateStudy: React.FC = () => {
                 required
               >
                 <option value="">구/군 선택</option>
-                {koreanRegions
-                  .find((region) => region.name === selectedRegion.region)
-                  ?.districts.map((district) => (
-                    <option key={district} value={district}>
-                      {district}
-                    </option>
-                  ))}
+                {KOREAN_REGIONS.find((region) => region.name === selectedRegion.region)?.districts.map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
               </select>
             )}
           </div>

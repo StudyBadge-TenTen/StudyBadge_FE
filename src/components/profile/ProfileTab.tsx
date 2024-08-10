@@ -63,10 +63,14 @@ const ProfileTab = (): JSX.Element => {
       <div className="w-full flex justify-between mt-8">
         {accessToken && (
           <>
-            <button onClick={() => setModalOpen(() => true)} className="w-24 md:w-full text-center text-Red-2 py-2">
+            <button
+              type="button"
+              onClick={() => setModalOpen(() => true)}
+              className="w-24 md:w-full text-center text-Red-2 py-2"
+            >
               회원 탈퇴하기
             </button>
-            <button onClick={() => setLogoutModal(() => true)} className={`w-20 btn-blue w-10 md:hidden`}>
+            <button type="button" onClick={() => setLogoutModal(() => true)} className={`w-20 btn-blue w-10 md:hidden`}>
               로그아웃
             </button>
           </>
@@ -76,10 +80,10 @@ const ProfileTab = (): JSX.Element => {
             <div className="flex flex-col justify-center items-center">
               <p>로그아웃 하시겠습니까?</p>
               <div className="flex mt-6">
-                <button onClick={() => logout()} className="w-10 btn-blue">
+                <button type="button" onClick={() => logout()} className="w-10 btn-blue">
                   예
                 </button>
-                <button onClick={() => setLogoutModal(() => false)} className="w-10 btn-blue ml-2">
+                <button type="button" onClick={() => setLogoutModal(() => false)} className="w-10 btn-blue ml-2">
                   아니요
                 </button>
               </div>
@@ -93,10 +97,10 @@ const ProfileTab = (): JSX.Element => {
             <p>스터디 뱃지 계정을 삭제하고</p>
             <p>탈퇴하시겠습니까?</p>
             <div className="flex mt-6">
-              <button onClick={() => handleDeleteClick()} className="w-10 btn-blue">
+              <button type="button" onClick={() => handleDeleteClick()} className="w-10 btn-blue">
                 예
               </button>
-              <button onClick={() => setModalOpen(() => false)} className="w-10 btn-blue ml-2">
+              <button type="button" onClick={() => setModalOpen(() => false)} className="w-10 btn-blue ml-2">
                 아니요
               </button>
             </div>

@@ -59,12 +59,12 @@ export const postSignUp = async (userData: SignUpData) => {
 };
 
 export const getAuthEmail = async (email: string, code: string) => {
-  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/auth?email=${email}&code=${code}`, "get");
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/auth`, "get", null, { email, code });
   return response;
 };
 
 export const postEmailResend = async (email: string) => {
-  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/resend?email=${email}`, "post");
+  const response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/resend`, "post", null, { email });
   return response;
 };
 
@@ -101,5 +101,19 @@ export const patchResetPassword = async (email: string, newPassword: string) => 
     email,
     newPassword,
   });
+  return response;
+};
+
+export const getAccountVerification = async (bankCode: string, bankNum: string, name?: string) => {
+  let response;
+  if (name) {
+    response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/cert`, "get", {
+      bankCode,
+      bankNum,
+      name,
+    });
+  } else {
+    response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/cert`, "get", { bankCode, bankNum });
+  }
   return response;
 };

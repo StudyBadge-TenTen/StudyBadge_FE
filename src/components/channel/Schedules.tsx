@@ -28,7 +28,8 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | undefined>();
   const [isLoadingState, setIsLoadingState] = useState(false);
 
-  const [checkDay, setCheckDay] = useState(false);
+  const [checkDay, setCheckDay] = useState(true);
+  const [checkBtn, setCheckBtn] = useState(false);
   const today = new Date();
   const todayString = moment(today).format("YYYY-MM-DD");
 
@@ -38,7 +39,15 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
     if (isMember || isLeader) {
       return () => setIsEditMode(false);
     }
-  }, [isMember, isLeader, setIsEditMode]);
+  }, []);
+
+  useEffect(() => {
+    if (!isStudyEnd && !isEditMode && isLeader && checkDay && scheduleInfo) {
+      setCheckBtn(() => true);
+    } else {
+      setCheckBtn(() => false);
+    }
+  }, [isLeader, isStudyEnd, isEditMode, checkDay, scheduleInfo]);
 
   useEffect(() => {
     if (isMember || isLeader) {
@@ -79,10 +88,12 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   useEffect(() => {
     if (isMember || isLeader) {
-      if (scheduleInfo && moment(selectedDate).isSame(todayString)) {
-        setCheckDay(true);
-      } else {
-        setCheckDay(false);
+      if (selectedDate) {
+        if (moment(new Date(selectedDate)).isSame(new Date(todayString))) {
+          setCheckDay(true);
+        } else {
+          setCheckDay(false);
+        }
       }
 
       if (scheduleState && scheduleState.scheduleList.length !== 0) {
@@ -102,7 +113,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
           });
       }
     }
-  }, [isMember, isLeader, selectedDate, scheduleState, todayString]);
+  }, [setCheckDay, isMember, isLeader, selectedDate, scheduleState, todayString]);
 
   const handleAttendanceCheckComplete = () => {
     queryClient.invalidateQueries({
@@ -112,13 +123,13 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
 
   return (
     <>
-      {isMember && marks.length === 0 && (
+      {isMember && scheduleState?.scheduleList.length !== 0 && marks.length === 0 && (
         <svg
           width="150"
           height="150"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin absolute top-1/3 left-[42%] z-50"
+          className={`animate-spin absolute top-1/3 left-[42%] z-50`}
         >
           <path d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity=".25" />
           <path
@@ -202,14 +213,12 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                         {selectedDate.split("-")[1]}.{selectedDate.split("-")[2]} 출석 멤버
                       </h3>
                       {/* 조건 : 미종료스터디, 리더, 오늘, 출석체크비활성화 시 버튼 렌더링 */}
-                      {!isStudyEnd && isLeader && checkDay && !isEditMode && (
-                        <>
-                          <div className="flex justify-center items-center mb-2">
-                            <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
-                              출석체크
-                            </button>
-                          </div>
-                        </>
+                      {checkBtn && (
+                        <div className="flex justify-center items-center mb-2">
+                          <button type="button" onClick={() => setIsEditMode(true)} className="btn-blue self-center">
+                            출석체크
+                          </button>
+                        </div>
                       )}
                       {channelId && isEditMode && (
                         <CheckAttend

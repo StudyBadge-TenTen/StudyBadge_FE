@@ -37,7 +37,9 @@ const ApplicationList = () => {
                 <h3 className=" font-bold text-xl md:text-2xl text-Blue-2">{studyChannel.studyChannelName}</h3>
               </div>
               {/* todo : 신청 상태에 따라 렌더링 */}
-              <p className={`text-xl font-bold ${stateToColorClassName(studyChannel.participationStatus)}`}>
+              <p
+                className={`text-xl font-bold mt-2 sm:mt-0 ${stateToColorClassName(studyChannel.participationStatus)}`}
+              >
                 {ParticipateEnToKr(studyChannel.participationStatus)}
               </p>
             </Link>

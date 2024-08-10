@@ -5,11 +5,16 @@ import axios from "axios";
 import { useAuthStore } from "../../store/auth-store";
 import { useNavigate } from "react-router";
 import { CustomErrorType } from "@/types/common";
+import { getAccountVerification } from "@/services/auth-api";
 
 const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
 
   const navigate = useNavigate();
+
+  const { accessToken } = useAuthStore();
+  const [imageFile, setImageFile] = useState<File>();
+  const [isAccountVerified, setIsAccountVerified] = useState(false);
   const [profileInfo, setProfileInfo] = useState({
     nickname: "",
     introduction: "",
@@ -17,12 +22,11 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
     accountBank: "",
     imgUrl: "",
   });
-  const [imageFile, setImageFile] = useState<File>();
+
   const imageInputRef = useRef<HTMLInputElement>(null);
   const nicknameRef = useRef<HTMLInputElement>(null);
   const accountRef = useRef<HTMLInputElement>(null);
   const accountBankRef = useRef<HTMLSelectElement>(null);
-  const { accessToken } = useAuthStore();
 
   useEffect(() => {
     if (userInfo) {
@@ -56,6 +60,7 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         ...origin,
         accountBank: e.target.value,
       }));
+      setIsAccountVerified(() => false);
     }
     if (e.target.id === "editAccount") {
       if (Number.isNaN(Number(e.target.value))) {
@@ -68,6 +73,7 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
           ...origin,
           account: e.target.value,
         }));
+        setIsAccountVerified(() => false);
       }
     }
   };
@@ -75,8 +81,16 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   // 이미지를 미리보기로 보여줄 함수
   const previewImage = () => {
     if (imageInputRef && imageInputRef.current && imageInputRef.current.files) {
+      const IMG_MAX_SIZE = 1024 * 1024;
       const img = imageInputRef.current.files[0];
-      setImageFile(() => img);
+
+      if (img.size > IMG_MAX_SIZE) {
+        imageInputRef.current.files = null;
+        alert("프로필 이미지는 1MB 이내로 가능합니다.");
+        return;
+      } else {
+        setImageFile(() => img);
+      }
 
       const reader = new FileReader();
       reader.readAsDataURL(img);
@@ -96,6 +110,49 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
       ...origin,
       imgUrl: "",
     }));
+  };
+
+  // 계좌 인증하는 함수
+  const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const bank = BANK_LIST.find((bankObj) => bankObj.name === profileInfo.accountBank);
+
+    if (bank && profileInfo.account) {
+      try {
+        const response = await getAccountVerification(bank.code, profileInfo.account);
+        if (axios.isAxiosError(response)) {
+          const error = response.response?.data as CustomErrorType;
+          alert(error.message);
+          setIsAccountVerified(() => false);
+        } else {
+          if (response.data.accountHolder === userInfo.name) {
+            alert("계좌번호 인증에 성공하였습니다");
+            setIsAccountVerified(() => true);
+          } else {
+            alert("본인 명의의 계좌가 아닙니다. 입력한 이름과 계좌 소유주명이 동일하지 않습니다.");
+            setIsAccountVerified(() => false);
+          }
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const customError = error.response?.data as CustomErrorType;
+          alert(customError.message);
+          setIsAccountVerified(() => false);
+        } else {
+          alert(
+            "계좌번호 인증에 문제가 발생하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+          );
+          setIsAccountVerified(() => false);
+        }
+      }
+    } else if (!bank) {
+      alert("선택한 은행이 존재하지 않습니다.");
+      return;
+    } else if (!profileInfo.account) {
+      alert("계좌번호를 입력해주세요");
+      return;
+    }
   };
 
   // 프로필 수정을 저장할 때 반영하도록 하는 함수
@@ -129,6 +186,15 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         accountBankRef.current.focus();
         return;
       }
+    }
+
+    if (!isAccountVerified) {
+      alert("계좌 인증이 필요합니다");
+      if (accountRef.current) {
+        accountRef.current.classList.add("outline-Red-2");
+        accountRef.current.focus();
+      }
+      return;
     }
 
     if (nicknameRef.current) {
@@ -255,22 +321,32 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
             ref={accountRef}
             required
           ></input>
-          <select
-            name="bank"
-            id="bankDropdown"
-            className="w-fit p-1 border border-solid border-Gray-2 rounded-[10px] mt-2 mb-8"
-            value={profileInfo.accountBank}
-            ref={accountBankRef}
-            onChange={handleChange}
-          >
-            <option value="">-- 금융기관을 선택해주세요 --</option>
-            {BANK_LIST.map((bank) => (
-              <option key={bank} value={bank}>
-                {bank}
-              </option>
-            ))}
-          </select>
+          <div className="flex flex-col items-center sm:flex-row sm:items-start mb-14">
+            <select
+              name="bank"
+              id="bankDropdown"
+              className="w-fit p-1 border border-solid border-Gray-2 rounded-[10px] mt-2"
+              value={profileInfo.accountBank}
+              ref={accountBankRef}
+              onChange={handleChange}
+            >
+              <option value="">-- 금융기관을 선택해주세요 --</option>
+              {BANK_LIST.map((bank) => (
+                <option key={bank.name} value={bank.name}>
+                  {bank.name}
+                </option>
+              ))}
+            </select>
+            {isAccountVerified ? (
+              <div className="text-Green-1 mb-14">계좌인증완료</div>
+            ) : (
+              <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue w-24 mt-2 ml-4">
+                계좌번호 인증
+              </button>
+            )}
+          </div>
           <button
+            type="submit"
             onClick={(e) => handleSaveClick(e, profileInfo, imageFile)}
             className="btn-blue w-fit self-center mt-10"
           >

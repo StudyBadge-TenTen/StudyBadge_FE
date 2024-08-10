@@ -58,7 +58,7 @@ const ParticipateBtn = (): JSX.Element => {
   if (data && data.recruitmentStatus === "RECRUITING") {
     return (
       <>
-        <button onClick={() => handleClick(false)} className="btn-blue px-6 py-4">
+        <button type="button" onClick={() => handleClick(false)} className="btn-blue px-6 py-4">
           스터디 신청하기
         </button>
         {modalOpen && (
@@ -70,10 +70,10 @@ const ParticipateBtn = (): JSX.Element => {
             </div>
             <p className="self-center">스터디 예치금은 충전된 포인트에서 차감됩니다.</p>
             <div className="flex justify-center items-center mt-4">
-              <button onClick={() => handleClick(true)} className="btn-blue w-10">
+              <button type="button" onClick={() => handleClick(true)} className="btn-blue w-10">
                 예
               </button>
-              <button onClick={() => setModalInfo(() => false)} className="btn-blue w-10 ml-2">
+              <button type="button" onClick={() => setModalInfo(() => false)} className="btn-blue w-10 ml-2">
                 아니요
               </button>
             </div>

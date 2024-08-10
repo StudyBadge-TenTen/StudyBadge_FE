@@ -26,7 +26,7 @@ const ProfileBtn = (): JSX.Element => {
   // };
 
   return (
-    <button className="profile-btn mr-8 md:mr-4" onClick={() => handleClick()}>
+    <button type="button" className="profile-btn mr-8 md:mr-4" onClick={() => handleClick()}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="30"

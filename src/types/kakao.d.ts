@@ -11,6 +11,7 @@ declare namespace kakao.maps {
     constructor(container: HTMLElement, options: MapOptions);
     setCenter(latlng: LatLng): void;
     setLevel(level: number): void;
+    getBounds(): LatLngBounds; // 추가된 부분
   }
 
   interface MapOptions {
@@ -21,6 +22,7 @@ declare namespace kakao.maps {
   class Marker {
     constructor(options: MarkerOptions);
     getPosition(): LatLng;
+    setMap(map: Map | null): void; // 추가된 부분
   }
 
   interface MarkerOptions {
@@ -56,6 +58,7 @@ declare namespace kakao.maps {
 
   namespace event {
     function addListener(target: any, type: string, handler: Function): void;
+    function removeListener(target: any, type: string, handler: Function): void; // 추가된 부분
   }
 
   namespace services {

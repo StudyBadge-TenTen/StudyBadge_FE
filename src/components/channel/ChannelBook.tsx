@@ -28,16 +28,9 @@ const ChannelBook = (): JSX.Element => {
   const { data } = useGetStudyInfo(Number(channelId));
   const { selectedDate, setSelectedDate } = useSelectedDateStore();
   const { setSelectedMonth } = useSelectedMonthStore();
-  // const isMemberData = useQuery<boolean, AxiosError>({
-  //   queryKey: ["isMember", channelId],
-  //   queryFn: () => getIsMember(Number(channelId)),
-  //   enabled: !!accessToken, // accessToken이 있는 경우에만 쿼리 실행
-  // });
   const memberTab = ["정보", "일정", "멤버", "출석현황"];
   const transTab = useMemo(() => transTabName(tab ?? "information"), [tab]);
   usePageScrollTop();
-
-  // const today = moment(new Date()).format("YYYY-MM-DD");
 
   // URL에서 탭 상태 설정
   useEffect(() => {
@@ -104,17 +97,17 @@ const ChannelBook = (): JSX.Element => {
         {isStudyEnd && endModal && (
           <Modal>
             해당 스터디 채널은 종료되었습니다.
-            {isMember && data.attendanceRatio && data.refundsAmount && (
+            {isMember && data && (
               <div className="flex flex-col justify-center items-center my-8">
                 <span className="text-lg">
-                  출석률 : <b>{Math.round(data.attendanceRatio)}</b>%
+                  출석률 : <b>{Math.round(data.attendanceRatio ?? 0)}</b>%
                 </span>
                 <span className="text-lg">
                   환급금 : <b>{data.refundsAmount.toLocaleString()}</b>원
                 </span>
               </div>
             )}
-            <button onClick={() => setEndModal(() => false)} className="btn-blue">
+            <button type="button" onClick={() => setEndModal(() => false)} className="btn-blue mt-2">
               확인
             </button>
           </Modal>
@@ -124,6 +117,7 @@ const ChannelBook = (): JSX.Element => {
             {/* todo: '정보', '일정', '멤버', '출석현황', '모집' 탭 필요 */}
             {memberTab.map((tab) => (
               <button
+                type="button"
                 key={`tab_${tab}`}
                 onClick={() => {
                   setTabState(() => tab);
@@ -135,6 +129,7 @@ const ChannelBook = (): JSX.Element => {
             ))}
             {!isStudyEnd && data.leader && (
               <button
+                type="button"
                 onClick={() => {
                   setTabState(() => "모집");
                 }}
@@ -147,7 +142,9 @@ const ChannelBook = (): JSX.Element => {
           <div className="w-[400px] md:w-[768px] lg:w-[854px] h-fit flex flex-col px-4 py-8 md:p-8 relative">
             {!isMember && tabState !== "정보" && (
               <div className="w-full h-full absolute top-0 left-0 bg-Gray-2 opacity-60 rounded-b-[50px] flex justify-center items-center">
-                <p className="text-2xl font-bold opacity-100">해당 스터디 멤버에게만 공개되는 컨텐츠입니다.</p>
+                <p className="px-10 sm:px-0 sm:text-2xl font-bold opacity-100">
+                  해당 스터디 멤버에게만 공개되는 컨텐츠입니다.
+                </p>
               </div>
             )}
             {tabState === "정보" && <Information isStudyEnd={isStudyEnd} />}
