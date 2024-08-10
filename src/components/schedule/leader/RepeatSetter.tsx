@@ -53,6 +53,7 @@ const RepeatSetter = ({ repeatState, setRepeatState, day, setSelector }: RepeatS
             {repeatState === "MONTHLY" && <>매월 {selectedDate.split("-")[2]}일 마다 반복</>}
           </div>
           <button
+            type="button"
             onClick={() => {
               setSelector(() => "");
             }}

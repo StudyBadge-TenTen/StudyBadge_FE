@@ -5,7 +5,11 @@ const AddScheduleBtn = ({ originInfo }: { originInfo: false | ScheduleType | und
   const navigate = useNavigate();
 
   return (
-    <button className="btn-blue self-end mt-4" onClick={() => navigate("schedule_edit", { state: { originInfo } })}>
+    <button
+      type="button"
+      className="btn-blue self-end mt-4"
+      onClick={() => navigate("schedule_edit", { state: { originInfo } })}
+    >
       {originInfo ? "일정 변경" : "일정 등록"}
     </button>
   );

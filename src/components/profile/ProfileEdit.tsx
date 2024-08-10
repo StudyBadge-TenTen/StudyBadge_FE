@@ -113,7 +113,9 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   };
 
   // 계좌 인증하는 함수
-  const verifyAccount = async () => {
+  const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    e.preventDefault();
     const bank = BANK_LIST.find((bankObj) => bankObj.name === profileInfo.accountBank);
 
     if (bank && profileInfo.account) {
@@ -338,12 +340,13 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
             {isAccountVerified ? (
               <div className="text-Green-1 mb-14">계좌인증완료</div>
             ) : (
-              <button onClick={() => verifyAccount()} className="btn-blue w-24 mt-2 ml-4">
+              <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue w-24 mt-2 ml-4">
                 계좌번호 인증
               </button>
             )}
           </div>
           <button
+            type="submit"
             onClick={(e) => handleSaveClick(e, profileInfo, imageFile)}
             className="btn-blue w-fit self-center mt-10"
           >

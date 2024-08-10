@@ -105,6 +105,7 @@ const Checkout = ({
         {/* 결제하기 버튼 */}
         <div className="flex justify-center mt-[30px]">
           <button
+            type="button"
             id="cancelBtn"
             className="button btn-blue mr-8"
             onClick={() => {
@@ -114,7 +115,7 @@ const Checkout = ({
           >
             취소하기
           </button>
-          <button id="paymentBtn" className="button btn-blue" onClick={() => handlePayClick()}>
+          <button type="button" id="paymentBtn" className="button btn-blue" onClick={() => handlePayClick()}>
             결제하기
           </button>
         </div>

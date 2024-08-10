@@ -154,6 +154,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                       </div>
                       {/* 리더에게만 보여질 버튼 */}
                       <button
+                        type="button"
                         id="subLeaderBtn"
                         className={`${(member.role === "LEADER" || member.role === "SUB_LEADER") && "hidden"} btn-blue px-3 py-2 w-28`}
                         onClick={(e) => handleClick(e, member.studyMemberId, member.name)}
@@ -161,6 +162,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                         서브리더로 지정
                       </button>
                       <button
+                        type="button"
                         id="banishBtn"
                         className={`${member.role === "LEADER" && "hidden"} btn-red px-3 py-2 w-28`}
                         onClick={(e) => handleClick(e, member.studyMemberId)}
@@ -173,6 +175,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                             {modalState.content}
                             <div className="flex justify-center items-center mt-10">
                               <button
+                                type="button"
                                 className="yes-btn btn-blue w-10 mr-4"
                                 onClick={(e) =>
                                   handleConfirm(e, studyMemberState.id ?? member.studyMemberId, studyMemberState.name)
@@ -181,6 +184,7 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                                 예
                               </button>
                               <button
+                                type="button"
                                 className="no-btn btn-blue"
                                 onClick={() => setModalState((origin) => ({ ...origin, isOpen: false }))}
                               >

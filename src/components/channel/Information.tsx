@@ -137,13 +137,17 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
               : "해당 스터디 멤버에게만 공개"}
           {isEditMode && index === 6 && (
             <>
-              <button onClick={handleModalOpen} className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4">
+              <button
+                type="button"
+                onClick={handleModalOpen}
+                className="btn-blue h-6 text-sm text-center px-2 py-1 ml-4"
+              >
                 변경
               </button>
               {modal && (
                 <Modal>
                   <MemberList isStudyEnd={isStudyEnd} setNewSubLeader={setNewSubLeader} setModal={setModal} />
-                  <button onClick={handleModalClose} className="cancel-btn btn-blue">
+                  <button type="button" onClick={handleModalClose} className="cancel-btn btn-blue">
                     취소
                   </button>
                 </Modal>
@@ -172,6 +176,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
         {/* 리더에게만 보일 수정 버튼 */}
         {isMember && data?.leader && !isStudyEnd && channelId && newStudyInfo && (
           <button
+            type="button"
             onClick={
               isEditMode ? handleSave : () => navigate("information_edit", { state: { tab: "정보", edit: true } })
             }
@@ -181,7 +186,7 @@ const Information = ({ isStudyEnd }: { isStudyEnd: boolean }): JSX.Element => {
           </button>
         )}
         {isEditMode && (
-          <button onClick={handleCancel} className="btn-blue self-end ml-2 mb-4">
+          <button type="button" onClick={handleCancel} className="btn-blue self-end ml-2 mb-4">
             취소
           </button>
         )}

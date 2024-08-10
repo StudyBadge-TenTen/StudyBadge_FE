@@ -19,6 +19,7 @@ const Main = (): JSX.Element => {
             지금 바로 새로운 스터디 그룹을 생성하고, 멤버들을 모아보세요!
           </p>
           <button
+            type="button"
             onClick={() => {
               if (!accessToken) {
                 alert("로그인 후 이용하실 수 있습니다.");
