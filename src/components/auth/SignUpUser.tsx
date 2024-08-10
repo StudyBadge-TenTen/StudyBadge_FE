@@ -19,9 +19,14 @@ const SignUp: React.FC = () => {
     e.preventDefault();
     const bank = BANK_LIST.find((bankObj) => bankObj.name === authStore.accountBank);
 
-    if (bank && authStore.account) {
+    if (!authStore.name) {
+      alert("계좌 인증을 위해 이름을 작성해주시기 바랍니다.");
+      return;
+    }
+
+    if (bank && authStore.account && authStore.name) {
       try {
-        const response = await getAccountVerification(bank.code, authStore.account);
+        const response = await getAccountVerification(bank.code, authStore.account, authStore.name);
         if (axios.isAxiosError(response)) {
           const error = response.response?.data as CustomErrorType;
           alert(error.message);
