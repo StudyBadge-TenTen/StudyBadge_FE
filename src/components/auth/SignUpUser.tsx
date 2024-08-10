@@ -14,7 +14,9 @@ const SignUp: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const authStore = useAuthStore();
 
-  const verifyAccount = async () => {
+  const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    e.preventDefault();
     const bank = BANK_LIST.find((bankObj) => bankObj.name === authStore.accountBank);
 
     if (bank && authStore.account) {
@@ -194,7 +196,7 @@ const SignUp: React.FC = () => {
               (isAccountVerified ? (
                 <div className="text-Green-1 mb-14">계좌인증완료</div>
               ) : (
-                <button onClick={() => verifyAccount()} className="btn-blue mb-14">
+                <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue mb-14">
                   계좌번호 인증
                 </button>
               ))}

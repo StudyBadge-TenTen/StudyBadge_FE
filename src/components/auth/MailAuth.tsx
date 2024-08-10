@@ -36,7 +36,7 @@ const MailAuth = (): JSX.Element => {
         <Modal>
           <div className="flex flex-col justify-center items-center">
             이메일 인증을 위해 확인 버튼을 눌러주세요
-            <button onClick={() => handleClick()} className="btn-blue mt-4 w-10">
+            <button type="button" onClick={() => handleClick()} className="btn-blue mt-4 w-10">
               확인
             </button>
           </div>
@@ -46,6 +46,7 @@ const MailAuth = (): JSX.Element => {
           <div className="flex flex-col justify-center items-center">
             이메일 인증에 성공하였습니다
             <button
+              type="button"
               onClick={() => {
                 setSuccess(() => false);
                 navigate("/login");

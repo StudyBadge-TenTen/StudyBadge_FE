@@ -54,6 +54,7 @@ const Filter = (): JSX.Element => {
         <span className="text-Gray-4">방식</span>
         <div className="flex items-center mt-2">
           <button
+            type="button"
             id="offlineFilter"
             className={`btn-blue rounded-r-none text-xs md:text-sm break-keep ml-2 ${filter.type === "OFFLINE" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
@@ -61,6 +62,7 @@ const Filter = (): JSX.Element => {
             오프라인
           </button>
           <button
+            type="button"
             id="onlineFilter"
             className={`btn-blue rounded-l-none text-xs md:text-sm break-keep ml-1 ${filter.type === "ONLINE" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
@@ -75,6 +77,7 @@ const Filter = (): JSX.Element => {
         <span className="text-Gray-4">상태</span>
         <div className="flex items-center mt-2">
           <button
+            type="button"
             id="recruitingFilter"
             className={`btn-blue rounded-r-none text-xs md:text-sm break-keep ml-2 ${filter.status === "RECRUITING" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
@@ -82,6 +85,7 @@ const Filter = (): JSX.Element => {
             모집중
           </button>
           <button
+            type="button"
             id="recruitedFilter"
             className={`btn-blue rounded-l-none text-xs md:text-sm break-keep ml-1 ${filter.status === "RECRUIT_COMPLETED" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
@@ -94,6 +98,7 @@ const Filter = (): JSX.Element => {
         <span className="text-Gray-4">카테고리</span>
         <div className="flex flex-wrap sm:flex-nowrap justify-center items-center mt-2">
           <button
+            type="button"
             id="computerCategory"
             className={`btn-blue sm:rounded-r-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 ${filter.category === "IT" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
@@ -101,6 +106,7 @@ const Filter = (): JSX.Element => {
             컴퓨터/IT/개발
           </button>
           <button
+            type="button"
             id="languageCategory"
             className={`btn-blue sm:rounded-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 ${filter.category === "LANGUAGE" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
@@ -108,6 +114,7 @@ const Filter = (): JSX.Element => {
             언어/어학
           </button>
           <button
+            type="button"
             id="employmentCategory"
             className={`btn-blue sm:rounded-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 ${filter.category === "EMPLOYMENT" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}
@@ -115,6 +122,7 @@ const Filter = (): JSX.Element => {
             취업/이직
           </button>
           <button
+            type="button"
             id="selfDevelopCategory"
             className={`btn-blue sm:rounded-l-none text-xs md:text-sm break-keep mx-5 xs:mr-0 xs:ml-2 mt-2 xs:mt-0 ${filter.category === "SELF_DEVELOPMENT" && "bg-Blue-1"}`}
             onClick={(e) => handleFilterClick(e)}

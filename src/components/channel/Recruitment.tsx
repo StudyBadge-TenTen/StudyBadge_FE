@@ -125,7 +125,7 @@ const Recruitment = (): JSX.Element => {
             <div className="h-full overflow-y-scroll custom-scroll px-4 flex flex-col justify-center items-center">
               <p className="text-Gray-3">현재 모집 마감 상태입니다</p>
               <p className="text-Gray-3">멤버를 모집하시겠습니까?</p>
-              <button onClick={() => handleRecruitStart()} className="btn-blue w-24 mt-8">
+              <button type="button" onClick={() => handleRecruitStart()} className="btn-blue w-24 mt-8">
                 모집 시작
               </button>
             </div>
@@ -179,6 +179,7 @@ const Recruitment = (): JSX.Element => {
                         {participant.participationStatus === "APPROVE_WAITING" ? (
                           <div className="flex mt-2">
                             <button
+                              type="button"
                               id={`${participant.participationId}-noBtn`}
                               onClick={handleClick}
                               className="no-btn btn-blue w-10 mr-4"
@@ -186,6 +187,7 @@ const Recruitment = (): JSX.Element => {
                               거절
                             </button>
                             <button
+                              type="button"
                               id={`${participant.participationId}-yesBtn`}
                               onClick={handleClick}
                               className="yes-btn btn-blue w-10 "
@@ -202,6 +204,7 @@ const Recruitment = (): JSX.Element => {
                               {modalState.content}
                               <div className="flex justify-center items-center mt-10">
                                 <button
+                                  type="button"
                                   id={`${participateId}-modal-yes`}
                                   className="yes-btn btn-blue w-10 mr-4"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
@@ -209,6 +212,7 @@ const Recruitment = (): JSX.Element => {
                                   예
                                 </button>
                                 <button
+                                  type="button"
                                   id={`${participateId}-modal-no`}
                                   className="no-btn btn-blue"
                                   onClick={(e) => handleConfirm(e, Number(channelId), participateId)}
@@ -231,7 +235,7 @@ const Recruitment = (): JSX.Element => {
                 </p>
               )}
               <div className="w-full flex justify-center items-center">
-                <button onClick={() => handleRecruitEnd()} className="btn-blue w-24 mt-8">
+                <button type="button" onClick={() => handleRecruitEnd()} className="btn-blue w-24 mt-8">
                   모집마감
                 </button>
               </div>

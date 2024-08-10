@@ -43,6 +43,7 @@ const CustomOverlay = ({
       <div className="info">
         <div className="title w-full h-fit bg-Blue-2 text-white p-1 py-2 rounded-t-[30px] text-center flex flex-col justify-center items-center">
           <button
+            type="button"
             className="inline-block text-black close px-2 mr-3 bg-white rounded-full self-end"
             onClick={onClose}
             title="닫기"
@@ -61,6 +62,7 @@ const CustomOverlay = ({
             </div>
             {selectedCafe && (
               <button
+                type="button"
                 onClick={(e) => {
                   handleButtonClick(e, selectedCafe);
                 }}

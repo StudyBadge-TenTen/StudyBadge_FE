@@ -76,11 +76,13 @@ const Pagination = ({
   return (
     <div className="flex justify-center items-center mt-10">
       <button
+        type="button"
         className={`prev-btn btn-blue rounded-r-none mr-1 ${curPageGroup === 1 && "cursor-default bg-Gray-2 hover:bg-Gray-2"}`}
         onClick={(e) => handlePageClick(e)}
       >{`<`}</button>
       {pageList.map((page) => (
         <button
+          type="button"
           key={`page_${page}`}
           className={`page-btn btn-blue rounded-none ${type === "CHANNEL" ? filter && page === filter.page && "bg-Blue-1" : pageState === page && "bg-Blue-1"}`}
           onClick={(e) => handlePageClick(e)}
@@ -89,6 +91,7 @@ const Pagination = ({
         </button>
       ))}
       <button
+        type="button"
         className={`next-btn btn-blue rounded-l-none ml-1 ${type === "CHANNEL" ? curPageGroup === lastPageGroup && "cursor-default bg-Gray-2 hover:bg-Gray-2" : (!historyList || historyList.length === 0) && "cursor-default bg-Gray-2 hover:bg-Gray-2"}`}
         onClick={(e) => handlePageClick(e)}
       >{`>`}</button>

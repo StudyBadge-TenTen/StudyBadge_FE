@@ -93,6 +93,7 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
                       {isPossibleCancel(data) ? (
                         <>
                           <button
+                            type="button"
                             className="btn-red px-2 py-1 mr-4"
                             onClick={() => handleCancelClick(false, data.paymentKey)}
                           >
@@ -102,10 +103,18 @@ const HistoryList = ({ type }: { type: "POINT" | "PAYMENT" }): JSX.Element => {
                             <Modal>
                               해당 결제를 취소하시겠습니까?
                               <div className="flex justify-center items-center mt-4">
-                                <button onClick={() => handleCancelClick(true, cancelPayKey)} className="btn-blue w-10">
+                                <button
+                                  type="button"
+                                  onClick={() => handleCancelClick(true, cancelPayKey)}
+                                  className="btn-blue w-10"
+                                >
                                   예
                                 </button>
-                                <button onClick={() => setModalOpen(() => false)} className="btn-blue w-10 ml-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setModalOpen(() => false)}
+                                  className="btn-blue w-10 ml-2"
+                                >
                                   아니오
                                 </button>
                               </div>

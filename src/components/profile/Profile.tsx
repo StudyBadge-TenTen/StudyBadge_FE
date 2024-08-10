@@ -99,7 +99,11 @@ const Profile = (): JSX.Element => {
                   <span className="text-2xl">{data.nickname}</span>
                 </div>
                 <div className="flex justify-end">
-                  <button className="btn-blue px-3 py-2 text-xs md:mr-8" onClick={() => setIsEditMode(true)}>
+                  <button
+                    type="button"
+                    className="btn-blue px-3 py-2 text-xs md:mr-8"
+                    onClick={() => setIsEditMode(true)}
+                  >
                     수정하기
                   </button>
                 </div>
@@ -116,6 +120,7 @@ const Profile = (): JSX.Element => {
                 충전금액 : <span className="ml-4 font-bold">{data.point && data.point.toLocaleString()}원</span>
               </div>
               <button
+                type="button"
                 onClick={() => {
                   navigate("/profile/payment");
                 }}

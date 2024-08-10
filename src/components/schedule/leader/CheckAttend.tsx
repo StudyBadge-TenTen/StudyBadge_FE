@@ -97,6 +97,7 @@ const CheckAttend = ({
             Array.isArray(memberListData.data.studyMembers) &&
             memberListData.data.studyMembers.map((member) => (
               <button
+                type="button"
                 key={member.studyMemberId}
                 onClick={() => handleCheckClick(member.studyMemberId)}
                 className="member w-fit h-fit flex flex-col justify-center items-center mx-2 relative"
@@ -136,7 +137,7 @@ const CheckAttend = ({
               </button>
             ))}
         </div>
-        <button onClick={() => handleSubmitClick()} className="btn-blue self-center">
+        <button type="button" onClick={() => handleSubmitClick()} className="btn-blue self-center">
           체크완료
         </button>
       </div>

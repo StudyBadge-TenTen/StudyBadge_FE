@@ -107,7 +107,7 @@ const ChannelBook = (): JSX.Element => {
                 </span>
               </div>
             )}
-            <button onClick={() => setEndModal(() => false)} className="btn-blue mt-2">
+            <button type="button" onClick={() => setEndModal(() => false)} className="btn-blue mt-2">
               확인
             </button>
           </Modal>
@@ -117,6 +117,7 @@ const ChannelBook = (): JSX.Element => {
             {/* todo: '정보', '일정', '멤버', '출석현황', '모집' 탭 필요 */}
             {memberTab.map((tab) => (
               <button
+                type="button"
                 key={`tab_${tab}`}
                 onClick={() => {
                   setTabState(() => tab);
@@ -128,6 +129,7 @@ const ChannelBook = (): JSX.Element => {
             ))}
             {!isStudyEnd && data.leader && (
               <button
+                type="button"
                 onClick={() => {
                   setTabState(() => "모집");
                 }}

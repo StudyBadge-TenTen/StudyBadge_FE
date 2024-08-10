@@ -96,7 +96,11 @@ const Header = (): JSX.Element => {
       />
       <section className="header w-full h-32 flex justify-center items-center bg-white fixed z-40 top-0 shadow-md">
         <div className="w-[1025px] flex justify-between md:justify-center items-center">
-          <button onClick={() => setSearchOpen((origin) => !origin)} className="search-btn md:hidden ml-8">
+          <button
+            type="button"
+            onClick={() => setSearchOpen((origin) => !origin)}
+            className="search-btn md:hidden ml-8"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -130,6 +134,7 @@ const Header = (): JSX.Element => {
             <div className="flex justify-center items-center">
               <ProfileBtn />
               <button
+                type="button"
                 className="bell-btn hidden md:inline-block mr-4 relative"
                 onClick={() => handleBellBtnClick(accessToken)}
               >
@@ -150,11 +155,15 @@ const Header = (): JSX.Element => {
               </button>
             </div>
             {accessToken ? (
-              <button className={`hidden md:inline-block btn-blue`} onClick={async () => setModalOpen(() => true)}>
+              <button
+                type="button"
+                className={`hidden md:inline-block btn-blue`}
+                onClick={async () => setModalOpen(() => true)}
+              >
                 로그아웃
               </button>
             ) : (
-              <button className={`hidden md:inline-block btn-blue`} onClick={() => navigate("/login")}>
+              <button type="button" className={`hidden md:inline-block btn-blue`} onClick={() => navigate("/login")}>
                 로그인
               </button>
             )}
@@ -162,10 +171,10 @@ const Header = (): JSX.Element => {
               <Modal>
                 정말 로그아웃 하시겠습니까?
                 <div className="flex justify-center items-center mt-4">
-                  <button onClick={() => handleLogoutClick()} className="btn-blue w-10">
+                  <button type="button" onClick={() => handleLogoutClick()} className="btn-blue w-10">
                     예
                   </button>
-                  <button onClick={() => setModalOpen(false)} className="btn-blue w-10 ml-2">
+                  <button type="button" onClick={() => setModalOpen(false)} className="btn-blue w-10 ml-2">
                     아니요
                   </button>
                 </div>

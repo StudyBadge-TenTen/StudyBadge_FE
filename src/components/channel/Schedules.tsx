@@ -215,7 +215,7 @@ const Schedules = ({ selectedDateParam, isLeader, isStudyEnd }: SchedulesPropsTy
                       {/* 조건 : 미종료스터디, 리더, 오늘, 출석체크비활성화 시 버튼 렌더링 */}
                       {checkBtn && (
                         <div className="flex justify-center items-center mb-2">
-                          <button onClick={() => setIsEditMode(true)} className="btn-blue self-center">
+                          <button type="button" onClick={() => setIsEditMode(true)} className="btn-blue self-center">
                             출석체크
                           </button>
                         </div>
