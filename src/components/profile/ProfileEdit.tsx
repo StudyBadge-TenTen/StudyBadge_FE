@@ -120,20 +120,9 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
 
     if (bank && profileInfo.account) {
       try {
-        const response = await getAccountVerification(bank.code, profileInfo.account);
-        if (axios.isAxiosError(response)) {
-          const error = response.response?.data as CustomErrorType;
-          alert(error.message);
-          setIsAccountVerified(() => false);
-        } else {
-          if (response.data.accountHolder === userInfo.name) {
-            alert("계좌번호 인증에 성공하였습니다");
-            setIsAccountVerified(() => true);
-          } else {
-            alert("본인 명의의 계좌가 아닙니다. 입력한 이름과 계좌 소유주명이 동일하지 않습니다.");
-            setIsAccountVerified(() => false);
-          }
-        }
+        await getAccountVerification(bank.code, profileInfo.account);
+        alert("계좌번호 인증에 성공하였습니다");
+        setIsAccountVerified(() => true);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const customError = error.response?.data as CustomErrorType;
