@@ -95,6 +95,11 @@ const SignUp: React.FC = () => {
         setIsAccountVerified(() => false);
       }
     }
+    if (e.target.id === "이름") {
+      if (isAccountVerified) {
+        setIsAccountVerified(() => false);
+      }
+    }
     authStore.setField(nameToField(formName), e.target.value);
   };
 
