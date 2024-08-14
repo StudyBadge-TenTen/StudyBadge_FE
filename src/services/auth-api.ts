@@ -107,13 +107,23 @@ export const patchResetPassword = async (email: string, newPassword: string) => 
 export const getAccountVerification = async (bankCode: string, bankNum: string, name?: string) => {
   let response;
   if (name) {
-    response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/cert`, "get", {
-      bankCode,
-      bankNum,
-      name,
-    });
+    response = await fetchCall<AxiosResponse | AxiosError>(
+      `/api/signUp/cert`,
+      "get",
+      {
+        bankCode,
+        bankNum,
+        name,
+      },
+      { bankCode, bankNum, name },
+    );
   } else {
-    response = await fetchCall<AxiosResponse | AxiosError>(`/api/members/cert`, "get", { bankCode, bankNum });
+    response = await fetchCall<AxiosResponse | AxiosError>(
+      `/api/members/cert`,
+      "get",
+      { bankCode, bankNum },
+      { bankCode, bankNum },
+    );
   }
   return response;
 };
