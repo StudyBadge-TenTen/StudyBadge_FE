@@ -27,6 +27,7 @@ interface UserInfoType {
   badgeLevel: BadgeType;
   account: string;
   accountBank: string;
+  isAccountCert: boolean;
   introduction: string;
   imgUrl: string;
   point: number;
