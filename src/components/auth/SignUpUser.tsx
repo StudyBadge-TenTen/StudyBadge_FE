@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/auth-store";
 import { nameToField, nameToType, returnPlaceholder } from "../../utils/transform-function";
 import { BANK_LIST } from "../../constants/bank-list";
@@ -13,6 +13,12 @@ const SignUp: React.FC = () => {
   const [isAccountVerified, setIsAccountVerified] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const authStore = useAuthStore();
+
+  useEffect(() => {
+    if (isAccountVerified) {
+      authStore.setField("isAccountCert", true);
+    }
+  }, [isAccountVerified]);
 
   const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
