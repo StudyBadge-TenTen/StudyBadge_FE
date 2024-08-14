@@ -19,6 +19,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   introduction: "",
   accountBank: "",
   account: "",
+  isAccountCert: false,
   password: "",
   checkPassword: "",
   accessToken: null,
@@ -51,7 +52,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
     }
   },
   signUp: async () => {
-    const { email, name, nickname, introduction, accountBank, account, password, checkPassword } = get();
+    const { email, name, nickname, introduction, accountBank, account, isAccountCert, password, checkPassword } = get();
     const response = await postSignUp({
       email,
       name,
@@ -59,6 +60,7 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       introduction,
       accountBank,
       account,
+      isAccountCert,
       password,
       checkPassword,
     });
