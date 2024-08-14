@@ -5,6 +5,7 @@ import {
   attendList,
   memberListResponse,
   myStudyList,
+  notificationList,
   paymentResponse,
   paymentsList,
   paymentSuccessResponse,
@@ -252,7 +253,6 @@ export const handlers = [
   // auth handlers
   http.post(`/oauth2/authorization/kakao`, async ({ request }) => {
     const url = new URL(request.url);
-
     const code = url.searchParams.get("code");
 
     console.log(`Captured a "POST /oauth2/authorization/kakao?code=${code}" request`);
@@ -260,10 +260,19 @@ export const handlers = [
   }),
   http.post(`/oauth2/authorization/naver`, async ({ request }) => {
     const url = new URL(request.url);
-
     const code = url.searchParams.get("code");
 
     console.log(`Captured a "POST /oauth2/authorization/naver?code=${code}" request`);
     return HttpResponse.json({ status: 200 });
+  }),
+
+  // notification handlers
+  http.get("/api/notifications", async ({ request }) => {
+    const url = new URL(request.url);
+    const page = url.searchParams.get("page");
+    const size = url.searchParams.get("size");
+
+    console.log(`Captured a "GET /api/notifications?page=${page}&size=${size}&sort=createdAt" request`);
+    return HttpResponse.json(notificationList);
   }),
 ];

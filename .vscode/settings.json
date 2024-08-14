@@ -4,6 +4,7 @@
     "source.fixAll.eslint": "always"
   },
   "cSpell.words": [
+    "ACCESSTOKEN",
     "appkey",
     "autoload",
     "BRANDPAY",
@@ -16,6 +17,7 @@
     "latlng",
     "Naver",
     "Noti",
+    "REFRESHTOKEN",
     "tailwindcss",
     "tanstack",
     "tosspayments",

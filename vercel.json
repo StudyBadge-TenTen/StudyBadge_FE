@@ -1,13 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" },
-    {
-      "source": "/api/:path*",
-      "destination": "https://study-badge.shop/:path*"
-    },
-    {
-      "source": "/api/:path*/",
-      "destination": "https://study-badge.shop/:path*/"
-    }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
