@@ -188,7 +188,7 @@ const SignUp: React.FC = () => {
             </div>
             {formName === "계좌번호" &&
               (isAccountVerified ? (
-                <div className="text-Green-1 mb-14">계좌인증완료</div>
+                <div className="px-4 py-3 text-sm text-Green-1 mb-14">계좌인증완료</div>
               ) : (
                 <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue mb-14">
                   계좌번호 인증

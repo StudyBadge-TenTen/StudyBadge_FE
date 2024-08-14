@@ -38,6 +38,11 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         accountBank: userInfo.accountBank,
         imgUrl: userInfo.imgUrl,
       }));
+      if (userInfo.isAccountCert) {
+        setIsAccountVerified(() => true);
+      } else {
+        setIsAccountVerified(() => false);
+      }
     }
   }, [userInfo]);
 
@@ -327,7 +332,7 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
               ))}
             </select>
             {isAccountVerified ? (
-              <div className="text-Green-1 mb-14">계좌인증완료</div>
+              <div className="px-4 py-3 text-sm text-Green-1 mb-14">계좌인증완료</div>
             ) : (
               <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue w-24 mt-2 ml-4">
                 계좌번호 인증
