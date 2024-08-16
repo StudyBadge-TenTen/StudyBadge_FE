@@ -189,6 +189,12 @@ export const handlers = [
   }),
 
   // studyChannel handlers
+  http.post("/api/study-channels", async ({ request }) => {
+    const requestBody = await request.json();
+    console.log(`Captured a "POST /api/study-channels" request`);
+    console.log(requestBody);
+    return HttpResponse.json({ studyChannelId: 1 });
+  }),
   http.get("/api/study-channels/:studyChannelId", async ({ params }) => {
     console.log(`Captured a "GET /api/study-channels/${params.studyChannelId}" request`);
     return HttpResponse.json(studyInfoResponse);
@@ -247,6 +253,10 @@ export const handlers = [
     console.log(
       `Captured a "POST /api/study-channels/${params.studyChannelId}/members/${params.studyMemberId}/ban" request`,
     );
+    return HttpResponse.json({ status: 200 });
+  }),
+  http.post("/api/study-channels/:studyChannelId/check-attendance", async ({ params }) => {
+    console.log(`Captured a "POST /api/study-channels/${params.studyChannelId}/check-attendance" request`);
     return HttpResponse.json({ status: 200 });
   }),
 
