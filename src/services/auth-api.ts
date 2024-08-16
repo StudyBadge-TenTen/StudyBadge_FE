@@ -8,7 +8,7 @@ export const postLogin = async (email: string, password: string): Promise<LoginR
   try {
     const response = await axios.post<LoginResponse>(
       `${API_BASE_URL}/api/members/login`,
-      { email: email, password: password },
+      { email, password },
       { withCredentials: true }, // withCredentials 옵션 추가
     );
 
@@ -106,12 +106,12 @@ export const patchResetPassword = async (email: string, newPassword: string) => 
 
 export const getAccountVerification = async (bankCode: string, bankNum: string, name?: string) => {
   if (name) {
-    await fetchCall<AxiosResponse | AxiosError>(`/api/cert/sign-up`, "get", {
-      bankCode: bankCode,
-      bankNum: bankNum,
-      name: name,
+    await fetchCall<AxiosResponse | AxiosError>(`/api/cert/sign-up`, "get", null, {
+      bankCode,
+      bankNum,
+      name,
     });
   } else {
-    await fetchCall<AxiosResponse | AxiosError>(`/api/cert/account`, "get", { bankCode: bankCode, bankNum: bankNum });
+    await fetchCall<AxiosResponse | AxiosError>(`/api/cert/account`, "post", { bankCode, bankNum });
   }
 };

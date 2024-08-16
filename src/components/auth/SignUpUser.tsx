@@ -113,21 +113,20 @@ const SignUp: React.FC = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      const response = await authStore.signUp();
-      if (!response) {
-        alert("회원가입이 완료되었습니다.");
-        authStore.reset();
-        setIsSubmitted(true);
-      }
-      if (axios.isAxiosError(response)) {
-        const error = response.response?.data as CustomErrorType;
-        alert(error.message);
-      }
+      await authStore.signUp();
+      alert("회원가입이 완료되었습니다.");
+      authStore.reset();
+      setIsSubmitted(true);
     } catch (error: any) {
-      console.error("회원가입 실패:", error);
-      alert(
-        "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-      );
+      if (axios.isAxiosError(error)) {
+        const customError = error.response?.data as CustomErrorType;
+        alert(customError.message);
+      } else {
+        console.error("회원가입 실패:", error);
+        alert(
+          "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+        );
+      }
     }
   };
 
