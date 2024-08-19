@@ -27,14 +27,14 @@ export const scheduleList = [
   {
     id: 2,
     studyChannelId: 1,
-    scheduleName: "Monthly Team Meeting",
-    scheduleContent: "Discussion on project progress and planning",
-    scheduleDate: "2024-07-05",
+    scheduleName: "월간 코딩 테스트",
+    scheduleContent: "월마다 코딩 테스트 있습니다!",
+    scheduleDate: "2024-08-19",
     scheduleStartTime: "10:00:00",
-    scheduleEndTime: "11:00:00",
+    scheduleEndTime: "12:00:00",
     repeatCycle: "MONTHLY",
-    repeatSituation: "MONTHLY_FIVE",
-    repeatEndDate: "2024-12-31",
+    repeatSituation: "MONTHLY_NINETEEN",
+    repeatEndDate: "2024-09-30",
     repeated: true,
   },
 ];
@@ -69,7 +69,7 @@ export const attendList = [
     name: "김철수",
     imageUrl: "imageUrl",
     attendanceStatus: "ATTENDANCE",
-    attendance: true,
+    attendance: false,
   },
 ];
 
@@ -294,7 +294,7 @@ export const studyInfoResponse = {
   studyChannelId: 1,
   studyChannelName: "내일은 코딩왕",
   studyChannelDescription:
-    "내일은 코딩왕 스터디 모임입니다. 매주 모여서 코딩을 합니다. 코딩에 관심있으신 분들 신청주세요!",
+    "내일은 코딩왕 스터디 모임은 코딩 테스트를 준비 중인 사람들끼리 모여서 대비하는 스터디 모임입니다. 매일 5개의 문제를 필수로 푸는 걸 목표로 하고 있습니다. 꾸준히 참여 가능하신 분들 신청부탁드립니다!",
   chattingUrl: "http://study-chattingurl",
   capacity: 10,
   category: "IT",
@@ -378,11 +378,11 @@ export const recruitmentResponse = {
     {
       memberId: 7,
       imageUrl: "imageUrl",
-      name: "이스뱃",
+      name: "김스뱃",
       banCnt: 0,
       badgeLevel: "NONE",
       participationId: 1,
-      participationStatus: "APPROVE_WAITING",
+      participationStatus: "APPROVED",
     },
     {
       memberId: 8,
