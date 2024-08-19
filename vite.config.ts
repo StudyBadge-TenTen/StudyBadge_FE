@@ -27,3 +27,13 @@ export default defineConfig({
     },
   },
 });
+
+// 서버 중단 - vercel.json에서 아래 코드 제거
+// {
+//   "source": "/api/:path*",
+//   "destination": "https://study-badge.shop/:path*"
+// },
+// {
+//   "source": "/api/:path*/",
+//   "destination": "https://study-badge.shop/:path*/"
+// }

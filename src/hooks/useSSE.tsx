@@ -24,6 +24,12 @@ export const useSSE = () => {
   }, [setField]);
 
   useEffect(() => {
+    // 목데이터용 코드 (서버 없이 msw 이용 시 sse 연결하지 않음)
+    if (accessToken) {
+      console.log("useSSE - 현재 로그인상태가 아닙니다. 로그인 상태가 아닐 경우, 재연결하지 않음");
+      return;
+    }
+
     // 로그인 상태가 아닐 경우, 재연결하지 않음
     if (isLoginFailed || !accessToken) {
       console.log("useSSE - 현재 로그인상태가 아닙니다. 로그인 상태가 아닐 경우, 재연결하지 않음");

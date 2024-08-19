@@ -13,6 +13,7 @@ interface SignUpData {
   introduction: string;
   accountBank: string;
   account: string;
+  isAccountCert: boolean;
   password: string;
   checkPassword: string;
 }
@@ -24,6 +25,7 @@ interface AuthStoreType {
   introduction: string;
   accountBank: string;
   account: string;
+  isAccountCert: boolean;
   password: string;
   checkPassword: string;
   accessToken: string | null;
@@ -32,7 +34,10 @@ interface AuthStoreType {
   isMember: boolean;
   setLoginFailed: (status: boolean) => void;
   setIsMember: (isMember: boolean) => void;
-  setField: (field: keyof Omit<AuthStoreType, "setField" | "resetForm" | "login" | "signUp">, value: string) => void;
+  setField: (
+    field: keyof Omit<AuthStoreType, "setField" | "resetForm" | "login" | "signUp">,
+    value: string | boolean,
+  ) => void;
   login: (email: string, password: string) => Promise<void>;
   signUp: () => Promise<AxiosResponse | AxiosError>;
   reset: () => void;

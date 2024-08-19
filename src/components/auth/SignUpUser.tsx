@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/auth-store";
 import { nameToField, nameToType, returnPlaceholder } from "../../utils/transform-function";
 import { BANK_LIST } from "../../constants/bank-list";
 import PageScrollTop from "../common/PageScrollTop";
 import { CustomErrorType } from "@/types/common";
 import axios from "axios";
-// import { getAccountVerification } from "@/services/auth-api";
+import { getAccountVerification } from "@/services/auth-api";
 
 const SignUp: React.FC = () => {
   const formListFirst = ["이메일", "이름", "비밀번호", "비밀번호확인"];
@@ -14,52 +14,47 @@ const SignUp: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const authStore = useAuthStore();
 
-  // const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-  //   e.stopPropagation();
-  //   e.preventDefault();
-  //   const bank = BANK_LIST.find((bankObj) => bankObj.name === authStore.accountBank);
+  useEffect(() => {
+    if (isAccountVerified) {
+      authStore.setField("isAccountCert", true);
+    }
+  }, [isAccountVerified]);
 
-  //   if (!authStore.name) {
-  //     alert("계좌 인증을 위해 이름을 작성해주시기 바랍니다.");
-  //     return;
-  //   }
+  const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const bank = BANK_LIST.find((bankObj) => bankObj.name === authStore.accountBank);
 
-  //   if (bank && authStore.account && authStore.name) {
-  //     try {
-  //       const response = await getAccountVerification(bank.code, authStore.account, authStore.name);
-  //       if (axios.isAxiosError(response)) {
-  //         const error = response.response?.data as CustomErrorType;
-  //         alert(error.message);
-  //         setIsAccountVerified(() => false);
-  //       } else {
-  //         if (response.data.accountHolder === authStore.name) {
-  //           alert("계좌번호 인증에 성공하였습니다");
-  //           setIsAccountVerified(() => true);
-  //         } else {
-  //           alert("본인 명의의 계좌가 아닙니다. 입력한 이름과 계좌 소유주명이 동일하지 않습니다.");
-  //           setIsAccountVerified(() => false);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       if (axios.isAxiosError(error)) {
-  //         const customError = error.response?.data as CustomErrorType;
-  //         alert(customError.message);
-  //         setIsAccountVerified(() => false);
-  //       } else {
-  //         alert(
-  //           "계좌번호 인증에 문제가 발생하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-  //         );
-  //         setIsAccountVerified(() => false);
-  //       }
-  //     }
-  //   } else if (!bank) {
-  //     alert("선택한 은행이 존재하지 않습니다.");
-  //     return;
-  //   } else if (!authStore.account) {
-  //     alert("계좌번호를 입력해주세요");
-  //     return;
-  //   }
-  // };
+    if (!authStore.name) {
+      alert("계좌 인증을 위해 이름을 작성해주시기 바랍니다.");
+      return;
+    }
+
+    if (bank && authStore.account && authStore.name) {
+      try {
+        await getAccountVerification(bank.code, authStore.account, authStore.name);
+        alert("계좌번호 인증에 성공하였습니다");
+        setIsAccountVerified(() => true);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const customError = error.response?.data as CustomErrorType;
+          alert(customError.message);
+          setIsAccountVerified(() => false);
+        } else {
+          alert(
+            "계좌번호 인증에 문제가 발생하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+          );
+          setIsAccountVerified(() => false);
+        }
+      }
+    } else if (!bank) {
+      alert("선택한 은행이 존재하지 않습니다.");
+      return;
+    } else if (!authStore.account) {
+      alert("계좌번호를 입력해주세요");
+      return;
+    }
+  };
 
   const validateForm = (): boolean => {
     let result = true;
@@ -78,11 +73,10 @@ const SignUp: React.FC = () => {
     } else if (!authStore.account) {
       alert("계좌번호 입력은 필수입니다.");
       result = false;
-    }
-    // else if (!isAccountVerified) {
-    //   alert("계좌 인증이 필요합니다");
-    // }
-    else if (!authStore.password) {
+    } else if (!isAccountVerified) {
+      alert("계좌 인증이 필요합니다");
+      result = false;
+    } else if (!authStore.password) {
       alert("비밀번호 입력은 필수입니다.");
       result = false;
     } else if (authStore.password !== authStore.checkPassword) {
@@ -108,6 +102,11 @@ const SignUp: React.FC = () => {
         setIsAccountVerified(() => false);
       }
     }
+    if (e.target.id === "이름") {
+      if (isAccountVerified) {
+        setIsAccountVerified(() => false);
+      }
+    }
     authStore.setField(nameToField(formName), e.target.value);
   };
 
@@ -115,21 +114,20 @@ const SignUp: React.FC = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      const response = await authStore.signUp();
-      if (!response) {
-        alert("회원가입이 완료되었습니다.");
-        authStore.reset();
-        setIsSubmitted(true);
-      }
-      if (axios.isAxiosError(response)) {
-        const error = response.response?.data as CustomErrorType;
-        alert(error.message);
-      }
+      await authStore.signUp();
+      alert("회원가입이 완료되었습니다.");
+      authStore.reset();
+      setIsSubmitted(true);
     } catch (error: any) {
-      console.error("회원가입 실패:", error);
-      alert(
-        "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-      );
+      if (axios.isAxiosError(error)) {
+        const customError = error.response?.data as CustomErrorType;
+        alert(customError.message);
+      } else {
+        console.error("회원가입 실패:", error);
+        alert(
+          "회원가입에 실패하였습니다. 나중에 다시 시도해 주세요. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+        );
+      }
     }
   };
 
@@ -199,16 +197,14 @@ const SignUp: React.FC = () => {
                 onChange={(e) => handleChange(e, formName)}
               />
             </div>
-            {
-              // formName === "계좌번호" &&
-              //   (isAccountVerified ? (
-              //     <div className="text-Green-1 mb-14">계좌인증완료</div>
-              //   ) : (
-              //     <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue mb-14">
-              //       계좌번호 인증
-              //     </button>
-              //   ))
-            }
+            {formName === "계좌번호" &&
+              (isAccountVerified ? (
+                <div className="px-4 py-3 text-sm text-Green-1 mb-14">계좌인증완료</div>
+              ) : (
+                <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue mb-14">
+                  계좌번호 인증
+                </button>
+              ))}
           </React.Fragment>
         ))}
         <button type="submit" className="btn-blue hover:bg-blue-700 text-white mt-10">

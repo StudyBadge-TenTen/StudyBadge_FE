@@ -5,7 +5,7 @@ import axios from "axios";
 import { useAuthStore } from "../../store/auth-store";
 import { useNavigate } from "react-router";
 import { CustomErrorType } from "@/types/common";
-// import { getAccountVerification } from "@/services/auth-api";
+import { getAccountVerification } from "@/services/auth-api";
 
 const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   // todo: 회원가입 시 정했던 닉네임이랑 소개 등 글자수 제한 반영하기
@@ -40,6 +40,11 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
         accountBank: userInfo.accountBank,
         imgUrl: userInfo.imgUrl,
       }));
+      if (userInfo.isAccountCert) {
+        setIsAccountVerified(() => true);
+      } else {
+        setIsAccountVerified(() => false);
+      }
     }
   }, [userInfo]);
 
@@ -115,47 +120,36 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   };
 
   // 계좌 인증하는 함수
-  // const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-  //   e.stopPropagation();
-  //   e.preventDefault();
-  //   const bank = BANK_LIST.find((bankObj) => bankObj.name === profileInfo.accountBank);
+  const verifyAccount = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const bank = BANK_LIST.find((bankObj) => bankObj.name === profileInfo.accountBank);
 
-  //   if (bank && profileInfo.account) {
-  //     try {
-  //       const response = await getAccountVerification(bank.code, profileInfo.account);
-  //       if (axios.isAxiosError(response)) {
-  //         const error = response.response?.data as CustomErrorType;
-  //         alert(error.message);
-  //         setIsAccountVerified(() => false);
-  //       } else {
-  //         if (response.data.accountHolder === userInfo.name) {
-  //           alert("계좌번호 인증에 성공하였습니다");
-  //           setIsAccountVerified(() => true);
-  //         } else {
-  //           alert("본인 명의의 계좌가 아닙니다. 입력한 이름과 계좌 소유주명이 동일하지 않습니다.");
-  //           setIsAccountVerified(() => false);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       if (axios.isAxiosError(error)) {
-  //         const customError = error.response?.data as CustomErrorType;
-  //         alert(customError.message);
-  //         setIsAccountVerified(() => false);
-  //       } else {
-  //         alert(
-  //           "계좌번호 인증에 문제가 발생하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
-  //         );
-  //         setIsAccountVerified(() => false);
-  //       }
-  //     }
-  //   } else if (!bank) {
-  //     alert("선택한 은행이 존재하지 않습니다.");
-  //     return;
-  //   } else if (!profileInfo.account) {
-  //     alert("계좌번호를 입력해주세요");
-  //     return;
-  //   }
-  // };
+    if (bank && profileInfo.account) {
+      try {
+        await getAccountVerification(bank.code, profileInfo.account);
+        alert("계좌번호 인증에 성공하였습니다");
+        setIsAccountVerified(() => true);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const customError = error.response?.data as CustomErrorType;
+          alert(customError.message);
+          setIsAccountVerified(() => false);
+        } else {
+          alert(
+            "계좌번호 인증에 문제가 발생하였습니다. 문제가 반복될 경우 studybadge04@gmail.com 해당 주소로 문의 메일을 보내주시면 감사하겠습니다.",
+          );
+          setIsAccountVerified(() => false);
+        }
+      }
+    } else if (!bank) {
+      alert("선택한 은행이 존재하지 않습니다.");
+      return;
+    } else if (!profileInfo.account) {
+      alert("계좌번호를 입력해주세요");
+      return;
+    }
+  };
 
   // 프로필 수정을 저장할 때 반영하도록 하는 함수
   const handleSaveClick = async (
@@ -190,14 +184,14 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
       }
     }
 
-    // if (!isAccountVerified) {
-    //   alert("계좌 인증이 필요합니다");
-    //   if (accountRef.current) {
-    //     accountRef.current.classList.add("outline-Red-2");
-    //     accountRef.current.focus();
-    //   }
-    //   return;
-    // }
+    if (!isAccountVerified) {
+      alert("계좌 인증이 필요합니다");
+      if (accountRef.current) {
+        accountRef.current.classList.add("outline-Red-2");
+        accountRef.current.focus();
+      }
+      return;
+    }
 
     if (nicknameRef.current) {
       if (!nicknameRef.current.value) {
@@ -339,15 +333,13 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
                 </option>
               ))}
             </select>
-            {
-              // isAccountVerified ? (
-              //   <div className="text-Green-1 mb-14">계좌인증완료</div>
-              // ) : (
-              //   <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue w-24 mt-2 ml-4">
-              //     계좌번호 인증
-              //   </button>
-              // )
-            }
+            {isAccountVerified ? (
+              <div className="px-4 py-3 text-sm text-Green-1 mb-14 mt-2 ml-4">계좌인증완료</div>
+            ) : (
+              <button type="button" onClick={(e) => verifyAccount(e)} className="btn-blue w-24 mt-2 ml-4">
+                계좌번호 인증
+              </button>
+            )}
           </div>
           <button
             type="submit"

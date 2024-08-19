@@ -127,51 +127,32 @@ interface SettersPropsType {
   setRepeatEndDate: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface SingleSchedulePostType {
+interface ScheduleRequestType {
   memberId: number;
   scheduleName: string;
   scheduleContent: string;
-  scheduleDate: "YYYY-MM-DD" | string;
   scheduleStartTime: "00:00:00" | string;
   scheduleEndTime: "00:00:00" | string;
 }
-interface RepeatSchedulePostType {
-  memberId: number;
-  scheduleName: string;
-  scheduleContent: string;
+interface SingleSchedulePostType extends ScheduleRequestType {
   scheduleDate: "YYYY-MM-DD" | string;
-  scheduleStartTime: "00:00:00" | string;
-  scheduleEndTime: "00:00:00" | string;
+}
+interface RepeatSchedulePostType extends SingleSchedulePostType {
   repeatCycle: RepeatCycleType;
   repeatSituation: RepeatDailyType | RepeatMonthlyType | RepeatWeeklyType;
   repeatEndDate: "YYYY-MM-DD" | string;
 }
-interface ToSingleSchedulePutType {
-  memberId: number;
+interface ToSingleSchedulePutType extends ScheduleRequestType {
   scheduleId: number;
-  scheduleName: string;
-  scheduleContent: string;
   originType: ScheduleRepeatType;
   editType: ScheduleRepeatType;
   selectedDate: "YYYY-MM-DD" | string;
-  scheduleStartTime: "00:00:00" | string;
-  scheduleEndTime: "00:00:00" | string;
   placeId: null | number;
 }
-interface ToRepeatSchedulePutType {
-  memberId: number;
-  scheduleId: number;
-  scheduleName: string;
-  scheduleContent: string;
-  originType: ScheduleRepeatType;
-  editType: ScheduleRepeatType;
-  selectedDate: "YYYY-MM-DD" | string;
-  scheduleStartTime: "00:00:00" | string;
-  scheduleEndTime: "00:00:00" | string;
+interface ToRepeatSchedulePutType extends ToSingleSchedulePutType {
   repeatCycle: RepeatCycleType;
   repeatSituation: RepeatDailyType | RepeatMonthlyType | RepeatWeeklyType;
   repeatEndDate: "YYYY-MM-DD" | string;
-  placeId: null | number;
 }
 
 type NewScheduleType =
