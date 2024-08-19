@@ -75,6 +75,7 @@ const SignUp: React.FC = () => {
       result = false;
     } else if (!isAccountVerified) {
       alert("계좌 인증이 필요합니다");
+      result = false;
     } else if (!authStore.password) {
       alert("비밀번호 입력은 필수입니다.");
       result = false;
