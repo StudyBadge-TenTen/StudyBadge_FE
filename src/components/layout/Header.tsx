@@ -115,16 +115,20 @@ const Header = (): JSX.Element => {
           <img
             src={LOGO}
             className="h-24 md:h-16 cursor-pointer"
-            alt="STUDY-BADGE-LOGO"
+            alt="스터디 뱃지 로고"
             onClick={() => {
               navigate("/");
               window.location.reload();
             }}
           />
           <form className="hidden md:inline-block w-1/2 mx-8" onSubmit={handleSubmit}>
+            <label htmlFor="searchBar" className="hidden">
+              검색창
+            </label>
             <input
               id="searchBar"
               type="text"
+              name="keyword"
               value={inputValue}
               onChange={handleInputChange}
               className=" w-full h-12 border border-solid border-Gray-3 rounded-[50px] indent-5"

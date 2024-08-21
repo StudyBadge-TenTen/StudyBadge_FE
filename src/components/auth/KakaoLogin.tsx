@@ -23,8 +23,18 @@ const KakaoLogin: React.FC = () => {
 
   return (
     <>
-      <img onClick={handleKakaoLogin} src={KAKAO_BTN_BIG} className="hidden md:inline-block mt-2 cursor-pointer" />
-      <img onClick={handleKakaoLogin} src={KAKAO_BTN_SMALL} className="md:hidden mt-2 cursor-pointer" />
+      <img
+        onClick={handleKakaoLogin}
+        src={KAKAO_BTN_BIG}
+        alt="카카오 로그인 버튼"
+        className="hidden md:inline-block mt-2 cursor-pointer"
+      />
+      <img
+        onClick={handleKakaoLogin}
+        src={KAKAO_BTN_SMALL}
+        alt="카카오 로그인 버튼"
+        className="md:hidden mt-2 cursor-pointer"
+      />
     </>
   );
 };

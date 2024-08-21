@@ -1,5 +1,6 @@
 import create from "zustand";
 import { LocateType, fetchLocate } from "../services/location-api";
+import { devtools } from "zustand/middleware";
 
 interface MapStore {
   selectedLocate: LocateType | null;
@@ -7,7 +8,7 @@ interface MapStore {
   selectLocate: (locate: LocateType) => void;
 }
 
-export const useMapStore = create<MapStore>((set) => ({
+const mapStore = (set: any): MapStore => ({
   selectedLocate: null,
   getLocate: async (studyChannelId: number, placeId: number | undefined) => {
     if (!placeId) return;
@@ -19,4 +20,6 @@ export const useMapStore = create<MapStore>((set) => ({
     }
   },
   selectLocate: (locate: LocateType) => set({ selectedLocate: locate }),
-}));
+});
+
+export const useMapStore = create(import.meta.env.DEV ? devtools(mapStore) : mapStore);

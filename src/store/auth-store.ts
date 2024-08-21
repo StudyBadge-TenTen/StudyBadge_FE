@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 import axios from "axios";
 import { postLogin, postLogout, postSignUp } from "../services/auth-api";
 import { AuthStoreType, PasswordResetStore } from "../types/auth-type";
@@ -12,7 +13,7 @@ import {
 } from "@/utils/cookie";
 import { API_BASE_URL } from "@/services/common";
 
-export const useAuthStore = create<AuthStoreType>((set, get) => ({
+const authStore = (set: any, get: any): AuthStoreType => ({
   email: "",
   name: "",
   nickname: "",
@@ -26,9 +27,9 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
   refreshToken: null,
   isLoginFailed: false,
   isMember: false,
-  setLoginFailed: (status) => set((state) => ({ ...state, isLoginFailed: status })),
+  setLoginFailed: (status) => set((state: AuthStoreType) => ({ ...state, isLoginFailed: status })),
   setIsMember: (isMember) => set({ isMember }),
-  setField: (field, value) => set((state) => ({ ...state, [field]: value })),
+  setField: (field, value) => set((state: AuthStoreType) => ({ ...state, [field]: value })),
   login: async (email, password) => {
     try {
       const { accessToken, refreshToken } = await postLogin(email, password);
@@ -80,7 +81,6 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       accessToken: null,
       refreshToken: null,
     }),
-
   refreshAccessToken: async () => {
     try {
       const refreshToken = getRefreshToken();
@@ -109,7 +109,6 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       return;
     }
   },
-
   logout: async () => {
     try {
       const response = await postLogout();
@@ -128,9 +127,10 @@ export const useAuthStore = create<AuthStoreType>((set, get) => ({
       window.location.reload();
     }
   },
-}));
+});
+export const useAuthStore = create(import.meta.env.DEV ? devtools(authStore) : authStore);
 
-const usePasswordResetStore = create<PasswordResetStore>((set) => ({
+const passwordResetStore = (set: any): PasswordResetStore => ({
   email: "",
   newPassword: "",
   confirmPassword: "",
@@ -144,6 +144,5 @@ const usePasswordResetStore = create<PasswordResetStore>((set) => ({
   setVerificationCode: (verificationCode) => set({ verificationCode }),
   setShowVerificationForm: (showVerificationForm) => set({ showVerificationForm }),
   setShowNewPasswordForm: (showNewPasswordForm) => set({ showNewPasswordForm }),
-}));
-
-export { usePasswordResetStore };
+});
+export const usePasswordResetStore = create(import.meta.env.DEV ? devtools(passwordResetStore) : passwordResetStore);
