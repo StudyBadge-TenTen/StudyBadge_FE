@@ -1,9 +1,10 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 import { EditModeType } from "../types/common";
 
-const useEditModeStore = create<EditModeType>((set) => ({
+const editModeStore = (set: any): EditModeType => ({
   isEditMode: false,
   setIsEditMode: (isEditMode) => set({ isEditMode: isEditMode }),
-}));
+});
 
-export { useEditModeStore };
+export const useEditModeStore = create(import.meta.env.DEV ? devtools(editModeStore) : editModeStore);
