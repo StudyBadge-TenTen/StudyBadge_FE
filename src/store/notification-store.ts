@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { NotificationStoreType } from "../types/notification-type";
+import { devtools } from "zustand/middleware";
 
-const useNotificationStore = create<NotificationStoreType>((set, get) => ({
+const notificationStore = (set: any, get: any): NotificationStoreType => ({
   newNotification: null,
   notificationList: [],
   setNewNotification: (newNotification) => set({ newNotification: newNotification }),
@@ -23,6 +24,6 @@ const useNotificationStore = create<NotificationStoreType>((set, get) => ({
       set({ notificationList: updatedList });
     }
   },
-}));
+});
 
-export { useNotificationStore };
+export const useNotificationStore = create(import.meta.env.DEV ? devtools(notificationStore) : notificationStore);

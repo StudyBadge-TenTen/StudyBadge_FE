@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { FilterStoreType, StudyListRequestType, StudyListStoreType, StudyStoreType } from "../types/study-channel-type";
 
-const useStudyStore = create<StudyStoreType>((set) => ({
+const studyStore = (set: any): StudyStoreType => ({
   name: "",
   description: "",
   category: "",
@@ -15,7 +15,7 @@ const useStudyStore = create<StudyStoreType>((set) => ({
   chattingUrl: "",
   depositDescription: "",
   deposit: 10000,
-  setField: (field, value) => set((state) => ({ ...state, [field]: value })),
+  setField: (field, value) => set((state: StudyStoreType) => ({ ...state, [field]: value })),
   resetForm: () =>
     set({
       name: "",
@@ -31,12 +31,14 @@ const useStudyStore = create<StudyStoreType>((set) => ({
       depositDescription: "",
       deposit: 10000,
     }),
-}));
+});
+const useStudyStore = create(import.meta.env.DEV ? devtools(studyStore) : studyStore);
 
-const useStudyListStore = create<StudyListStoreType>((set) => ({
+const studyListStore = (set: any): StudyListStoreType => ({
   studyList: [],
   setStudyList: (studyList) => set({ studyList: studyList }),
-}));
+});
+const useStudyListStore = create(import.meta.env.DEV ? devtools(studyListStore) : studyListStore);
 
 const initialFilter: StudyListRequestType = {
   type: undefined,
@@ -47,17 +49,20 @@ const initialFilter: StudyListRequestType = {
   keyword: undefined,
 };
 
-const useFilterStore = create(
-  persist<FilterStoreType>(
-    (set) => ({
-      filter: initialFilter,
-      setFilter: (filter) => set(() => ({ filter: filter })),
-    }),
-    {
-      name: "filterStorage",
-      storage: createJSONStorage(() => sessionStorage),
-    },
-  ),
+const filterStore = (set: any): FilterStoreType => ({
+  filter: initialFilter,
+  setFilter: (filter) => set(() => ({ filter: filter })),
+});
+const useFilterStore = create<FilterStoreType, [["zustand/persist", unknown], ["zustand/devtools", never]]>(
+  import.meta.env.DEV
+    ? persist(devtools(filterStore), {
+        name: "filterStorage",
+        storage: createJSONStorage(() => sessionStorage),
+      })
+    : persist(filterStore, {
+        name: "filterStorage",
+        storage: createJSONStorage(() => sessionStorage),
+      }),
 );
 
 export { useStudyStore, useStudyListStore, initialFilter, useFilterStore };
