@@ -18,9 +18,13 @@ const MobileSearchBar = ({ isOpen, handleSubmit, inputValue, handleInputChange }
           className={`mobile-search-bar md:hidden fixed top-0 z-20 w-full h-20 bg-white shadow-card px-6 py-4 transition-all`}
         >
           <form className="w-full" onSubmit={handleSubmit}>
+            <label htmlFor="searchBar" className="hidden">
+              검색창
+            </label>
             <input
               id="searchBar"
               type="text"
+              name="keyword"
               value={inputValue}
               onChange={handleInputChange}
               className=" w-full h-12 border border-solid border-Gray-3 rounded-[50px] indent-5"

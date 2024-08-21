@@ -109,10 +109,10 @@ const Profile = (): JSX.Element => {
                 </div>
               </div>
               <div className="badge w-1/3 flex justify-center items-center mt-8 md:mt-0">
-                {data.badgeLevel === "NONE" && <img src={NONE_BADGE} className="w-28" />}
-                {data.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="w-28" />}
-                {data.badgeLevel === "SILVER" && <img src={SILVER_BADGE} className="w-28" />}
-                {data.badgeLevel === "GOLD" && <img src={GOLD_BADGE} className="w-28" />}
+                {data.badgeLevel === "NONE" && <img src={NONE_BADGE} alt="기본뱃지" className="w-28" />}
+                {data.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} alt="브론즈뱃지" className="w-28" />}
+                {data.badgeLevel === "SILVER" && <img src={SILVER_BADGE} alt="실버뱃지" className="w-28" />}
+                {data.badgeLevel === "GOLD" && <img src={GOLD_BADGE} alt="골드뱃지" className="w-28" />}
               </div>
             </div>
             <div className="w-full h-fit bg-Gray-1 border-x border-b border-solid border-Gray-3 rounded-b-[30px] flex flex-col md:flex-row justify-between items-center px-10 py-8 md:py-4">
