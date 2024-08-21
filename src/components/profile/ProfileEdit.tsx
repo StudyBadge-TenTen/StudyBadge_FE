@@ -29,6 +29,8 @@ const ProfileEdit = ({ userInfo }: { userInfo: UserInfoType }): JSX.Element => {
   const accountBankRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
+    console.log(isAccountVerified); // 임시 로그
+
     if (userInfo) {
       setProfileInfo((origin) => ({
         ...origin,
