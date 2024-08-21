@@ -39,7 +39,7 @@ const MainCarousel = (): JSX.Element => {
         >
           {carouselList.map((item, index) => (
             <div key={item.description} className="relative">
-              <img src={item.imgUrl} alt={`Carousel item ${index}`} />
+              <img src={item.imgUrl} alt={`슬라이드 이미지 ${index}`} />
               <div className="carousel-description absolute w-full h-48 left-auto right-auto top-1/3 sm:top-1/4 md:bottom-1/3 mb-10 text-left lg:container px-4 md:px-10">
                 <h2 className="text-2xl text-white font-bold">{item.title}</h2>
                 <p className="text-white">{item.description}</p>

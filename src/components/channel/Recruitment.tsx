@@ -167,10 +167,18 @@ const Recruitment = (): JSX.Element => {
                           </div>
                         )}
                         <div className="w-fit h-full flex flex-col justify-center items-center">
-                          {participant.badgeLevel === "NONE" && <img src={NONE_BADGE} className="w-16" />}
-                          {participant.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="w-16" />}
-                          {participant.badgeLevel === "SILVER" && <img src={SILVER_BADGE} className="w-16" />}
-                          {participant.badgeLevel === "GOLD" && <img src={GOLD_BADGE} className="w-16" />}
+                          {participant.badgeLevel === "NONE" && (
+                            <img src={NONE_BADGE} alt="기본뱃지" className="w-16" />
+                          )}
+                          {participant.badgeLevel === "BRONZE" && (
+                            <img src={BRONZE_BADGE} alt="브론즈뱃지" className="w-16" />
+                          )}
+                          {participant.badgeLevel === "SILVER" && (
+                            <img src={SILVER_BADGE} alt="실버뱃지" className="w-16" />
+                          )}
+                          {participant.badgeLevel === "GOLD" && (
+                            <img src={GOLD_BADGE} alt="골드뱃지" className="w-16" />
+                          )}
                           <p className="text-xl font-bold mt-2">{participant.name}</p>
                         </div>
                       </div>

@@ -128,10 +128,18 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                       key={member.studyMemberId}
                       className={`w-[210px] h-80 border border-solid border-Gray-3 rounded-[50px] flex flex-col ${!isStudyEnd && data.leader ? "justify-between" : "justify-center"} items-center px-4 py-8 m-2 relative`}
                     >
-                      {member.badgeLevel === "NONE" && <img src={NONE_BADGE} className="absolute w-16 right-8" />}
-                      {member.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="absolute w-16 right-8" />}
-                      {member.badgeLevel === "SILVER" && <img src={SILVER_BADGE} className="absolute w-16 right-8" />}
-                      {member.badgeLevel === "GOLD" && <img src={GOLD_BADGE} className="absolute w-16 right-8" />}
+                      {member.badgeLevel === "NONE" && (
+                        <img src={NONE_BADGE} alt="기본뱃지" className="absolute w-16 right-8" />
+                      )}
+                      {member.badgeLevel === "BRONZE" && (
+                        <img src={BRONZE_BADGE} alt="브론즈뱃지" className="absolute w-16 right-8" />
+                      )}
+                      {member.badgeLevel === "SILVER" && (
+                        <img src={SILVER_BADGE} alt="실버뱃지" className="absolute w-16 right-8" />
+                      )}
+                      {member.badgeLevel === "GOLD" && (
+                        <img src={GOLD_BADGE} alt="골드뱃지" className="absolute w-16 right-8" />
+                      )}
                       <div className="flex flex-col justify-center items-center">
                         {member.imageUrl ? (
                           <img
@@ -224,10 +232,18 @@ const MemberList = ({ setNewSubLeader, setModal, isStudyEnd }: MemberListPropsTy
                       key={member.memberId}
                       className={`w-[210px] h-80 border border-solid border-Gray-3 rounded-[50px] flex flex-col ${!isStudyEnd && data.leader ? "justify-between" : "justify-center"} items-center px-4 py-8 m-2 relative`}
                     >
-                      {member.badgeLevel === "NONE" && <img src={NONE_BADGE} className="absolute w-16 right-8" />}
-                      {member.badgeLevel === "BRONZE" && <img src={BRONZE_BADGE} className="absolute w-16 right-8" />}
-                      {member.badgeLevel === "SILVER" && <img src={SILVER_BADGE} className="absolute w-16 right-8" />}
-                      {member.badgeLevel === "GOLD" && <img src={GOLD_BADGE} className="absolute w-16 right-8" />}
+                      {member.badgeLevel === "NONE" && (
+                        <img src={NONE_BADGE} alt="기본뱃지" className="absolute w-16 right-8" />
+                      )}
+                      {member.badgeLevel === "BRONZE" && (
+                        <img src={BRONZE_BADGE} alt="브론즈뱃지" className="absolute w-16 right-8" />
+                      )}
+                      {member.badgeLevel === "SILVER" && (
+                        <img src={SILVER_BADGE} alt="실버뱃지" className="absolute w-16 right-8" />
+                      )}
+                      {member.badgeLevel === "GOLD" && (
+                        <img src={GOLD_BADGE} alt="골드뱃지" className="absolute w-16 right-8" />
+                      )}
                       <div className="flex flex-col justify-center items-center">
                         {member.imageUrl ? (
                           <img

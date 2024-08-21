@@ -9,7 +9,7 @@ const Footer = (): JSX.Element => {
           <br />
           created by team TenTen
         </div>
-        <img src={LOGO} className="h-20 md:h-44 mx-16" />
+        <img src={LOGO} alt="스터디 뱃지 로고" className="h-20 md:h-44 mx-16" />
         <div className="text-right w-full text-center sm:w-20 md:w-56 mr-8">
           <b>CONTACT</b>
           <br />

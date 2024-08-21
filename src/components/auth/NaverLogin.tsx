@@ -21,6 +21,7 @@ const NaverLogin: React.FC = () => {
   return (
     <button
       onClick={handleNaverLogin}
+      name="네이버 로그인"
       className="w-[183px] md:w-[300px] btn-blue bg-[#00C73C] hover:bg-[#00C73C] text-white p-0 py-1 rounded mt-4 flex justify-center items-center"
     >
       <img src={NAVER_ICON} className="w-8" />
